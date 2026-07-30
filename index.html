@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSIGHT - Bật mode focus, cân mọi deadline</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- DESIGN TOKENS (Pastel/Minimalist Theme) --- */
+        :root {
+            --bg-main: #FAFAF9; /* Soft off-white */
+            --bg-card: #FFFFFF;
+            --color-text: #2C3E50;
+            --color-text-light: #7F8C8D;
+            --color-mint: #D4EADD;
+            --color-mint-dark: #A9D1BA;
+            --color-peach: #FADCD9;
+            --color-peach-dark: #F2B9B3;
+            --color-beige: #F5EFEB;
+            --color-accent: #8E9BAE; /* Soft blue-grey */
+            
+            --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--color-text);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; }
+
+        /* --- LAYOUT --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--color-beige);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.03);
+            z-index: 10;
+        }
+
+        .logo-area { margin-bottom: 3rem; }
+        .logo-title { font-size: 2.5rem; letter-spacing: 2px; color: var(--color-text); font-weight: 700; }
+        .logo-slogan { font-size: 0.85rem; color: var(--color-text-light); margin-top: 0.5rem; }
+
+        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+        
+        .nav-item {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            color: var(--color-text-light);
+            transition: var(--transition);
+        }
+        
+        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.5); color: var(--color-text); }
+        .nav-item.active { background-color: var(--color-card); color: var(--color-text); box-shadow: var(--shadow-sm); font-weight: 600; }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem 4rem;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* Views (SPA switching) */
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .view-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- GLOBAL COMPONENTS --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+        .section-header { margin-bottom: 1.5rem; }
+        .section-header h2 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .section-header p { color: var(--color-text-light); }
+        
+        button.primary-btn {
+            background-color: var(--color-text);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        button.primary-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); opacity: 0.9; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        /* --- 1. DAILY VIEW --- */
+        .quote-banner {
+            background: linear-gradient(135deg, var(--color-mint), var(--color-peach));
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .mood-tracker { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0; }
+        .mood-btn {
+            font-size: 2.5rem;
+            background: none; border: none; cursor: pointer;
+            transition: var(--transition); filter: grayscale(80%); opacity: 0.6;
+        }
+        .mood-btn:hover, .mood-btn.selected { filter: grayscale(0%); opacity: 1; transform: scale(1.2); }
+        .mood-msg { text-align: center; height: 30px; color: var(--color-text-light); font-weight: 500; }
+
+        /* AMPS Form */
+        .amps-intro { background-color: rgba(212, 234, 221, 0.3); padding: 1.5rem; border-radius: var(--radius-md); margin-bottom: 2rem; border-left: 4px solid var(--color-mint-dark); }
+        .question-group { margin-bottom: 1.5rem; }
+        .question-text { font-weight: 500; margin-bottom: 0.5rem; }
+        
+        /* Custom Sliders */
+        input[type=range] {
+            -webkit-appearance: none; width: 100%; background: transparent;
+        }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 8px; cursor: pointer; background: var(--color-beige); border-radius: 4px;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px; width: 24px; border-radius: 50%;
+            background: var(--color-accent); cursor: pointer;
+            -webkit-appearance: none; margin-top: -8px; box-shadow: var(--shadow-sm);
+        }
+        .slider-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--color-text-light); margin-top: 5px; }
+        
+        #amps-result {
+            display: none; margin-top: 1.5rem; padding: 1.5rem; border-radius: var(--radius-md); font-weight: 500; text-align: center;
+        }
+        .result-high { background-color: var(--color-peach); color: #c0392b; }
+        .result-low { background-color: var(--color-mint); color: #27ae60; }
+
+        /* --- 2. PLAN VIEW --- */
+        .plan-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .task-input-group { display: flex; gap: 1rem; margin-bottom: 1rem; }
+        .task-input-group input, .task-input-group select {
+            padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 1rem; outline: none;
+        }
+        .task-input-group input[type="text"] { flex: 1; }
+        .task-list { list-style: none; margin-top: 1.5rem; }
+        
+        .task-item {
+            background-color: var(--bg-main); padding: 0.8rem 1rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+            border-left: 3px solid var(--color-text);
+        }
+        .task-info { display: flex; align-items: center; gap: 0.8rem; flex: 1; }
+        .task-time-badge { background: #e0e6ed; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; color: #444; font-weight: 500; }
+        .task-actions { display: flex; gap: 0.5rem; }
+        .action-btn {
+            background: transparent; border: none; cursor: pointer; color: var(--color-text-light);
+            width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .action-btn:hover { background: rgba(0,0,0,0.05); color: var(--color-text); }
+        .action-btn.delete-btn:hover { background: #FADCD9; color: #c0392b; }
+        
+        /* Schedule Visualizer */
+        .schedule-visualizer { background-color: var(--color-beige); padding: 1.5rem; border-radius: var(--radius-lg); height: 100%; }
+        .timeline { position: relative; padding-left: 1.5rem; border-left: 2px solid rgba(0,0,0,0.1); }
+        .timeline-item { position: relative; padding-bottom: 1rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -1.8rem; top: 0.3rem; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--color-text); border: 2px solid var(--color-beige);
+        }
+        .timeline-break::before { background: var(--color-peach-dark); }
+        .timeline-break { color: var(--color-text-light); font-style: italic; font-size: 0.9rem; }
+
+        /* --- 3. LEARN VIEW --- */
+        .learn-view { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .mode-selector { display: flex; gap: 1rem; margin-bottom: 2rem; background: var(--color-beige); padding: 0.5rem; border-radius: 50px; }
+        .mode-btn {
+            background: transparent; border: none; padding: 0.8rem 1.5rem; border-radius: 50px;
+            font-weight: 500; cursor: pointer; transition: var(--transition); color: var(--color-text-light);
+        }
+        .mode-btn.active { background: var(--bg-card); color: var(--color-text); box-shadow: var(--shadow-sm); }
+        
+        /* Learn info box */
+        .mode-info {
+            background: var(--bg-card); padding: 1.5rem; border-radius: var(--radius-md);
+            text-align: left; margin-bottom: 3rem; box-shadow: var(--shadow-sm);
+            max-width: 600px; width: 100%;
+        }
+        .mode-info h4 { margin-bottom: 0.8rem; font-size: 1.2rem; color: var(--color-text); border-bottom: 1px solid #eee; padding-bottom: 0.5rem;}
+        .mode-info p { margin-bottom: 0.5rem; font-size: 0.95rem; color: var(--color-text-light); }
+        .mode-info p b { color: var(--color-text); }
+
+        .timer-display {
+            font-size: 8rem; font-weight: 300; font-family: 'Playfair Display', serif;
+            color: var(--color-text); margin-bottom: 2rem; line-height: 1; font-variant-numeric: tabular-nums;
+        }
+        .timer-controls { display: flex; gap: 1.5rem; margin-bottom: 3rem; }
+        .ctrl-btn {
+            width: 60px; height: 60px; border-radius: 50%; border: none; background: var(--color-text); color: white;
+            font-size: 1.2rem; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center;
+        }
+        .ctrl-btn:hover { transform: scale(1.05); }
+        .ctrl-btn.secondary { background: var(--color-beige); color: var(--color-text); }
+
+        /* --- 4. PAUSE VIEW (Doodling & Breathing) --- */
+        .pause-container { display: grid; grid-template-columns: 300px 1fr; gap: 2rem; height: calc(100vh - 150px); }
+        
+        /* Breathing Widget */
+        .breathing-widget {
+            background: var(--bg-card); border-radius: var(--radius-lg); padding: 2rem;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+        }
+        .breathe-circle {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: radial-gradient(circle, var(--color-mint) 0%, transparent 70%);
+            animation: breathe 16s infinite ease-in-out; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .breathe-text { font-weight: 500; color: var(--color-mint-dark); position: absolute; }
+        
+        @keyframes breathe {
+            0%, 100% { transform: scale(0.6); opacity: 0.5; }
+            25% { transform: scale(1.5); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; }
+            75% { transform: scale(0.6); opacity: 0.5; }
+        }
+
+        /* Doodling Canvas (Whiteboard style) */
+        .doodling-area {
+            background: #FFFFFF;
+            border-radius: var(--radius-lg); position: relative;
+            overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column;
+            border: 1px solid #eaeaea;
+        }
+        .doodle-header {
+            padding: 1rem 1.5rem; background: var(--bg-main); display: flex; justify-content: space-between; align-items: center; color: var(--color-text);
+            border-bottom: 1px solid #eaeaea;
+        }
+        .tools { display: flex; gap: 1rem; align-items: center; }
+        .tool-btn {
+            width: 30px; height: 30px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s;
+        }
+        .tool-btn.active { border-color: var(--color-text); transform: scale(1.15); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+        .tool-black { background: #2C3E50; }
+        .tool-red { background: #E74C3C; }
+        .tool-blue { background: #3498DB; }
+        
+        #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background-color: transparent; }
+        
+        .shatter-btn {
+            background: var(--color-text); color: white; border: none; padding: 0.5rem 1rem;
+            border-radius: 50px; cursor: pointer; transition: var(--transition); font-family: inherit; font-size: 0.9rem;
+        }
+        .shatter-btn:hover { background: #E74C3C; transform: scale(1.05); }
+
+        /* Crumpled Paper Animation Effect */
+        .crumple-anim {
+            animation: paperCrumple 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            transform-origin: center;
+        }
+        @keyframes paperCrumple {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 0; }
+            30% { transform: scale(0.9) rotate(2deg) skew(2deg, 2deg); opacity: 0.9; }
+            60% { transform: scale(0.6) rotate(-5deg) skew(-5deg, -5deg); opacity: 0.6; border-radius: 40px; }
+            100% { transform: scale(0) translateY(400px) rotate(20deg); opacity: 0; border-radius: 50%; }
+        }
+        
+        .affirmation-overlay {
+            position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center;
+            color: rgba(0,0,0,0.3); font-style: italic; pointer-events: none; transition: opacity 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 1rem; flex-direction: row; align-items: center; justify-content: space-between; border-right: none; border-bottom: 1px solid rgba(0,0,0,0.05); }
+            .logo-area { margin-bottom: 0; }
+            .nav-menu { flex-direction: row; flex: unset; }
+            .nav-item { padding: 0.5rem; gap: 0.5rem; }
+            .nav-item span { display: none; }
+            .main-content { padding: 1.5rem; }
+            .plan-container { grid-template-columns: 1fr; }
+            .pause-container { grid-template-columns: 1fr; grid-template-rows: auto 400px; height: auto; }
+            .timer-display { font-size: 5rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo-area">
+            <h1 class="logo-title">INSIGHT</h1>
+            <p class="logo-slogan">Soi thấu tâm trí, bật mode siêu focus!</p>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-item active" data-target="daily"><i class="fa-solid fa-sun"></i> <span>Daily</span></div>
+            <div class="nav-item" data-target="plan" id="nav-plan"><i class="fa-solid fa-list-check"></i> <span>Plan</span></div>
+            <div class="nav-item" data-target="learn"><i class="fa-solid fa-stopwatch"></i> <span>Learn</span></div>
+            <div class="nav-item" data-target="pause"><i class="fa-solid fa-spa"></i> <span>Pause</span></div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+        <!-- 1. DAILY SECTION -->
+        <section id="daily" class="view-section active">
+            <div class="section-header">
+                <h2>Khởi động xíu nào!</h2>
+                <p>Check-in tâm linh trước khi cày cuốc.</p>
+            </div>
+            
+            <div class="quote-banner" id="daily-quote">
+                "Làm đi, lỡ sai thì sửa, còn hơn là ngồi nhìn deadline dí rồi hối hận."
+            </div>
+
+            <div class="card">
+                <h3>Vibe hiện tại của bạn thế nào?</h3>
+                <div class="mood-tracker">
+                    <button class="mood-btn" data-mood="terrible">😫</button>
+                    <button class="mood-btn" data-mood="bad">😔</button>
+                    <button class="mood-btn" data-mood="okay">😐</button>
+                    <button class="mood-btn" data-mood="good">🙂</button>
+                    <button class="mood-btn" data-mood="great">🤩</button>
+                </div>
+                <p class="mood-msg" id="mood-message">Hãy chọn một biểu tượng để bắt đầu.</p>
+            </div>
+
+            <div class="card">
+                <h3>Thang đo AMPS <small>(Maladaptive Perfectionism)</small></h3>
+                <div class="amps-intro">
+                    <p><strong>Hôm nay, bạn có đang tự làm khó mình không?</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--color-text-light);">Sự cầu toàn độc hại là khi bạn đặt tiêu chuẩn phi thực tế, gây sợ hãi và trì hoãn. Hãy kiểm tra xem "con quái vật cầu toàn" hôm nay lớn cỡ nào nhé.</p>
+                </div>
+
+                <div id="amps-form">
+                    <div class="question-group">
+                        <p class="question-text">1. Dù chưa bắt đầu, tôi đã lo sợ kết quả hôm nay sẽ không được như ý.</p>
+                        <input type="range" min="1" max="5" value="3" class="amps-range">
+                        <div class="slider-labels"><span>Hoàn toàn sai</span> <span>Hoàn toàn đúng</span></div>
+                    </div>
+                    <div class="question-group">
+                        <p class="question-text">2. Tôi có suy nghĩ "thà không làm còn hơn là làm mà có sai sót".</p>
+                        <input type="range" min="1" max="5" value="3" class="amps-range">
+                        <div class="slider-labels"><span>Hoàn toàn sai</span> <span>Hoàn toàn đúng</span></div>
+                    </div>
+                    <div class="question-group">
+                        <p class="question-text">3. Tôi thường mất quá nhiều thời gian để chỉnh sửa những chi tiết rất nhỏ nhặt.</p>
+                        <input type="range" min="1" max="5" value="3" class="amps-range">
+                        <div class="slider-labels"><span>Hoàn toàn sai</span> <span>Hoàn toàn đúng</span></div>
+                    </div>
+                     <div class="question-group">
+                        <p class="question-text">4. Nếu hôm nay làm việc không hiệu quả 100%, tôi sẽ thấy mình vô dụng.</p>
+                        <input type="range" min="1" max="5" value="3" class="amps-range">
+                        <div class="slider-labels"><span>Hoàn toàn sai</span> <span>Hoàn toàn đúng</span></div>
+                    </div>
+                     <div class="question-group">
+                        <p class="question-text">5. Ý nghĩ về to-do list hôm nay khiến tôi thấy ngột ngạt hơn là hào hứng.</p>
+                        <input type="range" min="1" max="5" value="3" class="amps-range">
+                        <div class="slider-labels"><span>Hoàn toàn sai</span> <span>Hoàn toàn đúng</span></div>
+                    </div>
+                    
+                    <button class="primary-btn" id="btn-submit-amps" style="width: 100%; margin-top: 1rem;">Phân tích & Lên kế hoạch</button>
+                </div>
+                <div id="amps-result"></div>
+            </div>
+        </section>
+
+        <!-- 2. PLAN SECTION -->
+        <section id="plan" class="view-section">
+            <div class="section-header">
+                <h2>Lên kèo hôm nay</h2>
+                <p id="plan-subtitle">Quy tắc số 5 (The Power of 5). Giới hạn nhiệm vụ để chống trì hoãn.</p>
+            </div>
+
+            <div class="plan-container">
+                <!-- Task Entry -->
+                <div class="card">
+                    <h3>To-do List (chọn lọc tinh túy) <span id="task-counter" style="color:var(--color-text-light); font-size: 1rem; font-weight:normal;">(0/5)</span></h3>
+                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem;" id="task-warning">
+                        Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.
+                    </p>
+                    
+                    <div class="task-input-group">
+                        <input type="text" id="task-name" placeholder="Ví dụ: Fix xong bug login...">
+                        <select id="task-time">
+                            <option value="25">25 Phút (1 Pomo)</option>
+                            <option value="50">50 Phút (2 Pomo)</option>
+                            <option value="90">90 Phút (Deep Work)</option>
+                        </select>
+                    </div>
+                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.6rem;">Thêm nhiệm vụ</button>
+                    
+                    <ul class="task-list" id="task-list-ui">
+                        <!-- Tasks added here -->
+                    </ul>
+
+                    <!-- KKHU VỰC THIẾT LẬP THỜI GIAN VÀ NÚT TẠO LỊCH -->
+                    <div id="schedule-controls" style="display: none; margin-top: 2rem; background: var(--bg-main); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid #eaeaea;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.95rem;">Giờ bắt đầu chạy task:</label>
+                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; outline: none; background: white;">
+                        </div>
+                        <button class="primary-btn" id="btn-generate-schedule" style="width: 100%;">Tạo Lịch Trình Tự Động</button>
+                    </div>
+                </div>
+
+                <!-- Schedule Visualizer -->
+                <div class="schedule-visualizer" id="schedule-ui">
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-light);">Timeline dự kiến</h3>
+                    <div class="timeline" id="timeline-container">
+                        <p style="text-align:center; color: #aaa; margin-top: 50px;">Chưa có data lịch trình. Lên task rồi thiết lập giờ chạy thử xem sao.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. LEARN SECTION -->
+        <section id="learn" class="view-section">
+            <div class="learn-view">
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-time="1500" data-mode="pomodoro">Pomodoro (25/5)</button>
+                    <button class="mode-btn" data-time="2700" data-mode="animedoro">Animedoro (45/15)</button>
+                    <button class="mode-btn" data-time="0" data-mode="flowtime">Flowtime (Bấm tiến)</button>
+                </div>
+
+                <!-- Info Box -->
+                <div class="mode-info" id="mode-info">
+                    <!-- Nội dung JS sẽ chèn vào đây dựa theo mode -->
+                </div>
+
+                <div class="timer-display" id="timer-text">25:00</div>
+
+                <div class="timer-controls">
+                    <button class="ctrl-btn" id="btn-timer-play"><i class="fa-solid fa-play"></i></button>
+                    <button class="ctrl-btn secondary" id="btn-timer-reset"><i class="fa-solid fa-rotate-right"></i></button>
+                </div>
+                
+                <p style="color: var(--color-text-light); font-size: 0.95rem;"><i class="fa-solid fa-headphones"></i> Gợi ý: Hãy bật nhạc Lofi/Tiếng mưa và vứt điện thoại ra góc phòng.</p>
+            </div>
+        </section>
+
+        <!-- 4. PAUSE SECTION -->
+        <section id="pause" class="view-section">
+            <div class="section-header">
+                <h2>Trạm sạc năng lượng</h2>
+                <p>Nghỉ ngơi xíu đi má, không ai ép đâu. Cho phép bản thân thả lỏng.</p>
+            </div>
+
+            <div class="pause-container">
+                <!-- Breathing -->
+                <div class="breathing-widget">
+                    <h3 style="margin-bottom: 2rem; position: relative; z-index: 2;">Hít thở (4-4-4)</h3>
+                    <div class="breathe-circle"></div>
+                    <div class="breathe-text" id="breathe-instruction">Hít vào...</div>
+                </div>
+
+                <!-- Doodling Therapy -->
+                <div class="doodling-area">
+                    <div class="doodle-header">
+                        <div>
+                            <span style="font-weight:600;"><i class="fa-solid fa-palette"></i> Bảng trắng xả stress</span>
+                            <span style="font-size:0.8rem; opacity:0.8; margin-left: 10px;">Căng quá thì vẽ bậy ra đây!</span>
+                        </div>
+                        <div class="tools">
+                            <div class="tool-btn tool-black active" data-color="#2C3E50"></div>
+                            <div class="tool-btn tool-red" data-color="#E74C3C"></div>
+                            <div class="tool-btn tool-blue" data-color="#3498DB"></div>
+                            <button class="shatter-btn" id="btn-shatter"><i class="fa-solid fa-trash-can"></i> Vò nát & Vứt bỏ</button>
+                        </div>
+                    </div>
+                    <canvas id="doodle-canvas"></canvas>
+                    <div class="affirmation-overlay" id="affirmation-text">"Cứ vẽ bất cứ thứ gì bạn muốn, không ai chấm điểm đâu."</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- LOGIC SCRIPT -->
+    <script>
+        // --- GLOBAL STATE ---
+        const AppState = {
+            maxTasks: 5,
+            tasks: [],
+            timerInterval: null,
+            isTimerRunning: false,
+            timeLeft: 1500, // default 25m
+            timerMode: 'pomodoro', 
+            elapsedFlowTime: 0
+        };
+
+        // --- NAVIGATION LOGIC (SPA) ---
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.view-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                sections.forEach(sec => sec.classList.remove('active'));
+                
+                item.classList.add('active');
+                const targetId = item.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                
+                if(targetId === 'pause') initCanvas(); 
+            });
+        });
+
+        function goToTab(targetId) {
+            document.querySelector(`.nav-item[data-target="${targetId}"]`).click();
+        }
+
+        // --- 1. DAILY LOGIC ---
+        const moodMsgs = {
+            'terrible': "Không sao cả, ráng lết qua ngày hôm nay thôi là được rồi!",
+            'bad': "Mệt thì thở hắt ra một cái rồi làm từ từ thôi, nay đừng ép bản thân quá.",
+            'okay': "Bình thường như cân đường hộp sữa. Giữ vững nhịp độ nhé.",
+            'good': "Tâm trạng khá keo! Một khởi đầu tuyệt vời cho ngày hôm nay.",
+            'great': "Năng lượng full cây! Bật mode chiến thần và càn quét deadline thôi!"
+        };
+
+        const moodBtns = document.querySelectorAll('.mood-btn');
+        const moodMsgEl = document.getElementById('mood-message');
+
+        moodBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                moodBtns.forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                moodMsgEl.textContent = moodMsgs[btn.getAttribute('data-mood')];
+            });
+        });
+
+        const btnSubmitAmps = document.getElementById('btn-submit-amps');
+        btnSubmitAmps.addEventListener('click', () => {
+            const ranges = document.querySelectorAll('.amps-range');
+            let score = 0;
+            ranges.forEach(r => score += parseInt(r.value));
+            
+            const resultEl = document.getElementById('amps-result');
+            resultEl.style.display = 'block';
+            resultEl.className = ''; 
+
+            const planSubtitle = document.getElementById('plan-subtitle');
+            const taskWarning = document.getElementById('task-warning');
+            
+            if (score >= 18) {
+                AppState.maxTasks = 3;
+                resultEl.classList.add('result-high');
+                resultEl.innerHTML = `Điểm cầu toàn: ${score}/25<br>Có vẻ hôm nay bạn đang tự đặt áp lực quá lớn. Sự hoàn hảo là một cái bẫy. Hệ thống đã giới hạn To-do list xuống còn <b>3 nhiệm vụ</b>. Hãy chỉ tập trung vào việc BẮT ĐẦU.`;
+                planSubtitle.innerHTML = "Quy tắc số 3 (Can thiệp AMPS). Bạn đang áp lực, hãy cắt giảm kỳ vọng.";
+                taskWarning.innerHTML = "<span style='color:#c0392b;'><i class='fa-solid fa-triangle-exclamation'></i> AMPS Cao: Hôm nay bạn chỉ được phép chọn tối đa 3 nhiệm vụ.</span>";
+            } else {
+                AppState.maxTasks = 5;
+                resultEl.classList.add('result-low');
+                resultEl.innerHTML = `Điểm cầu toàn: ${score}/25<br>Tâm trí bạn đang ở trạng thái cân bằng tuyệt vời! Sẵn sàng học hỏi điều mới chưa? To-do list <b>5 nhiệm vụ</b> đã mở khóa.`;
+                planSubtitle.innerHTML = "Quy tắc số 5 (The Power of 5). Giới hạn nhiệm vụ để chống trì hoãn.";
+                taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
+            }
+
+            updateTaskCounterUI();
+            
+            btnSubmitAmps.innerText = "Đang chuyển sang Plan...";
+            setTimeout(() => {
+                goToTab('plan');
+                btnSubmitAmps.innerText = "Phân tích & Lên kế hoạch";
+            }, 2500);
+        });
+
+        // --- 2. PLAN LOGIC ---
+        const btnAddTask = document.getElementById('btn-add-task');
+        const inputTaskName = document.getElementById('task-name');
+        const inputTaskTime = document.getElementById('task-time');
+        const taskListUI = document.getElementById('task-list-ui');
+        const taskCounterEl = document.getElementById('task-counter');
+        const scheduleControls = document.getElementById('schedule-controls'); // Cụm thiết lập giờ & Nút Tạo
+        const btnGenSchedule = document.getElementById('btn-generate-schedule');
+        
+        let editingIndex = -1;
+
+        function updateTaskCounterUI() {
+            taskCounterEl.textContent = `(${AppState.tasks.length}/${AppState.maxTasks})`;
+            if(AppState.tasks.length >= AppState.maxTasks && editingIndex === -1) {
+                btnAddTask.disabled = true;
+                btnAddTask.textContent = "Đã đạt giới hạn";
+            } else {
+                btnAddTask.disabled = false;
+                btnAddTask.textContent = editingIndex > -1 ? "Cập nhật nhiệm vụ" : "Thêm nhiệm vụ";
+            }
+            
+            // Hiện thị khung nhập thời gian và nút tạo lịch nếu có ít nhất 1 task
+            if(AppState.tasks.length > 0) {
+                scheduleControls.style.display = 'block';
+            } else {
+                scheduleControls.style.display = 'none';
+            }
+        }
+
+        btnAddTask.addEventListener('click', () => {
+            const name = inputTaskName.value.trim();
+            const time = parseInt(inputTaskTime.value);
+            
+            if(name === '') return;
+
+            if (editingIndex > -1) {
+                AppState.tasks[editingIndex] = { name, time };
+                editingIndex = -1;
+                btnAddTask.textContent = "Thêm nhiệm vụ";
+            } else {
+                if(AppState.tasks.length >= AppState.maxTasks) return;
+                AppState.tasks.push({ name, time });
+            }
+
+            inputTaskName.value = ''; 
+            renderTaskList();
+            updateTaskCounterUI();
+        });
+
+        window.editTask = function(index) {
+            editingIndex = index;
+            const task = AppState.tasks[index];
+            inputTaskName.value = task.name;
+            inputTaskTime.value = task.time;
+            updateTaskCounterUI(); 
+        };
+
+        window.deleteTask = function(index) {
+            AppState.tasks.splice(index, 1);
+            if(editingIndex === index) {
+                editingIndex = -1;
+                inputTaskName.value = '';
+            } else if (editingIndex > index) {
+                editingIndex--;
+            }
+            renderTaskList();
+            updateTaskCounterUI();
+        };
+
+        function renderTaskList() {
+            taskListUI.innerHTML = '';
+            AppState.tasks.forEach((task, index) => {
+                const li = document.createElement('li');
+                li.className = 'task-item';
+                li.innerHTML = `
+                    <div class="task-info">
+                        <span style="font-weight: 500;">${index + 1}. ${task.name}</span>
+                        <span class="task-time-badge">${task.time} phút</span>
+                    </div>
+                    <div class="task-actions">
+                        <button class="action-btn" onclick="editTask(${index})" title="Sửa"><i class="fa-solid fa-pen"></i></button>
+                        <button class="action-btn delete-btn" onclick="deleteTask(${index})" title="Xóa"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+                taskListUI.appendChild(li);
+            });
+        }
+
+        // TẠO LỊCH DỰA TRÊN THỜI GIAN NHẬP VÀO THAY VÌ THỜI GIAN THỰC TẾ
+        btnGenSchedule.addEventListener('click', () => {
+            const timelineContainer = document.getElementById('timeline-container');
+            timelineContainer.innerHTML = '';
+            
+            // Lấy dữ liệu thời gian người dùng thiết lập
+            const startTimeInput = document.getElementById('schedule-start-time').value;
+            if(!startTimeInput) {
+                alert("Vui lòng chọn thời gian bắt đầu!");
+                return;
+            }
+
+            const [startHours, startMinutes] = startTimeInput.split(':').map(Number);
+            let currentTime = new Date(); 
+            // Gán giờ phút chạy timeline theo input
+            currentTime.setHours(startHours, startMinutes, 0, 0);
+            
+            function formatTime(date) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            }
+
+            AppState.tasks.forEach((task, idx) => {
+                let startTimeStr = formatTime(currentTime);
+                currentTime.setMinutes(currentTime.getMinutes() + task.time); // Cộng thời gian làm
+                let endTimeStr = formatTime(currentTime);
+                
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'timeline-item';
+                taskDiv.innerHTML = `
+                    <strong>${startTimeStr} - ${endTimeStr}</strong><br>
+                    <span>${task.name}</span>
+                `;
+                timelineContainer.appendChild(taskDiv);
+
+                // Thêm thời gian nghỉ giữa các task
+                if (idx < AppState.tasks.length - 1) {
+                    let breakMins = 15; // Giờ nghỉ mặc định
+                    currentTime.setMinutes(currentTime.getMinutes() + breakMins); 
+                    
+                    const breakDiv = document.createElement('div');
+                    breakDiv.className = 'timeline-item timeline-break';
+                    breakDiv.innerHTML = `Nghỉ ngơi / Vươn vai (15m)`;
+                    timelineContainer.appendChild(breakDiv);
+                }
+            });
+            
+            btnGenSchedule.textContent = "Đã cập nhật Timeline!";
+            setTimeout(() => { btnGenSchedule.textContent = "Tạo Lịch Trình Tự Động"; }, 2000);
+        });
+
+        // --- 3. LEARN LOGIC (Timer & Method Info) ---
+        const timerText = document.getElementById('timer-text');
+        const btnPlay = document.getElementById('btn-timer-play');
+        const btnReset = document.getElementById('btn-timer-reset');
+        const modeBtns = document.querySelectorAll('.mode-btn');
+
+        const modeInfos = {
+            pomodoro: {
+                title: "🍅 Kỹ thuật Pomodoro (25 Phút Làm / 5 Phút Nghỉ)",
+                def: "Làm việc cường độ cao trong 25 phút, sau đó cho não xả hơi 5 phút.",
+                when: "Lý tưởng khi bạn có nhiều task nhỏ lắt nhắt hoặc đang quá lười, cần ép bản thân 'chỉ ráng làm 25 phút thôi'.",
+                how: "Bấm Play, úp điện thoại xuống và bắt đầu. Chuông reo thì đứng dậy đi lại, uống nước. Đừng lướt mạng xã hội lúc nghỉ."
+            },
+            animedoro: {
+                title: "🎬 Phương pháp Animedoro (45 Phút Làm / 15 Phút Chơi)",
+                def: "Phiên bản nâng cấp cho 'hệ wibu/mọt phim'. Cày cuốc 45 phút rồi tự thưởng 15 phút xem 1 tập anime (hoặc sitcom).",
+                when: "Cần cày một task lớn nhưng cần động lực mồi để không bị nản.",
+                how: "Tập trung hết tốc lực 45 phút. Xong thì thoải mái bật Netflix cày phim 15 phút rồi quay lại. Khuyến cáo: Phải có kỷ luật, không được xem lố!"
+            },
+            flowtime: {
+                title: "🌊 Thuận theo Flowtime (Bấm đồng hồ tiến)",
+                def: "Không có giới hạn thời gian ép buộc. Bạn cứ bấm giờ bắt đầu làm và tiếp tục cho đến khi thấy mệt hoặc cạn ý tưởng thì tự nghỉ.",
+                when: "Dành cho lúc bạn đang bị 'cuốn' vào công việc (như code, thiết kế, viết văn) và không muốn tiếng chuông làm đứt mạch cảm xúc.",
+                how: "Bấm Play và cứ thế trôi theo flow. Lúc nào thấy não hơi căng thì Pause lại, nghỉ một khoảng bằng 1/5 thời gian vừa làm."
+            }
+        };
+
+        function updateModeInfo(mode) {
+            const info = modeInfos[mode];
+            document.getElementById('mode-info').innerHTML = `
+                <h4>${info.title}</h4>
+                <p><b>Tính năng:</b> ${info.def}</p>
+                <p><b>Dùng khi nào:</b> ${info.when}</p>
+                <p><b>Cách thực hiện:</b> ${info.how}</p>
+            `;
+        }
+        
+        updateModeInfo('pomodoro');
+
+        function formatDisplayTime(seconds) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = (seconds % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function updateTimerUI() {
+            timerText.textContent = formatDisplayTime(
+                AppState.timerMode === 'flowtime' ? AppState.elapsedFlowTime : AppState.timeLeft
+            );
+        }
+
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(AppState.isTimerRunning) return; 
+                
+                modeBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const mode = btn.getAttribute('data-mode');
+                AppState.timerMode = mode;
+                AppState.timeLeft = parseInt(btn.getAttribute('data-time'));
+                AppState.elapsedFlowTime = 0;
+                
+                updateModeInfo(mode);
+                updateTimerUI();
+            });
+        });
+
+        btnPlay.addEventListener('click', () => {
+            if (AppState.isTimerRunning) {
+                clearInterval(AppState.timerInterval);
+                AppState.isTimerRunning = false;
+                btnPlay.innerHTML = '<i class="fa-solid fa-play"></i>';
+            } else {
+                AppState.isTimerRunning = true;
+                btnPlay.innerHTML = '<i class="fa-solid fa-pause"></i>';
+                
+                AppState.timerInterval = setInterval(() => {
+                    if (AppState.timerMode === 'flowtime') {
+                        AppState.elapsedFlowTime++;
+                        updateTimerUI();
+                    } else {
+                        if (AppState.timeLeft > 0) {
+                            AppState.timeLeft--;
+                            updateTimerUI();
+                        } else {
+                            clearInterval(AppState.timerInterval);
+                            AppState.isTimerRunning = false;
+                            btnPlay.innerHTML = '<i class="fa-solid fa-play"></i>';
+                            alert("Hết giờ rồi kìa! Chuyển qua tab Pause xả hơi xíu nha.");
+                        }
+                    }
+                }, 1000);
+            }
+        });
+
+        btnReset.addEventListener('click', () => {
+            clearInterval(AppState.timerInterval);
+            AppState.isTimerRunning = false;
+            btnPlay.innerHTML = '<i class="fa-solid fa-play"></i>';
+            
+            const activeBtn = document.querySelector('.mode-btn.active');
+            AppState.timeLeft = parseInt(activeBtn.getAttribute('data-time'));
+            AppState.elapsedFlowTime = 0;
+            updateTimerUI();
+        });
+
+        // --- 4. PAUSE LOGIC (Breathing text & Whiteboard Canvas) ---
+        const breatheInstruction = document.getElementById('breathe-instruction');
+        setInterval(() => {
+            const texts = ["Hít vào...", "Giữ...", "Thở ra...", "Giữ..."];
+            let idx = Math.floor((Date.now() % 16000) / 4000);
+            breatheInstruction.textContent = texts[idx];
+        }, 1000);
+
+        const canvas = document.getElementById('doodle-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+        let strokeColor = '#2C3E50'; 
+        let isCanvasInit = false;
+
+        function initCanvas() {
+            if(isCanvasInit) return;
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight - 60; 
+            
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 4;
+            
+            drawZenTemplate();
+            isCanvasInit = true;
+        }
+
+        window.addEventListener('resize', () => {
+            if(document.getElementById('pause').classList.contains('active')) {
+                isCanvasInit = false;
+                initCanvas();
+            }
+        });
+
+        function drawZenTemplate() {
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.05)'; 
+            ctx.lineWidth = 1;
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            
+            for(let r=50; r<Math.max(cx, cy); r+=50) {
+                ctx.beginPath();
+                ctx.arc(cx, cy, r, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            ctx.lineWidth = 4; 
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath();
+        }
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX || e.touches[0].clientX) - rect.left;
+            const y = (e.clientY || e.touches[0].clientY) - rect.top;
+
+            ctx.strokeStyle = strokeColor;
+            ctx.shadowBlur = 0; 
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+        canvas.addEventListener('touchmove', draw);
+        canvas.addEventListener('touchend', stopDrawing);
+
+        const toolBtns = document.querySelectorAll('.tool-btn');
+        toolBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toolBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                strokeColor = btn.getAttribute('data-color');
+            });
+        });
+
+        const btnShatter = document.getElementById('btn-shatter');
+        const affirmations = [
+            '"Ném hết bực tức vào thùng rác rồi đó, chill đi!"',
+            '"Xóa sổ mớ deadline trong đầu, thở phào nhẹ nhõm."',
+            '"Giấy nháp vứt đi thì lấy tờ khác vẽ, không gì phải xoắn!"',
+            '"Căng thẳng đã bay màu. Sạc lại năng lượng thôi!"'
+        ];
+        const textOverlay = document.getElementById('affirmation-text');
+
+        btnShatter.addEventListener('click', () => {
+            canvas.classList.add('crumple-anim');
+            
+            textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
+            textOverlay.style.color = 'var(--color-text)'; 
+            
+            setTimeout(() => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawZenTemplate();
+                
+                canvas.classList.remove('crumple-anim');
+                textOverlay.style.color = 'rgba(0,0,0,0.3)';
+            }, 800); 
+        });
+
+    </script>
+</body>
+</html>
