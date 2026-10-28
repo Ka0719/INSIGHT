@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
     <title>INSIGHT – Soi Thấu Tâm Trí, Bật Mood Siêu Focus</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,45 +29,514 @@
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05);
             --radius-lg: 24px;
             --radius-md: 16px;
-            --radius-sm: 10px;
-            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
             /* Dynamic Psychological Background Gradient Stops */
             --mesh-c1: rgba(169, 209, 186, 0.75);
             --mesh-c2: rgba(242, 185, 179, 0.60);
             --mesh-c3: rgba(195, 177, 225, 0.50);
             --mesh-c4: rgba(174, 198, 207, 0.60);
-
-            --font-ui: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, sans-serif;
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --glass-bg-strong: rgba(255, 255, 255, 0.85);
-            --glass-border: rgba(255, 255, 255, 0.7);
-            --glass-blur: blur(24px) saturate(170%);
-            --glass-shadow: 0 8px 32px rgba(44, 62, 80, 0.08);
-            --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.85);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-        }
-
         body {
-            font-family: var(--font-ui);
+            font-family: 'Be Vietnam Pro', sans-serif;
             background-color: var(--bg-main);
             color: var(--color-text);
             display: flex;
             height: 100vh;
             height: 100dvh;
             overflow: hidden;
-            line-height: 1.55;
-            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
         }
 
-        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; letter-spacing: -0.01em; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; }
+
+        /* --- WELCOME SCREEN --- */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            background-color: var(--bg-main);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+        }
+        #welcome-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.02);
+        }
+        .welcome-content {
+            text-align: center;
+            animation: fadeIn 1s ease-out forwards;
+            padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
+            max-width: 90%;
+            width: 580px;
+        }
+        .welcome-logo {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: clamp(2.8rem, 10vw, 4.5rem);
+            letter-spacing: 3px;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+        }
+        .welcome-slogan {
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            color: var(--color-text-light);
+            margin-bottom: clamp(1.8rem, 5vh, 3rem);
+            font-weight: 500;
+        }
+        .welcome-btn {
+            font-size: 1.1rem;
+            padding: 0.9rem 2.5rem;
+            border-radius: 50px;
+            background-color: var(--color-text);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 500;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 48px;
+        }
+        .welcome-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            background-color: #3b5066;
+        }
+
+        /* --- LAYOUT --- */
+        .sidebar {
+            width: 280px;
+            background-color: var(--color-beige);
+            padding: 2.5rem 2rem;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(0,0,0,0.03);
+            z-index: 100;
+            flex-shrink: 0;
+        }
+
+        .logo-area { margin-bottom: 3rem; }
+        .logo-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; letter-spacing: 2px; color: var(--color-text); font-weight: 700; }
+        .logo-slogan { font-size: 0.88rem; color: var(--color-text-light); margin-top: 0.5rem; font-weight: 500; }
+
+        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+        
+        .nav-item {
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            color: var(--color-text-light);
+            transition: var(--transition);
+            min-height: 44px;
+        }
+        
+        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; flex-shrink: 0; }
+        .nav-item:hover { background-color: rgba(255,255,255,0.5); color: var(--color-text); }
+        .nav-item.active { background-color: var(--bg-card); color: var(--color-text); box-shadow: var(--shadow-sm); font-weight: 600; }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem 4rem;
+            overflow-y: auto;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        .view-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- GLOBAL COMPONENTS --- */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+        .section-header { margin-bottom: 1.75rem; }
+        .section-header h2 { font-size: 2rem; margin-bottom: 0.4rem; }
+        .section-header p { color: var(--color-text-light); font-size: 1rem; }
+        
+        button.primary-btn {
+            background-color: var(--color-text);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            min-height: 44px;
+        }
+        button.primary-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); opacity: 0.9; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+        button.secondary-btn {
+            background-color: transparent;
+            color: var(--color-text-light);
+            border: 1px solid #ddd;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            min-height: 44px;
+        }
+        button.secondary-btn:hover {
+            background-color: #f5f5f5;
+            color: var(--color-text);
+            border-color: #ccc;
+        }
+
+        /* --- 1. DAILY VIEW --- */
+        .quote-banner {
+            background: linear-gradient(135deg, var(--color-mint), var(--color-peach));
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .mood-tracker { display: flex; justify-content: center; gap: clamp(0.75rem, 3vw, 1.5rem); margin: 2rem 0; flex-wrap: wrap; }
+        .mood-btn {
+            font-size: clamp(2rem, 6vw, 2.5rem);
+            background: none; border: none; cursor: pointer;
+            transition: var(--transition); filter: grayscale(80%); opacity: 0.6;
+            min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+        }
+        .mood-btn:hover, .mood-btn.selected { filter: grayscale(0%); opacity: 1; transform: scale(1.2); }
+        .mood-msg { text-align: center; min-height: 30px; color: var(--color-text-light); font-weight: 500; padding: 0 0.5rem; }
+
+        /* Glass AMPS Intro */
+        .amps-intro { 
+            background: rgba(212, 234, 221, 0.38); 
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            backdrop-filter: blur(16px) saturate(160%);
+            padding: 1.35rem 1.6rem; 
+            border-radius: var(--radius-md); 
+            margin: 1.25rem 0 1.8rem 0; 
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-left: 4px solid var(--color-mint-dark); 
+            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+        .amps-intro p { margin: 0; line-height: 1.6; }
+        .amps-intro p strong { font-weight: 600; font-size: 1.02rem; }
+        .amps-intro p + p { margin-top: 0.45rem; font-size: 0.94rem; color: var(--color-text-light); }
+
+        .question-group { margin-bottom: 1.6rem; }
+        .question-text { font-weight: 500; margin-bottom: 0.6rem; font-size: 0.98rem; }
+        
+        .question-anim { opacity: 0; animation: fadeInQuestion 0.5s ease-out forwards; }
+        @keyframes fadeInQuestion {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; padding: 8px 0; touch-action: pan-x; }
+        input[type=range]:focus { outline: none; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--color-beige); border-radius: 4px; }
+        input[type=range]::-webkit-slider-thumb {
+            height: 26px; width: 26px; border-radius: 50%;
+            background: var(--color-accent); cursor: pointer;
+            -webkit-appearance: none; margin-top: -9px; box-shadow: var(--shadow-sm);
+        }
+        .slider-labels { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--color-text-light); margin-top: 6px; }
+        
+        #amps-result { display: none; margin-top: 1.5rem; padding: 1.5rem; border-radius: var(--radius-md); font-weight: 500; text-align: center; }
+        .result-high { background-color: var(--color-peach); color: #c0392b; }
+        .result-medium { background-color: #FFF3CD; color: #856404; }
+        .result-low { background-color: var(--color-mint); color: #27ae60; }
+
+        /* --- 2. PLAN VIEW --- */
+        .plan-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .task-input-group { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .task-input-group input, .task-input-group select {
+            padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 1rem; outline: none;
+        }
+        .task-input-group input[type="text"] { flex: 1; min-width: 200px; }
+        .task-list { list-style: none; margin-top: 1.5rem; }
+        
+        .task-item {
+            background-color: var(--bg-main); padding: 0.8rem 1rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;
+            display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--color-text);
+        }
+        .task-info { display: flex; align-items: center; gap: 0.8rem; flex: 1; }
+        .task-time-badge { background: #e0e6ed; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; color: #444; font-weight: 500; white-space: nowrap; }
+        .task-actions { display: flex; gap: 0.5rem; }
+        .action-btn {
+            background: transparent; border: none; cursor: pointer; color: var(--color-text-light);
+            width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .action-btn:hover { background: rgba(0,0,0,0.05); color: var(--color-text); }
+        .action-btn.delete-btn:hover { background: #FADCD9; color: #c0392b; }
+        
+        .schedule-visualizer { background-color: var(--color-beige); padding: 1.5rem; border-radius: var(--radius-lg); height: 100%; }
+        .timeline { position: relative; padding-left: 1.5rem; border-left: 2px solid rgba(0,0,0,0.1); }
+        .timeline-item { position: relative; padding-bottom: 1rem; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -1.8rem; top: 0.3rem; width: 12px; height: 12px;
+            border-radius: 50%; background: var(--color-text); border: 2px solid var(--color-beige);
+        }
+        .timeline-break::before { background: var(--color-peach-dark); }
+        .timeline-break { color: var(--color-text-light); font-style: italic; font-size: 0.9rem; }
+
+        /* --- 3. LEARN VIEW --- */
+        .learn-view { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100%; padding-bottom: 2rem;}
+        
+        .learn-cards-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            width: 100%;
+            max-width: 750px;
+        }
+        .learn-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            flex: 1;
+            border: 2px solid transparent;
+            transition: var(--transition);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+        .learn-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
+        .learn-card.active { border-color: var(--color-text); box-shadow: var(--shadow-md); }
+        
+        .learn-card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 600; color: var(--color-text-light); font-size: 1rem;
+        }
+        .learn-card.active .learn-card-header { color: var(--color-text); }
+        
+        .info-btn { color: var(--color-accent); cursor: pointer; padding: 6px; font-size: 1.25rem; transition: var(--transition); min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; }
+        .info-btn:hover { color: var(--color-text); transform: scale(1.1); }
+        
+        .learn-card-info {
+            display: none; margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-light);
+            border-top: 1px solid rgba(44, 62, 80, 0.08); padding-top: 0.8rem; line-height: 1.5;
+        }
+        .learn-card-info.show { display: block; animation: fadeIn 0.3s ease-out forwards; }
+        .learn-card-info b { color: var(--color-text); }
+
+        /* Digital Clock */
+        .digital-clock-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 1.2rem;
+            min-height: 60px;
+        }
+
+        #digital-clock {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3rem, 9vw, 3.8rem);
+            font-weight: 700;
+            color: var(--color-text);
+            letter-spacing: 2px;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+
+        #btn-toggle-digital {
+            font-size: 1.3rem;
+            width: 44px;
+            height: 44px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-text-light);
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #btn-toggle-digital:hover {
+            background: rgba(0,0,0,0.06);
+            color: var(--color-text);
+        }
+
+        /* Analog Clock */
+        .clock-container { position: relative; margin-bottom: 2.2rem; }
+        
+        .analog-clock {
+            width: 260px; height: 260px; border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px);
+            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 10px 30px rgba(0,0,0,0.03);
+            border: 1px solid rgba(255,255,255,0.8);
+            position: relative; display: flex; align-items: center; justify-content: center;
+        }
+
+        .clock-progress-ring {
+            position: absolute; inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px);
+            z-index: 1; pointer-events: none; transition: opacity 0.4s ease;
+        }
+
+        .clock-face { width: 100%; height: 100%; position: absolute; border-radius: 50%; z-index: 2; }
+        .hand {
+            position: absolute; bottom: 50%; left: 50%;
+            transform-origin: bottom center; border-radius: 10px; z-index: 10;
+        }
+        .hour-hand { width: 4px; height: 26%; margin-left: -2px; background: var(--color-text); }
+        .min-hand { width: 2.5px; height: 38%; margin-left: -1.25px; background: var(--color-text-light); }
+        .sec-hand { width: 1.5px; height: 45%; margin-left: -0.75px; background: var(--color-mint-dark); z-index: 11; transition: transform 0.05s linear;}
+        
+        .clock-face::after {
+            content: ''; position: absolute; top: 50%; left: 50%;
+            width: 12px; height: 12px; background: var(--color-text);
+            border-radius: 50%; transform: translate(-50%, -50%); z-index: 12;
+            border: 2px solid var(--bg-main);
+        }
+
+        /* --- 4. PAUSE VIEW --- */
+        .pause-container { display: grid; grid-template-columns: 320px 1fr; gap: 2rem; min-height: calc(100vh - 150px); }
+        
+        .breathing-widget {
+            background: #E3F2FD; border-radius: var(--radius-lg); padding: 2rem;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
+            transition: background-color 1s ease;
+        }
+        
+        .breathe-graph-container {
+            position: relative; width: 100%; max-width: 280px; height: 110px;
+            margin: 1.5rem 0 1rem 0; z-index: 2;
+        }
+        .breathe-wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+        
+        .breathe-dot-wrapper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        }
+        .breathe-dot {
+            position: absolute; width: 16px; height: 16px; border-radius: 50%;
+            background-color: var(--color-text);
+            box-shadow: 0 0 0 6px rgba(255,255,255,0.5);
+            margin-left: -8px; margin-top: -8px;
+        }
+
+        @keyframes breathMoveX {
+            0% { left: 7.1%; }       
+            33.33% { left: 35.7%; }  
+            66.66% { left: 64.3%; }  
+            100% { left: 92.8%; }    
+        }
+        @keyframes breathMoveY {
+            0% { top: 90%; animation-timing-function: ease-in-out; }     
+            33.33% { top: 10%; animation-timing-function: linear; }      
+            66.66% { top: 10%; animation-timing-function: ease-in-out; } 
+            100% { top: 90%; }                                           
+        }
+
+        .breathe-text { font-weight: 500; color: var(--color-text-light); text-align: center; font-size: 1rem; margin-bottom: 2rem; height: 24px; }
+
+        .ambient-selector { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; z-index: 2; }
+        .ambient-cards { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
+        .ambient-card {
+            background: rgba(255,255,255,0.7); width: 48px; height: 48px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--transition);
+            font-size: 1.4rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);
+        }
+        .ambient-card:hover { transform: translateY(-3px) scale(1.05); background: #fff; }
+        .ambient-card.active { border-color: var(--color-mint-dark); background: white; transform: scale(1.1); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.1); }
+        
+        .sound-btn { background: rgba(255,255,255,0.9); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; cursor: pointer; color: var(--color-text-light); font-family: inherit; font-size: 0.9rem; font-weight: 500; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 8px; min-height: 44px; }
+        .sound-btn:hover { background: #fff; transform: translateY(-2px); }
+        .sound-btn.active { background: var(--color-text); color: white; }
+
+        .doodling-area { background: #FFFFFF; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; border: 1px solid #eaeaea; min-height: 380px; }
+        .doodle-header { padding: 1rem 1.5rem; background: var(--bg-main); display: flex; justify-content: space-between; align-items: center; color: var(--color-text); border-bottom: 1px solid #eaeaea; flex-wrap: wrap; gap: 0.8rem; }
+        .tools { display: flex; gap: 0.8rem; align-items: center; }
+        .tool-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
+        .tool-btn.active { border-color: var(--color-text); transform: scale(1.15); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+        .tool-soft-blue { background: #AEC6CF; }
+        .tool-soft-green { background: #B2D8B2; }
+        .tool-lavender { background: #C3B1E1; }
+        
+        .shatter-btn { background: var(--color-text); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: var(--transition); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
+        .shatter-btn:hover { background: #E74C3C; transform: scale(1.15); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+
+        #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background-color: transparent; width: 100%; }
+        
+        .crumple-anim { animation: paperCrumple 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; transform-origin: center; }
+        @keyframes paperCrumple {
+            0% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 0; }
+            30% { transform: scale(0.9) rotate(2deg) skew(2deg, 2deg); opacity: 0.9; }
+            60% { transform: scale(0.6) rotate(-5deg) skew(-5deg, -5deg); opacity: 0.6; border-radius: 40px; }
+            100% { transform: scale(0) translateY(400px) rotate(20deg); opacity: 0; border-radius: 50%; }
+        }
+        
+        .affirmation-overlay { position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; color: var(--color-text-light); font-style: italic; pointer-events: none; transition: opacity 0.3s; padding: 0 1rem; font-size: 0.9rem; }
+
+        /* =====================================================================
+           iOS GLASS LAYER & SETTINGS
+           ===================================================================== */
+        :root {
+            --font-ui: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.55);
+            --glass-bg-strong: rgba(255, 255, 255, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.65);
+            --glass-blur: blur(24px) saturate(170%);
+            --glass-shadow: 0 8px 32px rgba(44, 62, 80, 0.08), 0 1px 2px rgba(44, 62, 80, 0.04);
+            --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+            --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --transition: all 0.3s var(--ease-ios);
+        }
+
+        body {
+            font-family: var(--font-ui);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+            line-height: 1.55;
+        }
+        h1, h2, h3 { letter-spacing: -0.01em; line-height: 1.2; }
+        h3 { font-family: var(--font-ui); font-weight: 600; font-size: 1.15rem; letter-spacing: -0.015em; }
+        h3 small { font-weight: 400; color: var(--color-text-light); font-size: 0.8rem; }
+        .section-header h2 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); letter-spacing: -0.02em; }
+        .logo-slogan, .welcome-slogan { line-height: 1.45; }
         button, input, select { font-family: var(--font-ui); }
 
         body::before {
@@ -86,394 +555,415 @@
             to   { transform: translate3d(2%, -2%, 0) scale(1.05); }
         }
 
-        /* --- WELCOME SCREEN --- */
-        #welcome-screen {
-            position: fixed; inset: 0;
-            background: radial-gradient(45% 45% at 15% 20%, var(--mesh-c1), transparent 70%), var(--bg-main);
-            z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-            padding: 1.5rem;
-        }
-        #welcome-screen.hidden { opacity: 0; pointer-events: none; transform: scale(1.02); }
-        .welcome-content {
-            text-align: center; animation: fadeIn 0.8s ease-out forwards;
-            background: rgba(255, 255, 255, 0.45); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
-            border-radius: 32px; padding: 3rem 2.5rem; width: 100%; max-width: 480px;
-        }
-        .welcome-logo { font-size: clamp(2.8rem, 8vw, 4.2rem); letter-spacing: 2px; color: var(--color-text); margin-bottom: 0.5rem; }
-        .welcome-slogan { font-size: clamp(0.95rem, 3.5vw, 1.15rem); color: var(--color-text-light); margin-bottom: 2.2rem; font-weight: 500; }
-        .welcome-btn {
-            font-size: 1.1rem; padding: 0.85rem 2.6rem; border-radius: 50px;
-            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
-            color: white; border: none; cursor: pointer; font-weight: 500; transition: var(--transition);
-            display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(44, 62, 80, 0.2);
-        }
-
-        /* --- SIDEBAR (DESKTOP) --- */
         .sidebar {
-            width: 270px; background: var(--glass-bg);
+            background: var(--glass-bg);
             -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border-right: 1px solid var(--glass-border); padding: 2.5rem 1.8rem;
-            display: flex; flex-direction: column; z-index: 20;
+            border-right: 1px solid var(--glass-border);
+            box-shadow: var(--glass-highlight), 4px 0 30px rgba(44, 62, 80, 0.04);
         }
-        .logo-area { margin-bottom: 2.8rem; }
-        .logo-title { font-size: 2.3rem; letter-spacing: 2px; color: var(--color-text); }
-        .logo-slogan { font-size: 0.85rem; color: var(--color-text-light); margin-top: 0.35rem; font-weight: 500; }
-
-        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; }
-        .nav-item {
-            padding: 0.85rem 1.25rem; border-radius: var(--radius-md); cursor: pointer;
-            display: flex; align-items: center; gap: 1rem; font-weight: 500;
-            color: var(--color-text-light); transition: var(--transition);
+        .nav-item { border-radius: var(--radius-md); }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.45); }
+        .nav-item.active {
+            background: var(--glass-bg-strong);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-highlight), 0 4px 14px rgba(44, 62, 80, 0.08);
         }
-        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
-        .nav-item span { font-size: 1rem; }
-        .nav-item:hover { background-color: rgba(255,255,255,0.45); color: var(--color-text); }
-        .nav-item.active { background-color: var(--glass-bg-strong); color: var(--color-text); box-shadow: var(--shadow-sm); font-weight: 600; border: 1px solid var(--glass-border); }
+        .nav-item:active { transform: scale(0.97); }
 
-        /* Settings Wrap */
-        .settings-wrap { margin-top: auto; position: relative; }
-        .settings-btn { width: 100%; display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1.25rem; border: none; background: transparent; border-radius: var(--radius-md); color: var(--color-text-light); font-weight: 500; cursor: pointer; transition: var(--transition); }
-        .settings-btn i { font-size: 1.2rem; width: 24px; text-align: center; }
-        .settings-btn:hover { background: rgba(255,255,255,0.45); color: var(--color-text); }
-        
-        .settings-pop { 
-            position: absolute; left: 0; bottom: calc(100% + 12px); width: 260px; padding: 1.2rem; 
-            border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.96); 
-            -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.9); box-shadow: 0 14px 35px rgba(44, 62, 80, 0.16); 
-            z-index: 1000; animation: fadeIn .25s ease-out; 
+        .main-content { z-index: 1; scroll-behavior: smooth; }
+        .main-content::-webkit-scrollbar { width: 8px; }
+        .main-content::-webkit-scrollbar-thumb { background: rgba(44, 62, 80, 0.15); border-radius: 8px; }
+
+        .card, .doodling-area, .learn-card, .schedule-visualizer, .breathing-widget {
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
         }
-        .settings-pop[hidden] { display: none; }
-        .settings-pop h4 { font-size: 0.82rem; color: var(--color-text-light); margin: 0 0 .45rem; font-weight: 600; }
-        .settings-pop h4:not(:first-child) { margin-top: 1rem; }
-        
-        .seg { display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: rgba(44,62,80,.08); }
-        .seg button { flex: 1; border: none; background: transparent; padding: .45rem .3rem; border-radius: 9px; font-size: .85rem; color: var(--color-text-light); cursor: pointer; }
-        .seg button[aria-pressed="true"] { background: var(--bg-card); color: var(--color-text); font-weight: 600; box-shadow: var(--shadow-sm); }
+        .card, .learn-card, .doodling-area { background: var(--glass-bg); }
+        .card { padding: 2rem 2.2rem; }
+        .schedule-visualizer { background: rgba(245, 239, 235, 0.5); }
+        .breathing-widget { box-shadow: var(--glass-shadow), var(--glass-highlight); }
+        .doodle-header { background: rgba(255, 255, 255, 0.45); border-bottom: 1px solid rgba(255, 255, 255, 0.7); }
+        #doodle-canvas { background-color: rgba(255, 255, 255, 0.35); }
 
-        .color-palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 0.4rem; }
-        .color-swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.12); cursor: pointer; transition: transform 0.2s; }
-        .color-swatch:hover, .color-swatch.active { transform: scale(1.15); border-color: var(--color-text); outline: 2px solid var(--color-accent); outline-offset: 1px; }
+        .learn-card.active { border-color: rgba(44, 62, 80, 0.55); background: var(--glass-bg-strong); }
+        .learn-card:hover { transform: translateY(-3px); }
 
-        /* --- MAIN CONTENT & CARDS --- */
-        .main-content {
-            flex: 1; height: 100%; padding: 2.5rem 3.5rem;
-            overflow-y: auto; overflow-x: hidden; position: relative;
-            scroll-behavior: smooth;
-        }
-
-        .view-section { display: none; animation: fadeIn 0.35s ease-out forwards; width: 100%; max-width: 950px; margin: 0 auto; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card {
-            background: var(--glass-bg); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-lg);
-            padding: 1.8rem 2rem; box-shadow: var(--glass-shadow), var(--glass-highlight);
-            margin-bottom: 1.8rem; width: 100%;
-        }
-
-        .section-header { margin-bottom: 1.5rem; }
-        .section-header h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); margin-bottom: 0.3rem; }
-        .section-header p { color: var(--color-text-light); font-size: 0.95rem; }
-        
-        button.primary-btn {
-            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
-            color: white; border: none; padding: 0.75rem 1.8rem; border-radius: 50px;
-            font-weight: 500; cursor: pointer; transition: var(--transition);
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            box-shadow: 0 6px 16px rgba(44, 62, 80, 0.2);
-        }
-        button.primary-btn:hover { transform: translateY(-2px); opacity: 0.95; }
-        button.primary-btn:active { transform: scale(0.98); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
-
-        button.secondary-btn {
-            background: rgba(255, 255, 255, 0.6); color: var(--color-text); border: 1px solid var(--glass-border);
-            padding: 0.75rem 1.8rem; border-radius: 50px; font-weight: 500; cursor: pointer; transition: var(--transition);
-        }
-
-        /* --- 1. DAILY --- */
         .quote-banner {
             background: linear-gradient(135deg, rgba(212, 234, 221, 0.75), rgba(250, 220, 217, 0.75));
             -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border); border-radius: var(--radius-md);
-            padding: 1.25rem 1.5rem; text-align: center; margin-bottom: 1.6rem;
-            font-style: italic; color: #333; font-weight: 500; font-size: 0.98rem;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
+            font-size: 1.02rem; line-height: 1.6;
         }
 
-        .mood-tracker { display: flex; justify-content: center; gap: clamp(0.6rem, 3.5vw, 1.5rem); margin: 1.5rem 0; width: 100%; }
-        .mood-btn {
-            font-size: clamp(2rem, 6.5vw, 2.6rem); background: none; border: none; cursor: pointer;
-            transition: var(--transition); filter: grayscale(80%); opacity: 0.6; flex-shrink: 0;
+        button.primary-btn, .welcome-btn {
+            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 6px 16px rgba(44, 62, 80, 0.22);
+            letter-spacing: 0.005em;
         }
-        .mood-btn:hover, .mood-btn.selected { filter: grayscale(0%); opacity: 1; transform: scale(1.18); }
-        .mood-msg { text-align: center; min-height: 28px; color: var(--color-text-light); font-weight: 500; font-size: 0.92rem; }
-
-        .amps-title { display: flex; align-items: center; gap: 0.6rem; font-size: 1.15rem; font-weight: 600; }
-        .info-toggle { width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid var(--color-accent); background: transparent; color: var(--color-accent); font: italic 700 .85rem 'Playfair Display', serif; cursor: pointer; flex-shrink: 0; }
-        
-        .amps-info { margin: 0 0 1.2rem; padding: 1rem 1.25rem; border-radius: var(--radius-md); background: var(--glass-bg-strong); border: 1px solid var(--glass-border); animation: fadeIn .3s ease-out; }
-        .amps-info[hidden] { display: none; }
-        .amps-info p { font-size: .92rem; line-height: 1.5; color: var(--color-text-light); margin: 0; }
-        .amps-info .amps-full { font-weight: 600; color: var(--color-text); margin-bottom: 0.3rem; }
-
-        .amps-intro { 
-            background: rgba(212, 234, 221, 0.4); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
-            padding: 1.2rem 1.4rem; border-radius: var(--radius-md); margin: 1rem 0 1.5rem 0; 
-            border: 1px solid var(--glass-border); border-left: 4px solid var(--color-mint-dark); 
+        button.primary-btn:hover, .welcome-btn:hover { transform: translateY(-2px); opacity: 1; filter: brightness(1.08); }
+        button.primary-btn:active, .welcome-btn:active, button.secondary-btn:active { transform: scale(0.97) !important; }
+        button.secondary-btn {
+            background: rgba(255, 255, 255, 0.5); border: 1px solid var(--glass-border);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            box-shadow: var(--glass-highlight);
         }
-        .amps-intro p { margin: 0; line-height: 1.5; font-size: 0.95rem; }
-        .amps-intro p strong { font-weight: 600; }
-        .amps-intro p + p { margin-top: 0.35rem; font-size: 0.88rem; color: var(--color-text-light); }
-
-        .question-group { margin-bottom: 1.4rem; width: 100%; }
-        .question-text { font-weight: 500; margin-bottom: 0.5rem; font-size: 0.95rem; line-height: 1.45; }
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]:focus { outline: none; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--color-beige); border-radius: 4px; }
-        input[type=range]::-webkit-slider-thumb {
-            height: 26px; width: 26px; border-radius: 50%;
-            background: var(--color-accent); cursor: pointer; -webkit-appearance: none; margin-top: -9px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        button.secondary-btn:hover { background: rgba(255, 255, 255, 0.8); border-color: rgba(255, 255, 255, 0.9); }
+        .sound-btn, .ambient-card {
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
         }
-        .slider-labels { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--color-text-light); margin-top: 6px; }
+        .ambient-card.active { border-color: var(--color-mint-dark); }
+        .sound-btn.active { border-color: transparent; }
+        #btn-take-break { background: linear-gradient(180deg, #b9dcc8, var(--color-mint-dark)) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 6px 16px rgba(169, 209, 186, 0.45); }
 
-        #amps-result { display: none; margin-top: 1.4rem; padding: 1.25rem; border-radius: var(--radius-md); font-weight: 500; text-align: center; font-size: 0.95rem; }
-        .result-high { background-color: var(--color-peach); color: #c0392b; }
-        .result-medium { background-color: #FFF3CD; color: #856404; }
-        .result-low { background-color: var(--color-mint); color: #27ae60; }
-
-        /* --- 2. PLAN --- */
-        .plan-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; width: 100%; }
-        .task-input-group { display: flex; gap: 0.75rem; margin-bottom: 1rem; width: 100%; }
         .task-input-group input, .task-input-group select, #schedule-start-time {
-            padding: 0.75rem 0.9rem; border: 1px solid rgba(44, 62, 80, 0.12); border-radius: var(--radius-sm);
-            background: rgba(255,255,255,0.7); outline: none; font-size: 0.95rem;
+            background: rgba(255, 255, 255, 0.6) !important;
+            border: 1px solid rgba(44, 62, 80, 0.10) !important;
+            border-radius: 14px !important;
+            padding: 0.8rem 1rem;
+            transition: var(--transition);
         }
-        .task-input-group input[type="text"] { flex: 1; min-width: 0; }
-        .task-list { list-style: none; margin-top: 1.2rem; width: 100%; }
-        
+        .task-input-group input:focus, .task-input-group select:focus, #schedule-start-time:focus {
+            background: #fff !important;
+            border-color: var(--color-mint-dark) !important;
+            box-shadow: 0 0 0 4px rgba(169, 209, 186, 0.35);
+        }
+        #schedule-controls {
+            background: rgba(255, 255, 255, 0.45) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: var(--radius-md) !important;
+        }
+
         .task-item {
-            background-color: rgba(255, 255, 255, 0.65); padding: 0.75rem 1rem; border-radius: var(--radius-sm);
-            margin-bottom: 0.75rem; display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid var(--glass-border); border-left: 3.5px solid var(--color-text);
-            gap: 0.6rem; width: 100%;
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--color-text);
+            border-radius: 14px;
+            box-shadow: var(--glass-highlight);
         }
-        .task-info { display: flex; align-items: center; gap: 0.6rem; flex: 1; min-width: 0; word-break: break-word; }
-        .task-time-badge { background: rgba(44, 62, 80, 0.08); padding: 3px 8px; border-radius: 12px; font-size: 0.78rem; font-weight: 500; flex-shrink: 0; }
-        .task-actions { display: flex; gap: 0.3rem; flex-shrink: 0; }
-        .action-btn { background: transparent; border: none; cursor: pointer; color: var(--color-text-light); width: 32px; height: 32px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-        .action-btn:hover { background: rgba(0,0,0,0.06); color: var(--color-text); }
-        .action-btn.delete-btn:hover { background: #FADCD9; color: #c0392b; }
-        
-        .schedule-visualizer { background-color: rgba(245, 239, 235, 0.5); padding: 1.5rem; border-radius: var(--radius-lg); height: 100%; border: 1px solid var(--glass-border); }
-        .timeline { position: relative; padding-left: 1.3rem; border-left: 2px solid rgba(0,0,0,0.1); margin-top: 1rem; }
-        .timeline-item { position: relative; padding-bottom: 1rem; font-size: 0.95rem; word-break: break-word; }
-        .timeline-item::before { content: ''; position: absolute; left: -1.6rem; top: 0.35rem; width: 10px; height: 10px; border-radius: 50%; background: var(--color-text); border: 2px solid var(--color-beige); }
-        .timeline-break::before { background: var(--color-peach-dark); }
-        .timeline-break { color: var(--color-text-light); font-style: italic; font-size: 0.88rem; }
+        .task-time-badge { background: rgba(44, 62, 80, 0.08); }
+        .timeline-item::before { border-color: rgba(245, 239, 235, 0.9); }
 
-        /* --- 3. LEARN --- */
-        .learn-view { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
-        .learn-cards-container { display: flex; align-items: flex-start; gap: 1.2rem; margin-bottom: 2rem; width: 100%; max-width: 720px; }
-        .learn-card {
-            background: var(--glass-bg); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm);
-            cursor: pointer; flex: 1; border: 2px solid transparent; transition: var(--transition);
-            display: flex; flex-direction: column; text-align: left;
-        }
-        .learn-card:hover { transform: translateY(-2px); }
-        .learn-card.active { border-color: var(--color-text); background: var(--glass-bg-strong); box-shadow: var(--shadow-md); }
-        .learn-card-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.95rem; }
-        .learn-card-info { display: none; margin-top: 0.8rem; font-size: 0.85rem; color: var(--color-text-light); border-top: 1px solid rgba(44, 62, 80, 0.08); padding-top: 0.6rem; line-height: 1.45; }
-        .learn-card-info.show { display: block; animation: fadeIn 0.25s ease-out forwards; }
-        
-        .digital-clock-wrapper { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 1rem; height: 50px; }
-        #digital-clock { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 10vw, 3.8rem); font-weight: 700; color: var(--color-text); letter-spacing: 2px; }
-        #btn-toggle-digital { font-size: 1.2rem; width: 38px; height: 38px; background: transparent; border: none; cursor: pointer; color: var(--color-text-light); border-radius: 50%; }
-
-        .clock-container { position: relative; margin-bottom: 1.8rem; display: flex; justify-content: center; }
         .analog-clock {
-            width: clamp(200px, 55vw, 250px); height: clamp(200px, 55vw, 250px); border-radius: 50%;
-            background: rgba(255, 255, 255, 0.45); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 10px 30px rgba(0,0,0,0.03);
-            border: 1px solid var(--glass-border); position: relative; display: flex; align-items: center; justify-content: center;
+            background: rgba(255, 255, 255, 0.45);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-highlight), inset 0 0 30px rgba(255, 255, 255, 0.35), 0 16px 40px rgba(44, 62, 80, 0.10);
+            border: 1px solid var(--glass-border);
         }
-        .clock-progress-ring { position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); pointer-events: none; }
-        .clock-face { width: 100%; height: 100%; position: absolute; border-radius: 50%; }
-        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; }
-        .hour-hand { width: 4px; height: 26%; margin-left: -2px; background: var(--color-text); }
-        .min-hand { width: 2.5px; height: 38%; margin-left: -1.25px; background: var(--color-text-light); }
-        .sec-hand { width: 1.5px; height: 45%; margin-left: -0.75px; background: var(--color-mint-dark); }
-        .clock-face::after { content: ''; position: absolute; top: 50%; left: 50%; width: 10px; height: 10px; background: var(--color-text); border-radius: 50%; transform: translate(-50%, -50%); }
+        #digital-clock { letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
+        #break-countdown { font-variant-numeric: tabular-nums; }
 
-        /* --- 4. PAUSE --- */
-        .pause-container { display: grid; grid-template-columns: 310px 1fr; gap: 1.8rem; width: 100%; }
-        .breathing-widget {
-            background: #E3F2FD; border-radius: var(--radius-lg); padding: 1.8rem 1.4rem;
-            display: flex; flex-direction: column; align-items: center; box-shadow: var(--shadow-md);
-            border: 1px solid var(--glass-border); min-height: 400px;
+        #welcome-screen {
+            background:
+                radial-gradient(45% 45% at 15% 20%, var(--mesh-c1), transparent 70%),
+                radial-gradient(40% 40% at 85% 15%, var(--mesh-c2), transparent 70%),
+                radial-gradient(45% 45% at 75% 85%, var(--mesh-c3), transparent 70%),
+                radial-gradient(40% 40% at 20% 85%, var(--mesh-c4), transparent 70%),
+                var(--bg-main);
         }
-        .breathe-graph-container { position: relative; width: 100%; max-width: 260px; height: 100px; margin: 1.5rem 0 1rem; }
-        .breathe-wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
-        .breathe-dot-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-        .breathe-dot { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: var(--color-text); box-shadow: 0 0 0 6px rgba(255,255,255,0.6); margin-left: -8px; margin-top: -8px; }
-        .breathe-text { font-weight: 600; color: var(--color-text); text-align: center; font-size: 1.05rem; height: 24px; margin-bottom: 1.5rem; }
-
-        .ambient-selector { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-        .ambient-cards { display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center; }
-        .ambient-card {
-            background: rgba(255,255,255,0.7); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; border: 2px solid transparent;
-            font-size: 1.3rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);
+        .welcome-content {
+            background: rgba(255, 255, 255, 0.4);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
+            border-radius: 36px;
         }
-        .ambient-card.active { border-color: var(--color-mint-dark); background: white; transform: scale(1.1); }
-        .sound-btn { background: rgba(255,255,255,0.9); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; cursor: pointer; font-size: 0.88rem; font-weight: 500; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 6px; }
-        .sound-btn.active { background: var(--color-text); color: white; }
 
-        .doodling-area { background: #FFFFFF; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; border: 1px solid #eaeaea; min-height: 380px; position: relative; }
-        .doodle-header { padding: 0.9rem 1.2rem; background: rgba(255,255,255,0.6); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eaeaea; }
-        .tools { display: flex; gap: 0.6rem; align-items: center; }
-        .tool-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; }
-        .tool-btn.active { border-color: var(--color-text); transform: scale(1.15); }
-        .tool-soft-blue { background: #AEC6CF; }
-        .tool-soft-green { background: #B2D8B2; }
-        .tool-lavender { background: #C3B1E1; }
-        .shatter-btn { background: var(--color-text); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        /* --- CÀI ĐẶT --- */
+        :root { --tick-major: rgba(44,62,80,.6); --tick-minor: rgba(127,140,141,.3); }
+        .amps-title { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+        .info-toggle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--color-accent); background: transparent; color: var(--color-accent); font: italic 700 .95rem/1 'Playfair Display', serif; cursor: pointer; transition: var(--transition); flex: none; display: inline-flex; align-items: center; justify-content: center; }
+        .info-toggle:hover, .info-toggle[aria-expanded="true"] { background: var(--color-accent); color: #fff; }
+        
+        .amps-info { margin: 0 0 1.25rem; padding: 1rem 1.25rem; border-radius: var(--radius-md); background: var(--glass-bg-strong); border: 1px solid var(--glass-border); animation: fadeIn .3s ease-out; }
+        .amps-info[hidden] { display: none; }
+        .amps-info p { font-size: .95rem; line-height: 1.6; color: var(--color-text-light); margin: 0; }
+        .amps-info p + p { margin-top: .5rem; }
+        .amps-info .amps-full { font-size: 1rem; font-weight: 600; color: var(--color-text); }
+        .amps-info .amps-note { font-size: .88rem; font-style: italic; padding-top: .5rem; border-top: 1px solid rgba(44,62,80,.08); }
 
-        #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background: transparent; width: 100%; }
-        .affirmation-overlay { position: absolute; bottom: 15px; left: 0; width: 100%; text-align: center; color: var(--color-text-light); font-style: italic; pointer-events: none; font-size: 0.88rem; padding: 0 1rem; }
+        .settings-wrap { margin-top: auto; position: relative; }
+        .settings-btn { width: 100%; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border: none; background: transparent; border-radius: var(--radius-md); color: var(--color-text-light); font: inherit; font-weight: 500; cursor: pointer; transition: var(--transition); min-height: 44px; }
+        .settings-btn i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .settings-btn:hover, .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.45); color: var(--color-text); }
+        
+        /* POPUP CÀI ĐẶT */
+        .settings-pop { 
+            position: absolute; 
+            left: 0; 
+            bottom: calc(100% + 12px); 
+            width: 270px; 
+            padding: 1.25rem; 
+            border-radius: var(--radius-md); 
+            background: rgba(255, 255, 255, 0.96); 
+            -webkit-backdrop-filter: blur(20px); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255, 255, 255, 0.9); 
+            box-shadow: 0 14px 35px rgba(44, 62, 80, 0.16), 0 2px 6px rgba(0,0,0,0.04); 
+            z-index: 1000; 
+            animation: fadeIn .25s ease-out; 
+        }
+        .settings-pop[hidden] { display: none; }
+        .settings-pop h4 { font: 600 .85rem var(--font-ui); color: var(--color-text-light); margin: 0 0 .5rem; }
+        .settings-pop h4:not(:first-child) { margin-top: 1.15rem; }
+        
+        .seg { display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: rgba(44,62,80,.08); }
+        .seg button { flex: 1; border: none; background: transparent; padding: .5rem .4rem; border-radius: 9px; font: inherit; font-size: .88rem; color: var(--color-text-light); cursor: pointer; transition: var(--transition); min-height: 38px; }
+        .seg button[aria-pressed="true"] { background: var(--bg-card); color: var(--color-text); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+        .color-palette-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 0.4rem;
+        }
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.85);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .color-swatch:hover { transform: scale(1.15); box-shadow: 0 4px 8px rgba(0,0,0,0.18); }
+        .color-swatch.active { border-color: var(--color-text); transform: scale(1.12); outline: 2px solid var(--color-accent); outline-offset: 1px; }
+
+        /* Dark Mode */
+        html[data-theme="dark"] { 
+            color-scheme: dark;
+            --bg-main: #10161c; --bg-card: #1b242d; --color-text: #E6EBF0; --color-text-light: #9DAAB7; --color-beige: #1a222a; --color-accent: #7f93ab;
+            --glass-bg: rgba(30,40,52,.62); --glass-bg-strong: rgba(38,50,64,.82); --glass-border: rgba(255,255,255,.09);
+            --glass-shadow: 0 8px 32px rgba(0,0,0,.35); --glass-highlight: inset 0 1px 0 rgba(255,255,255,.06);
+            --tick-major: rgba(230,235,240,.7); --tick-minor: rgba(157,170,183,.4); 
+        }
+        html[data-theme="dark"] body::before { opacity: .35; }
+        html[data-theme="dark"] .settings-pop { 
+            background: rgba(27, 36, 45, 0.96); 
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45);
+        }
+        html[data-theme="dark"] .welcome-content { background: var(--glass-bg); }
+        html[data-theme="dark"] .welcome-btn, html[data-theme="dark"] button.primary-btn { background: linear-gradient(180deg,#6a87a2,#506a82); }
+        html[data-theme="dark"] input, html[data-theme="dark"] select { color: var(--color-text); }
+        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.14) !important; }
+        html[data-theme="dark"] .task-input-group input:focus, html[data-theme="dark"] .task-input-group select:focus, html[data-theme="dark"] #schedule-start-time:focus { background: rgba(255,255,255,.12) !important; }
+        html[data-theme="dark"] #schedule-controls { background: rgba(255,255,255,.05) !important; }
+        html[data-theme="dark"] .nav-item:hover, html[data-theme="dark"] .settings-btn:hover, html[data-theme="dark"] .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.08); }
+        html[data-theme="dark"] .task-item, html[data-theme="dark"] .analog-clock, html[data-theme="dark"] .doodle-header, html[data-theme="dark"] #doodle-canvas { background: rgba(255,255,255,.05); }
+        html[data-theme="dark"] .schedule-visualizer { background: rgba(255,255,255,.04); }
+        html[data-theme="dark"] .task-time-badge { background: rgba(255,255,255,.1); color: #c9d3dc; }
+        html[data-theme="dark"] .timeline-item::before { border-color: #1a222a; }
+        html[data-theme="dark"] .quote-banner { background: linear-gradient(135deg,rgba(80,120,100,.45),rgba(130,80,80,.35)); color: var(--color-text); }
+        html[data-theme="dark"] .amps-intro { 
+            background: rgba(169, 209, 186, 0.12); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-left: 4px solid var(--color-mint-dark); 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+        html[data-theme="dark"] .amps-info .amps-note, html[data-theme="dark"] .learn-card-info { border-top-color: rgba(255,255,255,.1); }
+        html[data-theme="dark"] .learn-card.active { border-color: rgba(230,235,240,.55); }
+        html[data-theme="dark"] .result-high { background: rgba(242,185,179,.18); color: #ffb4a8; }
+        html[data-theme="dark"] .result-medium { background: rgba(255,224,138,.14); color: #ffe08a; }
+        html[data-theme="dark"] .result-low { background: rgba(169,209,186,.16); color: #9fdcb7; }
+        html[data-theme="dark"] button.secondary-btn { background: rgba(255,255,255,.06); color: var(--color-text-light); }
+        html[data-theme="dark"] button.secondary-btn:hover { background: rgba(255,255,255,.12); color: var(--color-text); }
+        html[data-theme="dark"] .breathing-widget { background-image: linear-gradient(rgba(16,22,28,.68),rgba(16,22,28,.68)); }
+        html[data-theme="dark"] .ambient-card, html[data-theme="dark"] .sound-btn { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.12); }
+        html[data-theme="dark"] .ambient-card:hover, html[data-theme="dark"] .ambient-card.active { background: rgba(255,255,255,.2); }
+        html[data-theme="dark"] .sound-btn.active, html[data-theme="dark"] .shatter-btn { background: #5f7a93; }
+        html[data-theme="dark"] .shatter-btn:hover { background: #E74C3C; }
+        html[data-theme="dark"] .seg { background: rgba(255,255,255,.08); }
+        html[data-theme="dark"] .color-swatch { border-color: rgba(255,255,255,0.2); }
+        html[data-theme="dark"] .color-swatch.active { border-color: #fff; }
+        html[data-theme="dark"] .main-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); }
 
         /* =====================================================================
-           TỐI ƯU HÓA MOBILE (DƯỚI 820px)
+           RESPONSIVE MOBILE & TABLET MEDIA QUERIES
            ===================================================================== */
-        @media (max-width: 820px) {
-            body {
-                flex-direction: column;
+        @media (max-width: 900px) {
+            body { 
+                flex-direction: column; 
                 height: 100vh;
                 height: 100dvh;
             }
-
-            /* Header cố định trên cùng */
-            .sidebar {
-                width: 100%;
-                height: 56px;
-                padding: 0 1.2rem;
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                border-right: none;
+            .sidebar { 
+                width: 100%; 
+                padding: 0.75rem 1.25rem; 
+                flex-direction: row; 
+                align-items: center; 
+                justify-content: space-between; 
+                border-right: none; 
                 border-bottom: 1px solid var(--glass-border);
-                position: fixed;
-                top: 0;
-                left: 0;
-                z-index: 100;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             }
-
             .logo-area { margin-bottom: 0; }
-            .logo-title { font-size: 1.45rem; letter-spacing: 1px; }
+            .logo-title { font-size: 1.8rem; }
             .logo-slogan { display: none; }
-
-            .settings-wrap { margin-top: 0; }
-            .settings-btn { padding: 0.4rem; min-width: 38px; min-height: 38px; justify-content: center; }
-            .settings-btn span { display: none; }
-            .settings-btn i { font-size: 1.15rem; width: auto; }
-            
-            .settings-pop { 
-                left: auto; right: 10px; top: 60px; bottom: auto; 
-                width: min(280px, 92vw); 
+            .nav-menu { 
+                flex-direction: row; 
+                flex: unset; 
+                gap: 0.4rem;
+                align-items: center;
             }
+            .nav-item { 
+                padding: 0.6rem 0.9rem; 
+                gap: 0.5rem; 
+                border-radius: var(--radius-sm);
+            }
+            .main-content { 
+                padding: 1.75rem 1.5rem; 
+                height: calc(100% - 65px);
+            }
+            .plan-container { grid-template-columns: 1fr; }
+            .learn-cards-container { flex-direction: column; gap: 1rem; }
+            .pause-container { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto 420px; 
+                min-height: auto; 
+                gap: 1.5rem;
+            }
+            .analog-clock { width: 230px; height: 230px; }
+            .settings-wrap { margin-top: 0; }
+            .settings-btn { 
+                padding: 0.6rem 0.9rem; 
+                gap: 0.5rem; 
+                border-radius: var(--radius-sm);
+            }
+            .settings-pop { 
+                left: auto; 
+                right: 0; 
+                bottom: auto; 
+                top: calc(100% + 10px); 
+                max-width: min(290px, calc(100vw - 24px));
+            }
+        }
 
-            /* Bottom TabBar cố định ở đáy */
-            .nav-menu {
+        /* --- PHÙ HỢP CÁC DÒNG SMARTPHONE (< 600px) --- */
+        @media (max-width: 600px) {
+            body {
+                position: relative;
+            }
+            .sidebar {
                 position: fixed;
                 bottom: 0;
                 left: 0;
-                width: 100%;
-                height: calc(58px + env(safe-area-inset-bottom, 0px));
-                padding-bottom: env(safe-area-inset-bottom, 0px);
-                background: rgba(255, 255, 255, 0.88);
-                -webkit-backdrop-filter: blur(20px);
-                backdrop-filter: blur(20px);
+                right: 0;
+                top: auto;
+                z-index: 1000;
+                padding: 0.5rem 0.75rem env(safe-area-inset-bottom) 0.75rem;
+                border-bottom: none;
                 border-top: 1px solid var(--glass-border);
-                flex-direction: row;
-                gap: 0;
-                z-index: 100;
-                box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+                background: var(--glass-bg-strong);
+                justify-content: space-around;
             }
-
+            .logo-area { display: none; }
+            .nav-menu {
+                width: 100%;
+                justify-content: space-around;
+                gap: 0.2rem;
+            }
             .nav-item {
-                flex: 1;
                 flex-direction: column;
-                justify-content: center;
-                align-items: center;
                 gap: 3px;
-                padding: 0.4rem 0.2rem;
-                border-radius: 0;
-                background: transparent !important;
-                border: none !important;
-                box-shadow: none !important;
-                height: 100%;
-            }
-            .nav-item i { font-size: 1.1rem; width: auto; }
-            .nav-item span { 
-                display: block !important; 
-                font-size: 0.75rem !important; 
-                font-weight: 500;
-            }
-            .nav-item.active { color: var(--color-text); }
-            .nav-item.active span { font-weight: 700; color: var(--color-text); }
-            .nav-item.active i { transform: scale(1.1); color: var(--color-text); }
-
-            /* Khu vực nội dung cuộn mượt giữa Header & Bottom Bar */
-            .main-content {
-                padding: 70px 1rem calc(75px + env(safe-area-inset-bottom, 0px)) 1rem;
+                padding: 0.4rem 0.5rem;
+                font-size: 0.72rem;
+                border-radius: 10px;
                 flex: 1;
+                justify-content: center;
+                min-height: 48px;
+            }
+            .nav-item i { font-size: 1.15rem; width: auto; }
+            .nav-item span { display: block !important; }
+            .settings-wrap { display: flex; align-items: center; }
+            .settings-btn {
+                flex-direction: column;
+                gap: 3px;
+                padding: 0.4rem 0.5rem;
+                font-size: 0.72rem;
+                min-width: 48px;
+                min-height: 48px;
+                justify-content: center;
+            }
+            .settings-btn span { display: block; font-size: 0.72rem; }
+            .settings-btn i { font-size: 1.15rem; width: auto; }
+            .settings-pop {
+                position: fixed;
+                top: auto;
+                bottom: calc(64px + env(safe-area-inset-bottom));
+                right: 12px;
+                left: 12px;
+                width: auto;
+                max-width: none;
+                box-sizing: border-box;
+            }
+
+            .main-content {
+                padding: 1.25rem 1rem calc(80px + env(safe-area-inset-bottom)) 1rem;
                 overflow-x: hidden;
             }
 
             .card {
-                padding: 1.3rem 1.1rem;
+                padding: 1.4rem 1.25rem;
                 border-radius: 20px;
-                margin-bottom: 1.2rem;
+                margin-bottom: 1.25rem;
+            }
+            .section-header { margin-bottom: 1.25rem; }
+            .section-header h2 { font-size: 1.55rem; }
+            .section-header p { font-size: 0.92rem; }
+
+            .quote-banner {
+                padding: 1.1rem 1.2rem;
+                font-size: 0.95rem;
+                margin-bottom: 1.25rem;
             }
 
-            .plan-container { grid-template-columns: 1fr; gap: 1.2rem; }
-            .task-input-group { flex-direction: column; gap: 0.6rem; }
-            .task-input-group input, .task-input-group select { width: 100%; font-size: 0.95rem; }
-            .task-item { padding: 0.75rem 0.85rem; font-size: 0.9rem; }
+            /* Ngăn Safari iOS tự động zoom vào input */
+            .task-input-group input, 
+            .task-input-group select, 
+            #schedule-start-time {
+                font-size: 16px !important;
+            }
+
+            .task-input-group { flex-direction: column; gap: 0.7rem; }
+            .task-input-group input[type="text"], .task-input-group select { width: 100%; min-width: unset; }
+            .task-item { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 0.9rem; }
+            .task-info { width: 100%; flex-wrap: wrap; word-break: break-word; gap: 0.4rem; font-size: 0.92rem; }
+            .task-actions { width: 100%; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.6rem; }
+            #schedule-controls > div { flex-direction: column; align-items: flex-start !important; gap: 0.6rem; }
+            #schedule-controls input[type="time"] { width: 100%; }
+            .timeline-item { word-break: break-word; padding-right: 0.5rem; font-size: 0.92rem; }
+
+            /* Learn View Mobile */
+            .analog-clock { width: 210px; height: 210px; }
+            .clock-container { margin-bottom: 1.6rem; }
+            .learn-cards-container { margin-bottom: 1.8rem; }
+            .learn-card { padding: 1rem; }
             
-            .learn-cards-container { flex-direction: column; gap: 0.75rem; width: 100%; margin-bottom: 1.5rem; }
-            .learn-card { width: 100%; padding: 0.95rem; }
+            /* Pause View Mobile */
+            .pause-container { 
+                grid-template-columns: 1fr; 
+                grid-template-rows: auto 380px; 
+                gap: 1.2rem; 
+            }
+            .breathing-widget { padding: 1.4rem 1.2rem; border-radius: 20px; }
+            .breathe-graph-container { max-width: 250px; height: 95px; }
+            .doodling-area { border-radius: 20px; }
+            .doodle-header { padding: 0.8rem 1rem; }
 
-            .pause-container { grid-template-columns: 1fr; gap: 1.2rem; height: auto; }
-            .breathing-widget { min-height: 360px; padding: 1.5rem 1rem; }
-            .doodling-area { min-height: 360px; }
-
-            #session-popup .card { padding: 1.8rem 1.2rem; width: 92%; }
+            /* Session Popup Mobile */
+            #session-popup .card {
+                padding: 1.8rem 1.25rem !important;
+                margin: 0 1rem !important;
+                width: calc(100% - 2rem) !important;
+            }
         }
-
-        @media (max-width: 480px) {
-            .welcome-content { padding: 2.2rem 1.4rem; border-radius: 24px; }
-            .amps-intro { padding: 1rem 1.1rem; }
-            .slider-labels span { font-size: 0.75rem; }
-        }
-
-        /* Dark Mode Theme */
-        html[data-theme="dark"] { 
-            color-scheme: dark;
-            --bg-main: #10161c; --bg-card: #1b242d; --color-text: #E6EBF0; --color-text-light: #9DAAB7; --color-beige: #1a222a; --color-accent: #7f93ab;
-            --glass-bg: rgba(30,40,52,.65); --glass-bg-strong: rgba(38,50,64,.85); --glass-border: rgba(255,255,255,.09);
-        }
-        html[data-theme="dark"] body::before { opacity: .35; }
-        html[data-theme="dark"] .sidebar { background: var(--glass-bg); }
-        html[data-theme="dark"] .nav-menu { background: rgba(20, 28, 36, 0.92); }
-        html[data-theme="dark"] .settings-pop { background: rgba(27, 36, 45, 0.98); border: 1px solid rgba(255, 255, 255, 0.12); }
-        html[data-theme="dark"] .task-item { background: rgba(255,255,255,0.06); }
-        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: #fff; }
     </style>
+    <script>try{var p=localStorage.getItem('insight_theme')||'light';document.documentElement.dataset.theme=(p==='dark')?'dark':'light'}catch(e){}</script>
 </head>
 <body>
 
@@ -487,25 +977,23 @@
     </div>
 
     <!-- SESSION COMPLETION POPUP -->
-    <div id="session-popup" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; pointer-events: none;">
-        <div class="card" style="text-align: center; max-width: 380px; width: 90%; padding: 2rem 1.5rem; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-            <h2 id="popup-title" style="margin-bottom: 0.8rem; font-family: 'Playfair Display', serif;">✨ Hết giờ rồi!</h2>
-            <p id="popup-desc" style="color: var(--color-text-light); margin-bottom: 1.8rem; line-height: 1.5; font-size: 0.95rem;"></p>
-            <div style="display: flex; gap: 0.8rem; justify-content: center;">
-                <button class="primary-btn" id="btn-take-break" style="background-color: var(--color-mint-dark); color: #2c3e50;">Nghỉ ngơi</button>
-                <button class="secondary-btn" id="btn-continue-work">Tiếp tục</button>
+    <div id="session-popup" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; padding: 1rem;">
+        <div class="card" style="text-align: center; max-width: 400px; width: 100%; padding: 2.5rem 2rem; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <h2 id="popup-title" style="margin-bottom: 1rem; font-family: 'Playfair Display', serif;">✨ Hết giờ rồi!</h2>
+            <p id="popup-desc" style="color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6;"></p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <button class="primary-btn" id="btn-take-break" style="background-color: var(--color-mint-dark); color: #2c3e50; flex: 1; min-width: 120px;">Nghỉ ngơi</button>
+                <button class="secondary-btn" id="btn-continue-work" style="flex: 1; min-width: 120px;">Tiếp tục</button>
             </div>
         </div>
     </div>
 
-    <!-- Sidebar / Top Header on Mobile -->
+    <!-- Sidebar Navigation -->
     <nav class="sidebar">
         <div class="logo-area">
             <h1 class="logo-title">INSIGHT</h1>
             <p class="logo-slogan">Soi Thấu Tâm Trí, Bật Mood Siêu Focus</p>
         </div>
-        
-        <!-- 4 Tab luôn viết hoa chữ cái đầu: Daily, Plan, Learn, Pause -->
         <div class="nav-menu">
             <div class="nav-item active" data-target="daily"><i class="fa-solid fa-sun"></i> <span>Daily</span></div>
             <div class="nav-item" data-target="plan" id="nav-plan"><i class="fa-solid fa-list-check"></i> <span>Plan</span></div>
@@ -514,24 +1002,22 @@
         </div>
         
         <div class="settings-wrap">
-            <button type="button" class="settings-btn" id="settings-btn" aria-expanded="false" title="Cài đặt">
-                <i class="fa-solid fa-gear"></i> <span>Cài đặt</span>
-            </button>
+            <button type="button" class="settings-btn" id="settings-btn" aria-expanded="false" aria-controls="settings-pop"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></button>
             <div class="settings-pop" id="settings-pop" hidden>
                 <h4>Ngôn ngữ</h4>
-                <div class="seg" id="seg-lang"><button type="button" data-lang="vi" aria-pressed="true">Tiếng Việt</button><button type="button" data-lang="en">English</button></div>
+                <div class="seg" id="seg-lang"><button type="button" data-lang="vi">Tiếng Việt</button><button type="button" data-lang="en">English</button></div>
                 
                 <h4>Giao diện</h4>
-                <div class="seg" id="seg-theme"><button type="button" data-theme-opt="light" aria-pressed="true">Sáng</button><button type="button" data-theme-opt="dark">Tối</button></div>
+                <div class="seg" id="seg-theme"><button type="button" data-theme-opt="light">Sáng</button><button type="button" data-theme-opt="dark">Tối</button></div>
 
                 <h4>Màu nền</h4>
                 <div class="color-palette-grid" id="bg-palette-selector">
-                    <button type="button" class="color-swatch active" data-bg-theme="mesh" title="Cầu vồng pastel" style="background: linear-gradient(135deg, #a9d1ba, #f2b9b3, #c3b1e1);"></button>
-                    <button type="button" class="color-swatch" data-bg-theme="sage" title="Xanh xô thơm" style="background: linear-gradient(135deg, #B2D8C6, #D8EADF);"></button>
-                    <button type="button" class="color-swatch" data-bg-theme="ocean" title="Xanh sương mai" style="background: linear-gradient(135deg, #A8CDE2, #D4E9F7);"></button>
-                    <button type="button" class="color-swatch" data-bg-theme="lavender" title="Tím oải hương" style="background: linear-gradient(135deg, #CEBEE8, #EAE2F8);"></button>
-                    <button type="button" class="color-swatch" data-bg-theme="oat" title="Yến mạch ấm" style="background: linear-gradient(135deg, #E6DAC8, #F7F1E8);"></button>
-                    <button type="button" class="color-swatch" data-bg-theme="peach" title="Hồng đào dịu" style="background: linear-gradient(135deg, #F9C5BE, #FDE6E3);"></button>
+                    <button type="button" class="color-swatch active" data-bg-theme="mesh" title="Cầu vồng pastel (Hài hòa cảm xúc)" style="background: linear-gradient(135deg, #a9d1ba, #f2b9b3, #c3b1e1);"></button>
+                    <button type="button" class="color-swatch" data-bg-theme="sage" title="Xanh xô thơm (Xoa dịu, giảm stress)" style="background: linear-gradient(135deg, #B2D8C6, #D8EADF);"></button>
+                    <button type="button" class="color-swatch" data-bg-theme="ocean" title="Xanh sương mai (Tập trung, hạ hỏa)" style="background: linear-gradient(135deg, #A8CDE2, #D4E9F7);"></button>
+                    <button type="button" class="color-swatch" data-bg-theme="lavender" title="Tím oải hương (Tĩnh tâm, bớt âu lo)" style="background: linear-gradient(135deg, #CEBEE8, #EAE2F8);"></button>
+                    <button type="button" class="color-swatch" data-bg-theme="oat" title="Yến mạch ấm (Ấn tượng an toàn, thư thái)" style="background: linear-gradient(135deg, #E6DAC8, #F7F1E8);"></button>
+                    <button type="button" class="color-swatch" data-bg-theme="peach" title="Hồng đào dịu (Khoan dung với chính mình)" style="background: linear-gradient(135deg, #F9C5BE, #FDE6E3);"></button>
                 </div>
             </div>
         </div>
@@ -552,7 +1038,7 @@
             </div>
 
             <div class="card">
-                <h3 style="font-size: 1.15rem; margin-bottom: 0.4rem;">Tâm trạng hiện tại của bạn thế nào?</h3>
+                <h3>Tâm trạng hiện tại của bạn thế nào?</h3>
                 <div class="mood-tracker">
                     <button class="mood-btn" data-mood="terrible">😫</button>
                     <button class="mood-btn" data-mood="bad">😔</button>
@@ -564,13 +1050,11 @@
             </div>
 
             <div class="card">
-                <div class="amps-title">
-                    <span>Thang đo AMPS</span>
-                    <button type="button" class="info-toggle" id="amps-info-btn" aria-expanded="false" title="Thông tin thang đo">i</button>
-                </div>
+                <h3 class="amps-title">Thang đo AMPS <button type="button" class="info-toggle" id="amps-info-btn" aria-expanded="false" aria-controls="amps-info" title="Xem thông tin thang đo"><span aria-hidden="true">i</span></button></h3>
                 <div class="amps-info" id="amps-info" hidden>
                     <p class="amps-full">Assessment of Maladaptive Perfectionism Scale</p>
-                    <p>Đo lường mức độ khắt khe với bản thân để tự nhắc nhở bản thân thả lỏng khi cần.</p>
+                    <p>Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.</p>
+                    <p class="amps-note">Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.</p>
                 </div>
                 
                 <div class="amps-intro">
@@ -595,8 +1079,8 @@
 
             <div class="plan-container">
                 <div class="card">
-                    <h3 style="font-size: 1.15rem; margin-bottom: 0.3rem;">Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 0.95rem; font-weight:normal;">(0/5)</span></h3>
-                    <p style="font-size: 0.88rem; color: var(--color-text-light); margin-bottom: 1.2rem;" id="task-warning">
+                    <h3>Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 1rem; font-weight:normal;">(0/5)</span></h3>
+                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem;" id="task-warning">
                         Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.
                     </p>
                     
@@ -608,23 +1092,23 @@
                             <option value="90">90 phút (làm việc sâu)</option>
                         </select>
                     </div>
-                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.65rem;">Thêm nhiệm vụ</button>
+                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.6rem;">Thêm nhiệm vụ</button>
                     
                     <ul class="task-list" id="task-list-ui"></ul>
 
-                    <div id="schedule-controls" style="display: none; margin-top: 1.5rem; background: rgba(0,0,0,0.02); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(0,0,0,0.06);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; gap: 0.5rem;">
-                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.9rem;">Giờ bắt đầu:</label>
-                            <input type="time" id="schedule-start-time" value="08:30">
+                    <div id="schedule-controls" style="display: none; margin-top: 2rem; background: var(--bg-main); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid #eaeaea;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.95rem;">Giờ bắt đầu:</label>
+                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; outline: none; background: white;">
                         </div>
                         <button class="primary-btn" id="btn-generate-schedule" style="width: 100%;">Tạo lịch trình tự động</button>
                     </div>
                 </div>
 
                 <div class="schedule-visualizer" id="schedule-ui">
-                    <h3 style="font-size: 1.15rem; margin-bottom: 1rem; text-align: center; color: var(--color-text-light);">Lịch trình dự kiến</h3>
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-light);">Lịch trình dự kiến</h3>
                     <div class="timeline" id="timeline-container">
-                        <p style="text-align:center; color: #aaa; margin-top: 30px; font-size: 0.9rem;">Chưa có lịch trình. Thêm việc rồi bấm tạo lịch nhé.</p>
+                        <p style="text-align:center; color: #aaa; margin-top: 50px;">Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.</p>
                     </div>
                 </div>
             </div>
@@ -641,8 +1125,9 @@
                             <i class="fa-solid fa-circle-question info-btn" title="Xem chi tiết"></i>
                         </div>
                         <div class="learn-card-info">
-                            <b>Tính năng:</b> Tập trung 25 phút, nghỉ 5 phút.<br>
-                            <b>Phù hợp:</b> Khi có nhiều việc nhỏ hoặc khó bắt đầu.
+                            <b>Tính năng:</b> Làm việc tập trung 25 phút, sau đó nghỉ ngắn 5 phút.<br>
+                            <b>Dùng khi nào:</b> Phù hợp khi bạn có nhiều việc nhỏ hoặc đang khó bắt đầu.<br>
+                            <b>Cách thực hiện:</b> Tập trung trọn vẹn rồi bắt đầu. Khi nghỉ, hãy đứng dậy đi lại.
                         </div>
                     </div>
                     
@@ -652,8 +1137,9 @@
                             <i class="fa-solid fa-circle-question info-btn" title="Xem chi tiết"></i>
                         </div>
                         <div class="learn-card-info">
-                            <b>Tính năng:</b> Tập trung 45 phút, giải trí 15 phút.<br>
-                            <b>Phù hợp:</b> Khi cần xử lý nhiệm vụ lớn cần phần thưởng để duy trì động lực.
+                            <b>Tính năng:</b> Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).<br>
+                            <b>Dùng khi nào:</b> Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.<br>
+                            <b>Cách thực hiện:</b> Tập trung trong 45 phút, sau đó thư giãn 15 phút.
                         </div>
                     </div>
 
@@ -663,8 +1149,9 @@
                             <i class="fa-solid fa-circle-question info-btn" title="Xem chi tiết"></i>
                         </div>
                         <div class="learn-card-info">
-                            <b>Tính năng:</b> Đếm lên không giới hạn thời gian.<br>
-                            <b>Phù hợp:</b> Khi đang cuốn vào việc sáng tạo (viết lách, code, vẽ).
+                            <b>Tính năng:</b> Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.<br>
+                            <b>Dùng khi nào:</b> Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).<br>
+                            <b>Cách thực hiện:</b> Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.
                         </div>
                     </div>
                 </div>
@@ -679,8 +1166,9 @@
                         <div class="analog-clock" id="analog-clock">
                             <svg class="clock-progress-ring" viewBox="0 0 100 100" id="progress-svg">
                                 <circle cx="50" cy="50" r="48" fill="none" stroke="rgba(0,0,0,0.05)" stroke-width="2" />
-                                <circle id="timer-ring" cx="50" cy="50" r="48" fill="none" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="301.59" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 0.5s linear;" />
+                                <circle id="timer-ring" cx="50" cy="50" r="48" fill="none" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="301.59" stroke-dashoffset="0" stroke-linecap="round" transform="rotate(-90 50 50)" style="transition: stroke-dashoffset 0.5s linear, stroke 0.5s ease;" />
                             </svg>
+
                             <div class="clock-face" id="clock-face">
                                 <div class="hand hour-hand" id="hour-hand"></div>
                                 <div class="hand min-hand" id="min-hand"></div>
@@ -689,17 +1177,27 @@
                         </div>
                     </div>
 
-                    <div id="timer-controls" style="margin: 0.2rem 0 0.8rem; min-height: 48px;">
-                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.75rem 2.2rem; font-size: 0.95rem;">
+                    <div id="timer-controls" style="margin: 0.5rem 0 1rem; min-height: 50px;">
+                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.6rem 2rem; font-size: 0.95rem;">
                             <i class="fa-solid fa-play"></i> Bắt đầu tập trung
                         </button>
                         <div id="timer-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--color-text-light); font-weight: 500;"></div>
                     </div>
                     
-                    <p style="color: var(--color-text-light); font-size: 0.88rem; font-style: italic; max-width: 320px; text-align: center;">
-                        "Thời gian đang trôi, không cần vội. Thả lỏng và tập trung."
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; font-style: italic; max-width: 90%;">
+                        "Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung."
                     </p>
                 </div>
+
+                <!-- BREAK SCREEN -->
+                <div id="break-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem 0; min-height: 350px;">
+                    <h3 id="break-title" style="color: var(--color-text-light); font-size: 1.2rem; margin-bottom: 1rem;">☕ Thời gian nghỉ</h3>
+                    <div id="break-countdown" style="font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 10vw, 4.5rem); font-weight: 700; color: var(--color-text); margin-bottom: 1rem; letter-spacing: 2px;">05:00</div>
+                    <p id="break-desc" style="color: var(--color-text-light); font-size: 0.95rem; margin-bottom: 2rem; max-width: 320px; text-align: center;">Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.</p>
+                    <div id="break-end-msg" style="display: none; font-size: 1.2rem; font-weight: 600; color: var(--color-mint-dark); margin-bottom: 1.5rem; animation: fadeIn 0.5s ease-out;">✨ Hết giờ nghỉ</div>
+                    <button class="primary-btn" id="btn-end-break">Quay lại làm việc</button>
+                </div>
+
             </div>
         </section>
 
@@ -707,12 +1205,12 @@
         <section id="pause" class="view-section">
             <div class="section-header">
                 <h2>Không gian nghỉ ngơi</h2>
-                <p>Cho phép bản thân thả lỏng hoàn toàn.</p>
+                <p>Dành một chút thời gian để nghỉ ngơi. Cho phép bản thân thả lỏng.</p>
             </div>
 
             <div class="pause-container">
                 <div class="breathing-widget" id="breathing-widget-bg">
-                    <h3 style="font-size: 1.15rem; margin-bottom: 0.3rem;">Hít thở nhịp 4-4-4</h3>
+                    <h3 style="margin-bottom: 0.5rem; position: relative; z-index: 2; font-size: 1.2rem;">Hít thở nhịp 4-4-4</h3>
                     
                     <div class="breathe-graph-container">
                         <svg class="breathe-wave-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
@@ -737,7 +1235,10 @@
 
                 <div class="doodling-area">
                     <div class="doodle-header">
-                        <span style="font-weight:600; font-size: 0.9rem;"><i class="fa-solid fa-palette"></i> Vẽ tự do</span>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <span style="font-weight:600;"><i class="fa-solid fa-palette"></i> Bảng vẽ tự do</span>
+                            <span style="font-size:0.8rem; opacity:0.8;">Vẽ tự do để thư giãn.</span>
+                        </div>
                         <div class="tools">
                             <div class="tool-btn tool-soft-blue active" data-color="#AEC6CF"></div>
                             <div class="tool-btn tool-soft-green" data-color="#B2D8B2"></div>
@@ -755,18 +1256,13 @@
 
     <!-- LOGIC SCRIPT -->
     <script>
-        const SafeStore = {
-            get: (k, d) => { try { return localStorage.getItem(k) || d; } catch(e) { return d; } },
-            set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} }
-        };
-
-        // --- 0. WELCOME SCREEN & NAVIGATION ---
+        // --- 0. WELCOME SCREEN & NAVIGATION LOGIC ---
         const btnStartApp = document.getElementById('btn-start-app');
         const welcomeScreen = document.getElementById('welcome-screen');
 
         btnStartApp.addEventListener('click', () => {
             welcomeScreen.classList.add('hidden');
-            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 500);
+            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 600);
         });
 
         const navItems = document.querySelectorAll('.nav-item');
@@ -780,39 +1276,37 @@
                 
                 item.classList.add('active');
                 const targetId = item.getAttribute('data-target');
-                const targetSec = document.getElementById(targetId);
-                if (targetSec) targetSec.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
                 
-                if (targetId === 'pause') {
+                if(targetId === 'pause') {
+                    isCanvasInit = false;
                     setTimeout(initCanvas, 50);
                     const dotWrapper = document.querySelector('.breathe-dot-wrapper');
                     const dot = document.querySelector('.breathe-dot');
-                    if (dotWrapper && dot) {
-                        dotWrapper.style.animation = 'none';
-                        dot.style.animation = 'none';
-                        void dotWrapper.offsetWidth; 
-                        dotWrapper.style.animation = 'breathMoveX 12s linear infinite';
-                        dot.style.animation = 'breathMoveY 12s infinite';
-                    }
+                    dotWrapper.style.animation = 'none';
+                    dot.style.animation = 'none';
+                    void dotWrapper.offsetWidth; 
+                    dotWrapper.style.animation = 'breathMoveX 12s linear infinite';
+                    dot.style.animation = 'breathMoveY 12s infinite';
                     breatheStartTime = Date.now();
                 } 
             });
         });
 
         function goToTab(targetId) { 
-            const target = document.querySelector(`.nav-item[data-target="${targetId}"]`);
-            if (target) target.click();
+            const tab = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+            if (tab) tab.click();
         }
 
         const AppState = { maxTasks: 5, tasks: [] };
 
-        // --- 1. DAILY ---
+        // --- 1. DAILY LOGIC & QUESTIONS BANK ---
         const moodMsgs = {
             'terrible': "Hôm nay có vẻ nặng nề. Hãy làm từng việc nhỏ và cho phép bản thân đi chậm lại.",
             'bad': "Bạn đang hơi mệt. Hãy làm từ từ, đừng ép bản thân quá.",
-            'okay': "Tâm trạng ổn định. Giữ nhịp độ vừa phải nhé.",
-            'good': "Tâm trạng khá tốt. Một khởi đầu thuận lợi!",
-            'great': "Tràn đầy năng lượng! Tận dụng để xử lý những việc quan trọng nhé."
+            'okay': "Tâm trạng ổn định. Hãy giữ nhịp độ vừa phải nhé.",
+            'good': "Tâm trạng khá tốt. Một khởi đầu thuận lợi cho ngày hôm nay.",
+            'great': "Bạn đang tràn đầy năng lượng! Hãy tận dụng để xử lý những việc quan trọng."
         };
 
         const moodBtns = document.querySelectorAll('.mood-btn');
@@ -827,10 +1321,11 @@
         });
 
         const questionBank = {
-            A: [ { id: 1, text: "Dù chưa bắt đầu, tôi đã lo rằng kết quả hôm nay sẽ không được như ý." }, { id: 2, text: "Tôi thường nghĩ rằng một sai sót nhỏ cũng có thể khiến cả kết quả tệ đi." } ],
-            B: [ { id: 7, text: "Tôi thường đặt mục tiêu cao hơn khả năng thực tế của mình." } ],
-            C: [ { id: 13, text: "Tôi từng trì hoãn bắt đầu vì sợ mình không thể làm thật tốt." } ],
-            D: [ { id: 19, text: "Khi mắc lỗi, tôi dễ tập trung vào điều mình làm chưa tốt." } ]
+            A: [ { id: 1, text: "Dù chưa bắt đầu, tôi đã lo rằng kết quả hôm nay sẽ không được như ý." }, { id: 2, text: "Tôi thường nghĩ rằng một sai sót nhỏ cũng có thể khiến cả kết quả trở nên tệ đi." }, { id: 3, text: "Khi làm một việc quan trọng, tôi thường lo mình sẽ không đạt được kết quả tốt nhất." } ],
+            B: [ { id: 7, text: "Tôi thường đặt mục tiêu cao hơn khả năng thực tế của mình." }, { id: 8, text: "Tôi cảm thấy một kết quả chỉ thật sự tốt khi nó gần như hoàn hảo." }, { id: 9, text: "Tôi thường tự đặt ra những yêu cầu rất cao cho những việc tưởng như đơn giản." } ],
+            C: [ { id: 13, text: "Tôi từng trì hoãn bắt đầu một việc vì sợ mình không thể làm thật tốt." }, { id: 14, text: "Tôi có xu hướng chờ đến khi cảm thấy “đủ sẵn sàng” mới bắt đầu." }, { id: 15, text: "Tôi thà không làm còn hơn làm nhưng mắc nhiều sai sót." } ],
+            D: [ { id: 19, text: "Tôi thường tự trách mình khá lâu vì một lỗi nhỏ." }, { id: 20, text: "Khi mắc lỗi, tôi dễ tập trung vào điều mình làm chưa tốt hơn là những gì mình đã làm được." }, { id: 21, text: "Tôi thường cảm thấy mình chưa đủ tốt dù đã hoàn thành nhiều việc." } ],
+            E: [ { id: 25, text: "Tôi cảm thấy mình nên luôn làm một việc gì đó có ích thay vì nghỉ ngơi." }, { id: 26, text: "Khi thấy người khác học tập hoặc làm việc rất năng suất, tôi cảm thấy mình cũng phải cố gắng hơn." }, { id: 27, text: "Tôi cảm thấy một ngày không hiệu quả nếu mình không hoàn thành đủ những việc đã đặt ra." } ]
         };
 
         function initDailyQuestions() {
@@ -840,15 +1335,15 @@
                 selectedQuestions.push(pool[Math.floor(Math.random() * pool.length)]);
             });
             const container = document.getElementById('amps-questions-container');
-            if (!container) return;
             container.innerHTML = '';
             selectedQuestions.forEach((q, index) => {
                 const group = document.createElement('div');
-                group.className = 'question-group';
+                group.className = 'question-group question-anim';
+                group.style.animationDelay = `${index * 0.15}s`;
                 group.innerHTML = `
                     <p class="question-text">${index + 1}. ${q.text}</p>
                     <input type="range" min="1" max="5" value="3" class="amps-range">
-                    <div class="slider-labels"><span>Không đúng</span> <span>Rất đúng</span></div>
+                    <div class="slider-labels"><span>Hoàn toàn không đúng</span> <span>Hoàn toàn đúng</span></div>
                 `;
                 container.appendChild(group);
             });
@@ -866,30 +1361,24 @@
             const planSubtitle = document.getElementById('plan-subtitle');
             const taskWarning = document.getElementById('task-warning');
             
-            if (score >= 15) {
+            if (score >= 19) {
                 AppState.maxTasks = 3; resultEl.classList.add('result-high');
-                resultEl.innerHTML = `Điểm hôm nay: ${score}/20<br><br><b>Mức độ cầu toàn khá cao. Hãy chuyển sang tab Pause và cho bản thân nghỉ ngơi nhé.</b><br><br><span style="font-size:0.88rem;">Giới hạn: <b>3 nhiệm vụ quan trọng</b>.</span>`;
-                planSubtitle.innerHTML = "Quy tắc 3 việc: Hôm nay hãy hạ bớt kỳ vọng và làm nhẹ nhàng."; 
-                taskWarning.innerHTML = "<span style='color:#c0392b;'>Mức AMPS cao: hôm nay nên chọn tối đa 3 việc.</span>";
+                resultEl.innerHTML = `Điểm hôm nay: ${score}/25<br><br><b>Hôm nay mức độ cầu toàn của bạn khá cao. Hãy thử chuyển sang tab Nghỉ ngơi và dành cho bản thân một khoảng nghỉ.</b><br><br><span style="font-size:0.9rem;">Hệ thống đã giới hạn danh sách việc xuống còn <b>3 nhiệm vụ</b>.</span>`;
+                planSubtitle.innerHTML = "Quy tắc 3 việc (điều chỉnh theo kết quả AMPS). Hôm nay hãy giảm bớt kỳ vọng và chọn ít việc hơn."; taskWarning.innerHTML = "<span style='color:#c0392b;'><i class='fa-solid fa-triangle-exclamation'></i> Mức AMPS cao: hôm nay nên chọn tối đa 3 nhiệm vụ.</span>";
+            } else if (score >= 12) {
+                AppState.maxTasks = 5; resultEl.classList.add('result-medium');
+                resultEl.innerHTML = `Điểm hôm nay: ${score}/25<br><br><b>Bạn có vẻ đang hơi khắt khe với bản thân.</b><br><br><span style="font-size:0.9rem;">Bạn vẫn có thể chọn <b>5 nhiệm vụ</b>, hãy làm việc nhẹ nhàng, không cần hoàn hảo.</span>`;
+                planSubtitle.innerHTML = "Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu."; taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
             } else {
                 AppState.maxTasks = 5; resultEl.classList.add('result-low');
-                resultEl.innerHTML = `Điểm hôm nay: ${score}/20<br><br><b>Tâm trạng khá cân bằng 🌱</b><br><br><span style="font-size:0.88rem;">Bạn có thể chọn tối đa <b>5 nhiệm vụ</b>.</span>`;
-                planSubtitle.innerHTML = "Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải."; 
-                taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
+                resultEl.innerHTML = `Điểm hôm nay: ${score}/25<br><br><b>Hôm nay, bạn đang khá nhẹ nhàng với chính mình 🌱</b><br><br><span style="font-size:0.9rem;">Bạn đang khá thoải mái. Bạn có thể chọn tối đa <b>5 nhiệm vụ</b>.</span>`;
+                planSubtitle.innerHTML = "Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu."; taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
             }
-            updateTaskCounterUI(); 
-            btnSubmitAmps.innerText = "Đang chuyển sang Plan...";
-            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 1200);
+            updateTaskCounterUI(); btnSubmitAmps.innerText = "Đang chuyển sang Kế hoạch...";
+            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 2500);
         });
 
-        // Toggle info
-        const ampsInfoBtn = document.getElementById('amps-info-btn');
-        const ampsInfoBox = document.getElementById('amps-info');
-        ampsInfoBtn.addEventListener('click', () => {
-            ampsInfoBox.hidden = !ampsInfoBox.hidden;
-        });
-
-        // --- 2. PLAN ---
+        // --- 2. PLAN LOGIC ---
         const btnAddTask = document.getElementById('btn-add-task');
         const inputTaskName = document.getElementById('task-name');
         const inputTaskTime = document.getElementById('task-time');
@@ -897,21 +1386,22 @@
         const taskCounterEl = document.getElementById('task-counter');
         const scheduleControls = document.getElementById('schedule-controls'); 
         const btnGenSchedule = document.getElementById('btn-generate-schedule');
+        
         let editingIndex = -1;
 
         function updateTaskCounterUI() {
             taskCounterEl.textContent = `(${AppState.tasks.length}/${AppState.maxTasks})`;
-            if (AppState.tasks.length >= AppState.maxTasks && editingIndex === -1) {
+            if(AppState.tasks.length >= AppState.maxTasks && editingIndex === -1) {
                 btnAddTask.disabled = true; btnAddTask.innerHTML = "Đã đạt giới hạn";
             } else {
-                btnAddTask.disabled = false; btnAddTask.innerHTML = editingIndex > -1 ? "Cập nhật" : "Thêm nhiệm vụ";
+                btnAddTask.disabled = false; btnAddTask.innerHTML = editingIndex > -1 ? "Cập nhật nhiệm vụ" : "Thêm nhiệm vụ";
             }
             scheduleControls.style.display = AppState.tasks.length > 0 ? 'block' : 'none';
         }
 
         btnAddTask.addEventListener('click', () => {
             const name = inputTaskName.value.trim(); const time = parseInt(inputTaskTime.value);
-            if(!name) return;
+            if(name === '') return;
             if (editingIndex > -1) { AppState.tasks[editingIndex] = { name, time }; editingIndex = -1; } 
             else { if(AppState.tasks.length >= AppState.maxTasks) return; AppState.tasks.push({ name, time }); }
             inputTaskName.value = ''; renderTaskList(); updateTaskCounterUI();
@@ -925,7 +1415,7 @@
             AppState.tasks.forEach((task, index) => {
                 const li = document.createElement('li'); li.className = 'task-item';
                 li.innerHTML = `
-                    <div class="task-info"><span>${index + 1}. ${task.name}</span><span class="task-time-badge">${task.time}p</span></div>
+                    <div class="task-info"><span style="font-weight: 500;">${index + 1}. ${task.name}</span><span class="task-time-badge">${task.time} phút</span></div>
                     <div class="task-actions">
                         <button class="action-btn" onclick="editTask(${index})" title="Sửa"><i class="fa-solid fa-pen"></i></button>
                         <button class="action-btn delete-btn" onclick="deleteTask(${index})" title="Xóa"><i class="fa-solid fa-trash"></i></button>
@@ -937,7 +1427,7 @@
         btnGenSchedule.addEventListener('click', () => {
             const timelineContainer = document.getElementById('timeline-container'); timelineContainer.innerHTML = '';
             const startTimeInput = document.getElementById('schedule-start-time').value;
-            if(!startTimeInput) { alert("Vui lòng chọn thời gian bắt đầu!"); return; }
+            if(!startTimeInput) { alert(window.t("Vui lòng chọn thời gian bắt đầu!")); return; }
 
             const [startHours, startMinutes] = startTimeInput.split(':').map(Number);
             let currentTime = new Date(); currentTime.setHours(startHours, startMinutes, 0, 0);
@@ -957,44 +1447,53 @@
                     breakDiv.innerHTML = `Nghỉ ngơi (15 phút)`; timelineContainer.appendChild(breakDiv);
                 }
             });
-            btnGenSchedule.textContent = "Đã cập nhật lịch!";
-            setTimeout(() => { btnGenSchedule.textContent = "Tạo lịch trình tự động"; }, 1500);
+            btnGenSchedule.textContent = "Đã cập nhật lịch trình!";
+            setTimeout(() => { btnGenSchedule.textContent = "Tạo lịch trình tự động"; }, 2000);
         });
 
-        // --- 3. LEARN ---
+        // --- 3. LEARN LOGIC ---
         const learnCards = document.querySelectorAll('.learn-card');
-        let currentLearnMode = 'pomodoro';
 
         learnCards.forEach(card => {
             card.addEventListener('click', (e) => {
                 if (e.target.closest('.info-btn')) {
                     e.stopPropagation();
                     const info = card.querySelector('.learn-card-info');
-                    const isShown = info.classList.contains('show');
+                    const isCurrentlyShown = info.classList.contains('show');
+                    
                     document.querySelectorAll('.learn-card-info').forEach(el => el.classList.remove('show'));
-                    if (!isShown) info.classList.add('show');
+                    
+                    if (!isCurrentlyShown) {
+                        info.classList.add('show');
+                    }
                     return; 
                 }
                 learnCards.forEach(c => c.classList.remove('active'));
                 card.classList.add('active');
                 currentLearnMode = card.getAttribute('data-mode');
+                
+                hideSessionPopup();
                 resetTimerVisuals();
             });
         });
 
-        // Clock Ticks
         const clockFace = document.getElementById('clock-face');
         for (let i = 0; i < 60; i++) {
             const mark = document.createElement('div');
             mark.style.position = 'absolute'; mark.style.left = '50%'; mark.style.top = '2%';
             mark.style.width = '100%'; mark.style.height = '96%'; mark.style.marginLeft = '-50%';
             mark.style.transform = `rotate(${i * 6}deg)`;
+            
             const tick = document.createElement('div');
             tick.style.position = 'absolute'; tick.style.left = '50%'; tick.style.top = '0';
-            tick.style.width = i % 5 === 0 ? '2px' : '1px';
-            tick.style.height = i % 5 === 0 ? '8px' : '4px';
-            tick.style.background = i % 5 === 0 ? 'rgba(44,62,80,0.6)' : 'rgba(127,140,141,0.3)';
-            tick.style.marginLeft = i % 5 === 0 ? '-1px' : '-0.5px';
+            
+            if (i % 5 === 0) {
+                tick.style.width = '2px'; tick.style.height = '12px';
+                tick.style.background = 'var(--tick-major)'; tick.style.marginLeft = '-1px';
+            } else {
+                tick.style.width = '1px'; tick.style.height = '5px';
+                tick.style.background = 'var(--tick-minor)'; tick.style.marginLeft = '-0.5px';
+            }
             mark.appendChild(tick); clockFace.appendChild(mark);
         }
 
@@ -1007,37 +1506,85 @@
             const seconds = now.getSeconds() + now.getMilliseconds() / 1000;
             const mins = now.getMinutes() + seconds / 60;
             const hours = now.getHours() % 12 + mins / 60;
-            if (secHand) secHand.style.transform = `rotate(${seconds * 6}deg)`;
-            if (minHand) minHand.style.transform = `rotate(${mins * 6}deg)`;
-            if (hourHand) hourHand.style.transform = `rotate(${hours * 30}deg)`;
+
+            secHand.style.transform = `rotate(${seconds * 6}deg)`;
+            minHand.style.transform = `rotate(${mins * 6}deg)`;
+            hourHand.style.transform = `rotate(${hours * 30}deg)`;
             requestAnimationFrame(drawClock);
         }
         drawClock();
 
+        let currentLearnMode = 'pomodoro';
         let timerInterval = null;
-        let timeRemaining = 25 * 60;
-        let totalDuration = 25 * 60;
-        let endTime = 0;
-        let isDigitalClockVisible = true;
+        let isWorkingPhase = true;
+        
+        let timeRemaining = 0;   
+        let totalDuration = 0;   
+        let endTime = 0;         
 
+        let breakInterval = null;
+        let breakTimeRemaining = 0;
+        let breakEndTimeMs = 0;
+
+        let timeElapsed = 0;     
+        let flowStartTime = 0;   
+        let isDigitalClockVisible = true; 
+
+        const gentlyBell = new Audio('https://actions.google.com/sounds/v1/water/droplet_reverb.ogg');
         const digitalClock = document.getElementById('digital-clock');
         const btnToggleDigital = document.getElementById('btn-toggle-digital');
+        const progressSvg = document.getElementById('progress-svg');
         const timerRing = document.getElementById('timer-ring');
         const btnTimerToggle = document.getElementById('btn-timer-toggle');
         const timerStatus = document.getElementById('timer-status');
+        const timerControls = document.getElementById('timer-controls');
+        
         const CIRCUMFERENCE = 301.59;
+        timerRing.style.strokeDasharray = CIRCUMFERENCE;
 
         btnToggleDigital.addEventListener('click', () => {
             isDigitalClockVisible = !isDigitalClockVisible;
-            digitalClock.style.visibility = isDigitalClockVisible ? 'visible' : 'hidden';
-            btnToggleDigital.innerHTML = isDigitalClockVisible ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+            if (isDigitalClockVisible) {
+                digitalClock.style.visibility = 'visible';
+                digitalClock.style.opacity = '1';
+                btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+                btnToggleDigital.title = "Ẩn đồng hồ số";
+            } else {
+                digitalClock.style.visibility = 'hidden';
+                digitalClock.style.opacity = '0';
+                btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                btnToggleDigital.title = "Hiện đồng hồ số";
+            }
+            saveTimerState();
         });
+
+        function getDurationSettings(mode) {
+            if (mode === 'pomodoro') return { work: 25 * 60 };
+            if (mode === 'animedoro') return { work: 45 * 60 };
+            return { work: 0 };
+        }
 
         function formatTimeText(sec) {
             if (sec < 0) sec = 0;
             const m = Math.floor(sec / 60).toString().padStart(2, '0');
             const s = (sec % 60).toString().padStart(2, '0');
             return `${m}:${s}`;
+        }
+
+        function saveTimerState() {
+            localStorage.setItem('insight_timer', JSON.stringify({
+                isWorkingPhase, 
+                timeRemaining, 
+                totalDuration, 
+                endTime,
+                timeElapsed, 
+                flowStartTime, 
+                isRunning: timerInterval !== null,
+                mode: currentLearnMode, 
+                isDigitalClockVisible,
+                isBreakRunning: breakInterval !== null,
+                breakEndTime: breakInterval ? breakEndTimeMs : 0
+            }));
         }
 
         function updateTimerRing() {
@@ -1049,140 +1596,610 @@
 
         function showSessionPopup() {
             const popup = document.getElementById('session-popup');
+            const title = document.getElementById('popup-title');
             const desc = document.getElementById('popup-desc');
-            desc.innerHTML = 'Bạn đã hoàn thành phiên tập trung. Hãy thả lỏng và nghỉ ngơi nhé.';
+            
+            gentlyBell.play().catch(()=>{});
+
+            if (currentLearnMode === 'pomodoro') {
+                title.innerHTML = '🌿 Hết giờ rồi!';
+                desc.innerHTML = 'Bạn đã hoàn thành 25 phút tập trung.<br>Bây giờ hãy dành một chút thời gian để nghỉ ngơi nhé.';
+            } else if (currentLearnMode === 'animedoro') {
+                title.innerHTML = '✨ Hết giờ rồi!';
+                desc.innerHTML = 'Bạn đã hoàn thành 45 phút tập trung.<br>Đến lúc tạm dừng và nghỉ ngơi rồi.';
+            }
+
             popup.style.display = 'flex';
             setTimeout(() => { popup.style.opacity = '1'; popup.style.pointerEvents = 'auto'; }, 10);
         }
 
+        function hideSessionPopup() {
+            const popup = document.getElementById('session-popup');
+            popup.style.opacity = '0';
+            popup.style.pointerEvents = 'none';
+            setTimeout(() => { popup.style.display = 'none'; }, 300);
+        }
+
         document.getElementById('btn-continue-work').addEventListener('click', () => {
-            document.getElementById('session-popup').style.display = 'none';
+            hideSessionPopup();
             resetTimerVisuals(); 
         });
 
         document.getElementById('btn-take-break').addEventListener('click', () => {
-            document.getElementById('session-popup').style.display = 'none';
-            goToTab('pause');
+            hideSessionPopup();
+            startBreakMode();
         });
 
-        function startTimer() {
-            if (timerInterval) return;
-            endTime = Date.now() + timeRemaining * 1000;
+        function startBreakMode(resumeTimeRemaining = null) {
+            isWorkingPhase = false;
+            document.getElementById('focus-visuals').style.display = 'none';
+            document.getElementById('break-screen').style.display = 'flex';
+            document.getElementById('break-end-msg').style.display = 'none';
+            
+            const title = document.getElementById('break-title');
+            const desc = document.getElementById('break-desc');
+            const display = document.getElementById('break-countdown');
+            const btn = document.getElementById('btn-end-break');
+            
+            btn.innerHTML = 'Dừng nghỉ sớm';
 
-            timerInterval = setInterval(() => {
-                let now = Date.now();
-                timeRemaining = Math.ceil((endTime - now) / 1000);
+            if (currentLearnMode === 'pomodoro') {
+                title.innerHTML = '☕ Thời gian nghỉ';
+                desc.innerHTML = 'Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.';
+                breakTimeRemaining = resumeTimeRemaining !== null ? resumeTimeRemaining : 5 * 60;
+            } else {
+                title.innerHTML = '🎬 Thời gian nghỉ';
+                desc.innerHTML = 'Thư giãn một chút trước khi quay lại nhé.';
+                breakTimeRemaining = resumeTimeRemaining !== null ? resumeTimeRemaining : 15 * 60;
+            }
+
+            display.textContent = formatTimeText(breakTimeRemaining);
+            
+            if (breakInterval) clearInterval(breakInterval);
+            
+            breakEndTimeMs = Date.now() + breakTimeRemaining * 1000;
+            saveTimerState(); 
+
+            breakInterval = setInterval(() => {
+                breakTimeRemaining = Math.ceil((breakEndTimeMs - Date.now()) / 1000);
                 
-                if (timeRemaining <= 0) {
-                    timeRemaining = 0;
-                    clearInterval(timerInterval);
-                    timerInterval = null;
-                    updateTimerRing();
-                    digitalClock.textContent = formatTimeText(0);
-                    showSessionPopup();
+                if (breakTimeRemaining <= 0) {
+                    breakTimeRemaining = 0;
+                    clearInterval(breakInterval);
+                    breakInterval = null;
+                    display.textContent = '00:00';
+                    
+                    gentlyBell.play().catch(()=>{});
+                    document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
+                    document.getElementById('break-end-msg').style.display = 'block';
+                    btn.innerHTML = 'Quay lại làm việc';
+                    saveTimerState();
                 } else {
-                    updateTimerRing();
-                    digitalClock.textContent = formatTimeText(timeRemaining);
+                    display.textContent = formatTimeText(breakTimeRemaining);
                 }
             }, 500);
+        }
 
-            btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
-            timerStatus.innerHTML = '<i class="fa-solid fa-briefcase"></i> Đang tập trung';
+        document.getElementById('btn-end-break').addEventListener('click', () => {
+            if (breakInterval) clearInterval(breakInterval);
+            breakInterval = null;
+            document.getElementById('break-screen').style.display = 'none';
+            document.getElementById('focus-visuals').style.display = 'flex';
+            resetTimerVisuals();
+        });
+
+        function handlePhaseComplete() {
+            timeRemaining = 0;
+            updateTimerRing();
+            digitalClock.textContent = formatTimeText(0);
+            clearInterval(timerInterval);
+            timerInterval = null;
+            saveTimerState();
+
+            if (currentLearnMode === 'flowtime') return;
+            showSessionPopup();
+        }
+
+        function startTimer(resumeEndTime = null, resumeStartTime = null) {
+            if (timerInterval) return;
+            
+            if (currentLearnMode === 'flowtime') {
+                flowStartTime = resumeStartTime ? resumeStartTime : (Date.now() - timeElapsed * 1000);
+                saveTimerState();
+
+                timerInterval = setInterval(() => {
+                    let now = Date.now();
+                    timeElapsed = Math.floor((now - flowStartTime) / 1000);
+                    digitalClock.textContent = formatTimeText(timeElapsed);
+                }, 500);
+
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
+                timerStatus.innerHTML = '<i class="fa-solid fa-water"></i> Đang ở chế độ Flowtime (đếm lên)';
+            } else {
+                endTime = resumeEndTime ? resumeEndTime : (Date.now() + timeRemaining * 1000);
+                saveTimerState();
+
+                timerInterval = setInterval(() => {
+                    let now = Date.now();
+                    timeRemaining = Math.ceil((endTime - now) / 1000);
+                    
+                    if (timeRemaining <= 0) {
+                        handlePhaseComplete();
+                    } else {
+                        updateTimerRing();
+                        digitalClock.textContent = formatTimeText(timeRemaining);
+                    }
+                }, 500);
+
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
+                timerStatus.innerHTML = '<i class="fa-solid fa-briefcase"></i> Đang tập trung';
+            }
         }
 
         function pauseTimer() {
             clearInterval(timerInterval);
             timerInterval = null;
-            btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục';
-            timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng';
+            saveTimerState();
+            
+            if (currentLearnMode === 'flowtime') {
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
+                timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng Flow';
+            } else {
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục';
+                timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng';
+            }
         }
 
         function resetTimerVisuals() {
             clearInterval(timerInterval);
             timerInterval = null;
-            if (currentLearnMode === 'pomodoro') totalDuration = 25 * 60;
-            else if (currentLearnMode === 'animedoro') totalDuration = 45 * 60;
-            else totalDuration = 60 * 60;
-            timeRemaining = totalDuration;
-            digitalClock.textContent = formatTimeText(timeRemaining);
-            timerRing.style.strokeDashoffset = 0;
-            btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
-            timerStatus.innerHTML = '';
+            if (breakInterval) clearInterval(breakInterval);
+            breakInterval = null;
+            
+            isWorkingPhase = true;
+            document.getElementById('break-screen').style.display = 'none';
+            document.getElementById('focus-visuals').style.display = 'flex';
+            
+            if (currentLearnMode === 'flowtime') {
+                progressSvg.style.opacity = '0';
+                timerControls.style.display = 'block'; 
+                timeElapsed = 0;
+                digitalClock.textContent = formatTimeText(timeElapsed);
+                
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu Flow';
+                timerStatus.innerHTML = 'Làm việc cho đến khi bạn thấy cần nghỉ.';
+            } else {
+                progressSvg.style.opacity = '1';
+                timerControls.style.display = 'block';
+                const settings = getDurationSettings(currentLearnMode);
+                totalDuration = settings.work;
+                timeRemaining = totalDuration;
+                
+                digitalClock.textContent = formatTimeText(timeRemaining);
+                timerRing.style.strokeDashoffset = 0;
+                timerRing.style.stroke = 'var(--color-text)'; 
+                btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
+                timerStatus.innerHTML = '';
+            }
+            saveTimerState();
         }
 
-        btnTimerToggle.addEventListener('click', () => {
-            if (timerInterval) pauseTimer(); else startTimer();
-        });
+        function loadTimerState() {
+            const saved = localStorage.getItem('insight_timer');
+            if (saved) {
+                const state = JSON.parse(saved);
+                currentLearnMode = state.mode || 'pomodoro';
+                isDigitalClockVisible = state.isDigitalClockVisible ?? true;
+                
+                if (isDigitalClockVisible) {
+                    digitalClock.style.visibility = 'visible'; digitalClock.style.opacity = '1';
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>'; btnToggleDigital.title = "Ẩn đồng hồ số";
+                } else {
+                    digitalClock.style.visibility = 'hidden'; digitalClock.style.opacity = '0';
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>'; btnToggleDigital.title = "Hiện đồng hồ số";
+                }
+                
+                learnCards.forEach(c => { c.classList.toggle('active', c.getAttribute('data-mode') === currentLearnMode); });
 
-        // --- 4. PAUSE ---
+                if (currentLearnMode === 'flowtime') {
+                    progressSvg.style.opacity = '0'; timerControls.style.display = 'block';
+                    if (state.isRunning) {
+                        timeElapsed = state.timeElapsed || 0;
+                        startTimer(null, state.flowStartTime);
+                    } else {
+                        timeElapsed = state.timeElapsed || 0;
+                        digitalClock.textContent = formatTimeText(timeElapsed);
+                        if(timeElapsed === 0) {
+                             btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu Flow';
+                             timerStatus.innerHTML = 'Làm việc cho đến khi bạn thấy cần nghỉ.';
+                        } else {
+                             btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
+                             timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng Flow';
+                        }
+                    }
+                    return;
+                }
+
+                isWorkingPhase = state.isWorkingPhase !== undefined ? state.isWorkingPhase : true;
+                
+                if (!isWorkingPhase) {
+                    const expectedEnd = state.breakEndTime || 0;
+                    const rem = Math.ceil((expectedEnd - Date.now()) / 1000);
+                    
+                    if (state.isBreakRunning && rem > 0) {
+                        startBreakMode(rem);
+                    } else {
+                        document.getElementById('focus-visuals').style.display = 'none';
+                        document.getElementById('break-screen').style.display = 'flex';
+                        document.getElementById('break-countdown').textContent = '00:00';
+                        document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
+                        document.getElementById('break-end-msg').style.display = 'block';
+                        document.getElementById('btn-end-break').innerHTML = 'Quay lại làm việc';
+                    }
+                    return;
+                }
+
+                document.getElementById('break-screen').style.display = 'none';
+                document.getElementById('focus-visuals').style.display = 'flex';
+                
+                totalDuration = state.totalDuration || getDurationSettings(currentLearnMode).work;
+                timerRing.style.stroke = 'var(--color-text)';
+                
+                if (state.isRunning) {
+                    let now = Date.now();
+                    let remaining = Math.ceil((state.endTime - now) / 1000);
+                    if (remaining <= 0) {
+                        handlePhaseComplete(); 
+                    } else {
+                        timeRemaining = remaining;
+                        updateTimerRing();
+                        digitalClock.textContent = formatTimeText(timeRemaining);
+                        startTimer(state.endTime);
+                    }
+                } else {
+                    timeRemaining = state.timeRemaining !== undefined ? state.timeRemaining : totalDuration;
+                    updateTimerRing();
+                    digitalClock.textContent = formatTimeText(timeRemaining);
+                    if (timeRemaining === totalDuration) {
+                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
+                        timerStatus.innerHTML = '';
+                    } else if (timeRemaining <= 0) {
+                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung'; 
+                        handlePhaseComplete();
+                    } else {
+                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục';
+                        timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng';
+                    }
+                }
+                progressSvg.style.opacity = '1'; timerControls.style.display = 'block';
+            } else {
+                resetTimerVisuals();
+            }
+        }
+
+        window.addEventListener('beforeunload', () => { if (timerInterval || breakInterval) saveTimerState(); });
+        document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && (timerInterval || breakInterval)) saveTimerState(); });
+
+        btnTimerToggle.addEventListener('click', () => {
+            if (timerInterval) pauseTimer();
+            else startTimer();
+        });
+        
+        loadTimerState();
+
+        // --- 4. PAUSE LOGIC ---
         const breatheInstruction = document.getElementById('breathe-instruction');
         const breatheTexts = ["Hít vào...", "Giữ...", "Thở ra..."];
         setInterval(() => {
             let elapsedPhase = Math.floor(((Date.now() - breatheStartTime) % 12000) / 4000);
-            if (breatheInstruction) breatheInstruction.textContent = breatheTexts[elapsedPhase] || breatheTexts[0];
-        }, 200); 
+            breatheInstruction.textContent = breatheTexts[elapsedPhase];
+        }, 50); 
 
-        // Canvas Doodling
-        const canvas = document.getElementById('doodle-canvas');
-        const ctx = canvas.getContext('2d');
-        let isDrawing = false;
-        let strokeColor = '#AEC6CF';
-
-        function initCanvas() {
-            const container = canvas.parentElement;
-            if (container) {
-                canvas.width = container.clientWidth;
-                canvas.height = Math.max(260, container.clientHeight - 55);
-                ctx.lineCap = 'round';
-                ctx.lineWidth = 4;
+        class OceanSynth {
+            constructor() { this._volume = 0; this.ctx = null; this.isPlaying = false; }
+            initCtx() { if (!this.ctx) { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } }
+            createPinkNoise() {
+                const bufferSize = this.ctx.sampleRate * 2; const buffer = this.ctx.createBuffer(1, bufferSize, this.ctx.sampleRate);
+                const output = buffer.getChannelData(0); let b0=0, b1=0, b2=0, b3=0, b4=0, b5=0, b6=0;
+                for (let i = 0; i < bufferSize; i++) {
+                    let white = Math.random() * 2 - 1;
+                    b0 = 0.99886 * b0 + white * 0.0555179; b1 = 0.99332 * b1 + white * 0.0750759;
+                    b2 = 0.96900 * b2 + white * 0.1538520; b3 = 0.86650 * b3 + white * 0.3104856;
+                    b4 = 0.55000 * b4 + white * 0.5329522; b5 = -0.7616 * b5 - white * 0.0168980;
+                    output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+                    output[i] *= 0.11; b6 = white * 0.115926;
+                }
+                const noiseSource = this.ctx.createBufferSource(); noiseSource.buffer = buffer; noiseSource.loop = true; return noiseSource;
             }
+            play() {
+                this.initCtx(); if (this.ctx.state === 'suspended') this.ctx.resume(); if (this.isPlaying) return Promise.resolve();
+                this.isPlaying = true; this.noise = this.createPinkNoise();
+                this.filter = this.ctx.createBiquadFilter(); this.filter.type = 'lowpass'; this.filter.Q.value = 0.8; this.filter.frequency.value = 350;
+                this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = this._volume;
+                this.waveGain = this.ctx.createGain(); this.waveGain.gain.value = 0.5;
+                this.lfo = this.ctx.createOscillator(); this.lfo.type = 'sine'; this.lfo.frequency.value = 0.1; 
+                this.lfoGain = this.ctx.createGain(); this.lfoGain.gain.value = 0.4;
+                this.lfoFilterGain = this.ctx.createGain(); this.lfoFilterGain.gain.value = 350; 
+                this.lfo.connect(this.lfoGain); this.lfoGain.connect(this.waveGain.gain);
+                this.lfo.connect(this.lfoFilterGain); this.lfoFilterGain.connect(this.filter.frequency);
+                this.noise.connect(this.filter); this.filter.connect(this.waveGain);
+                this.waveGain.connect(this.masterGain); this.masterGain.connect(this.ctx.destination);
+                this.lfo.start(); this.noise.start();
+                return Promise.resolve();
+            }
+            pause() { if (!this.isPlaying) return; this.isPlaying = false; if (this.noise) { this.noise.stop(); this.noise.disconnect(); } if (this.lfo) { this.lfo.stop(); this.lfo.disconnect(); } }
+            get volume() { return this._volume; }
+            set volume(val) { this._volume = Math.max(0, Math.min(1, val)); if (this.masterGain) this.masterGain.gain.setTargetAtTime(this._volume, this.ctx.currentTime, 0.1); }
+            set currentTime(val) { } set loop(val) { }
         }
 
-        function startDrawing(e) {
-            isDrawing = true;
-            if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
-            draw(e);
-        }
-        function stopDrawing() { isDrawing = false; ctx.beginPath(); }
-        function draw(e) {
-            if (!isDrawing) return;
-            if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
-            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-            const x = clientX - rect.left;
-            const y = clientY - rect.top;
-            ctx.strokeStyle = strokeColor;
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
+        class MultiAudio {
+            constructor(src, count) {
+                this.audios = Array.from({length: count}, () => {
+                    const a = new Audio(src);
+                    a.loop = true;
+                    return a;
+                });
+                this._volume = 0;
+            }
+            play() { this.audios.forEach(a => a.play().catch(()=>{})); return Promise.resolve(); }
+            pause() { this.audios.forEach(a => a.pause()); }
+            get volume() { return this._volume; }
+            set volume(val) { this._volume = val; this.audios.forEach(a => a.volume = val); }
+            set currentTime(val) { this.audios.forEach(a => a.currentTime = val); }
+            set loop(val) { }
         }
 
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('touchstart', startDrawing, { passive: false });
-        canvas.addEventListener('touchmove', draw, { passive: false });
-        canvas.addEventListener('touchend', stopDrawing);
+        const ambientAudioAssets = {
+            'ocean': new OceanSynth(),
+            '432hz': new Audio('https://actions.google.com/sounds/v1/science_fiction/alien_breath.ogg'),
+            'rain': new Audio('https://actions.google.com/sounds/v1/weather/rain_heavy_loud.ogg'),
+            'rainforest': new MultiAudio('https://actions.google.com/sounds/v1/ambiences/jungle_atmosphere_late_night.ogg', 3)
+        };
+        Object.values(ambientAudioAssets).forEach(audio => { audio.loop = true; audio.volume = 0; });
+        let currentAudioKey = 'ocean'; let isSoundOn = false;
+        const ambientCards = document.querySelectorAll('.ambient-card');
+        const widgetBg = document.getElementById('breathing-widget-bg');
+        const btnToggleSound = document.getElementById('btn-toggle-sound');
 
-        document.querySelectorAll('.tool-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                strokeColor = btn.getAttribute('data-color');
+        function fadeInAudio(audio) {
+            audio.play().catch(() => {}); let vol = 0; audio.volume = vol;
+            const interval = setInterval(() => { if (vol < 0.9) { vol += 0.1; audio.volume = vol; } else { audio.volume = 1; clearInterval(interval); } }, 100);
+        }
+        function fadeOutAudio(audio) {
+            let vol = audio.volume;
+            const interval = setInterval(() => { if (vol > 0.1) { vol -= 0.1; audio.volume = vol; } else { audio.volume = 0; audio.pause(); audio.currentTime = 0; clearInterval(interval); } }, 100);
+        }
+
+        ambientCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const targetKey = card.getAttribute('data-key'); if(currentAudioKey === targetKey) return; 
+                ambientCards.forEach(c => c.classList.remove('active')); card.classList.add('active'); widgetBg.style.backgroundColor = card.getAttribute('data-bg');
+                if (currentAudioKey && isSoundOn) fadeOutAudio(ambientAudioAssets[currentAudioKey]);
+                currentAudioKey = targetKey; if (isSoundOn) fadeInAudio(ambientAudioAssets[currentAudioKey]);
             });
         });
 
-        document.getElementById('btn-shatter').addEventListener('click', () => {
-            canvas.classList.add('crumple-anim');
-            setTimeout(() => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                canvas.classList.remove('crumple-anim');
-            }, 500);
+        btnToggleSound.addEventListener('click', () => {
+            isSoundOn = !isSoundOn;
+            if (isSoundOn) { btnToggleSound.classList.add('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> Tắt âm thanh'; fadeInAudio(ambientAudioAssets[currentAudioKey]); } 
+            else { btnToggleSound.classList.remove('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Bật âm thanh'; fadeOutAudio(ambientAudioAssets[currentAudioKey]); }
         });
 
-        // --- CÀI ĐẶT & BẢNG MÀU TÂM LÝ ---
+        // Doodling Canvas
+        const canvas = document.getElementById('doodle-canvas'); const ctx = canvas.getContext('2d');
+        let isDrawing = false; let strokeColor = '#AEC6CF'; let isCanvasInit = false;
+
+        function initCanvas() {
+            if(isCanvasInit) return;
+            const container = canvas.parentElement;
+            if (!container) return;
+            canvas.width = container.clientWidth;
+            canvas.height = Math.max(container.clientHeight - 60, 240); 
+            ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; isCanvasInit = true;
+        }
+
+        window.addEventListener('resize', () => { 
+            if(document.getElementById('pause').classList.contains('active')) { 
+                isCanvasInit = false; 
+                initCanvas(); 
+            }
+        });
+
+        function startDrawing(e) { 
+            isDrawing = true; 
+            draw(e); 
+        } 
+        function stopDrawing() { 
+            isDrawing = false; 
+            ctx.beginPath(); 
+        }
+        function draw(e) {
+            if (!isDrawing) return; 
+            if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const x = clientX - rect.left; 
+            const y = clientY - rect.top;
+            ctx.strokeStyle = strokeColor; 
+            ctx.lineTo(x, y); 
+            ctx.stroke(); 
+            ctx.beginPath(); 
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startDrawing); 
+        canvas.addEventListener('mousemove', draw); 
+        canvas.addEventListener('mouseup', stopDrawing); 
+        canvas.addEventListener('mouseout', stopDrawing);
+        
+        canvas.addEventListener('touchstart', startDrawing, { passive: false }); 
+        canvas.addEventListener('touchmove', draw, { passive: false }); 
+        canvas.addEventListener('touchend', stopDrawing);
+
+        const toolBtns = document.querySelectorAll('.tool-btn');
+        toolBtns.forEach(btn => {
+            btn.addEventListener('click', () => { toolBtns.forEach(b => b.classList.remove('active')); btn.classList.add('active'); strokeColor = btn.getAttribute('data-color'); });
+        });
+
+        const btnShatter = document.getElementById('btn-shatter');
+        const affirmations = [ '"Đã xóa xong. Hãy hít một hơi sâu và thả lỏng đôi vai."', '"Hãy để những lo lắng trôi đi, bạn đã làm đủ tốt rồi."', '"Tờ giấy trống mới đang chờ bạn, không cần vội."', '"Căng thẳng đang giảm dần. Hãy nghỉ thêm một chút nhé."' ];
+        const textOverlay = document.getElementById('affirmation-text');
+
+        btnShatter.addEventListener('click', () => {
+            canvas.classList.add('crumple-anim'); textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)]; textOverlay.style.color = 'var(--color-text)'; 
+            setTimeout(() => { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.classList.remove('crumple-anim'); textOverlay.style.color = 'var(--color-text-light)'; }, 800); 
+        });
+
+        // --- I18N & BẢNG MÀU ---
+        const PAIRS = [
+            ["INSIGHT – Soi Thấu Tâm Trí, Bật Mood Siêu Focus", "INSIGHT – Clear Your Mind, Boost Deep Focus"],
+            ["Soi Thấu Tâm Trí, Bật Mood Siêu Focus", "Clear Your Mind, Boost Deep Focus"],
+            ["Bắt đầu", "Get started"],
+            ["Daily", "Daily"],
+            ["Plan", "Plan"],
+            ["Learn", "Learn"],
+            ["Pause", "Pause"],
+            ["Cài đặt", "Settings"],
+            ["Ngôn ngữ", "Language"],
+            ["Giao diện", "Appearance"],
+            ["Sáng", "Light"],
+            ["Tối", "Dark"],
+            ["Màu nền", "Background"],
+            ["Cầu vồng pastel (Hài hòa cảm xúc)", "Pastel Aurora (Emotional balance)"],
+            ["Xanh xô thơm (Xoa dịu, giảm stress)", "Sage Green (Calming & de-stressing)"],
+            ["Xanh sương mai (Tập trung, hạ hỏa)", "Mist Blue (Deep focus & cooling)"],
+            ["Tím oải hương (Tĩnh tâm, bớt âu lo)", "Lavender (Serenity & eases anxiety)"],
+            ["Yến mạch ấm (Ấn tượng an toàn, thư thái)", "Warm Oat (Safe, grounding & gentle)"],
+            ["Hồng đào dịu (Khoan dung với chính mình)", "Soft Peach (Self-compassion & warmth)"],
+            ["Khởi động nhẹ nhàng", "A gentle start"],
+            ["Ghi nhận trạng thái của bạn trước khi làm việc.", "Check in with how you feel before you start."],
+            ["\"Hãy bắt đầu từ những bước nhỏ nhất, hoàn thành quan trọng hơn hoàn hảo.\"", "\"Start with the smallest step. Done matters more than perfect.\""],
+            ["Tâm trạng hiện tại của bạn thế nào?", "How are you feeling right now?"],
+            ["Hãy chọn một biểu tượng để bắt đầu.", "Pick an emoji to begin."],
+            ["Hôm nay có vẻ nặng nề. Hãy làm từng việc nhỏ và cho phép bản thân đi chậm lại.", "Today feels heavy. Take one small task at a time and allow yourself to slow down."],
+            ["Bạn đang hơi mệt. Hãy làm từ từ, đừng ép bản thân quá.", "You seem a bit tired. Go steady and don't push yourself too hard."],
+            ["Tâm trạng ổn định. Hãy giữ nhịp độ vừa phải nhé.", "A steady mood. Keep a comfortable pace."],
+            ["Tâm trạng khá tốt. Một khởi đầu thuận lợi cho ngày hôm nay.", "A good mood. A solid start to the day."],
+            ["Bạn đang tràn đầy năng lượng! Hãy tận dụng để xử lý những việc quan trọng.", "You're full of energy! Use it for your most important tasks."],
+            ["Thang đo AMPS", "AMPS scale"],
+            ["Xem thông tin thang đo", "About this scale"],
+            ["Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.", "Maladaptive perfectionism means setting standards that are unrealistically high, leading to anxiety, self-blame and procrastination."],
+            ["Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.", "This is a quick self-assessment tool and does not replace a professional diagnosis."],
+            ["Hôm nay, bạn có đang quá khắt khe với bản thân không?", "Are you being too hard on yourself today?"],
+            ["Trả lời vài câu ngắn để xem mức độ cầu toàn của bạn hôm nay.", "Answer a few short questions to see how perfectionistic you feel today."],
+            ["Hoàn toàn không đúng", "Completely untrue"],
+            ["Hoàn toàn đúng", "Completely true"],
+            ["Xem kết quả & lập kế hoạch", "See results & plan"],
+            ["Đang chuyển sang Kế hoạch...", "Moving to Plan..."],
+            ["Hôm nay mức độ cầu toàn của bạn khá cao. Hãy thử chuyển sang tab Nghỉ ngơi và dành cho bản thân một khoảng nghỉ.", "Your perfectionism level looks fairly high today. Try the Rest tab and give yourself a break."],
+            ["Hệ thống đã giới hạn danh sách việc xuống còn", "The to-do list has been limited to"],
+            ["Bạn có vẻ đang hơi khắt khe với bản thân.", "You seem to be a little hard on yourself."],
+            ["Bạn vẫn có thể chọn", "You can still choose"],
+            [", hãy làm việc nhẹ nhàng, không cần hoàn hảo.", ", so work gently; perfection isn't required."],
+            ["Hôm nay, bạn đang khá nhẹ nhàng với chính mình 🌱", "Today you're being kind to yourself 🌱"],
+            ["Bạn đang khá thoải mái. Bạn có thể chọn tối đa", "You're fairly relaxed. You can choose up to"],
+            ["Quy tắc 3 việc (điều chỉnh theo kết quả AMPS). Hôm nay hãy giảm bớt kỳ vọng và chọn ít việc hơn.", "The Rule of 3 (adjusted by your AMPS result). Lower your expectations today and pick fewer tasks."],
+            ["Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu.", "The Rule of 5: limit your tasks to avoid overload and make starting easier."],
+            ["Mức AMPS cao: hôm nay nên chọn tối đa 3 nhiệm vụ.", "High AMPS level: choose at most 3 tasks today."],
+            ["Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.", "Choose only your 5 most important tasks today."],
+            ["Kế hoạch hôm nay", "Today's plan"],
+            ["Danh sách việc cần làm", "To-do list"],
+            ["Ví dụ: Học IELTS...", "e.g. Study for IELTS..."],
+            ["25 phút (1 Pomodoro)", "25 min (1 Pomodoro)"],
+            ["50 phút (2 Pomodoro)", "50 min (2 Pomodoro)"],
+            ["90 phút (làm việc sâu)", "90 min (deep work)"],
+            ["Thêm nhiệm vụ", "Add task"],
+            ["Đã đạt giới hạn", "Limit reached"],
+            ["Cập nhật nhiệm vụ", "Update task"],
+            ["Sửa", "Edit"],
+            ["Xóa", "Delete"],
+            ["Giờ bắt đầu:", "Start time:"],
+            ["Tạo lịch trình tự động", "Generate schedule"],
+            ["Đã cập nhật lịch trình!", "Schedule updated!"],
+            ["Lịch trình dự kiến", "Planned schedule"],
+            ["Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.", "No schedule yet. Add tasks, then choose a start time to generate one."],
+            ["Nghỉ ngơi (15 phút)", "Break (15 min)"],
+            ["Vui lòng chọn thời gian bắt đầu!", "Please choose a start time!"],
+            ["Flowtime (Tự do)", "Flowtime (Free)"],
+            ["Xem chi tiết", "View details"],
+            ["Tính năng:", "Feature:"],
+            ["Dùng khi nào:", "Best for:"],
+            ["Cách thực hiện:", "How to:"],
+            ["Làm việc tập trung 25 phút, sau đó nghỉ ngắn 5 phút.", "Work with full focus for 25 minutes, then take a 5-minute break."],
+            ["Phù hợp khi bạn có nhiều việc nhỏ hoặc đang khó bắt đầu.", "Good when you have many small tasks or find it hard to get started."],
+            ["Tập trung trọn vẹn rồi bắt đầu. Khi nghỉ, hãy đứng dậy đi lại.", "Focus fully and start. During the break, stand up and move around."],
+            ["Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).", "Work with focus for 45 minutes, then take a 15-minute entertainment break (e.g. a short episode)."],
+            ["Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.", "Good for a large task when you want a reward to stay motivated."],
+            ["Tập trung trong 45 phút, sau đó thư giãn 15 phút.", "Focus for 45 minutes, then relax for 15."],
+            ["Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.", "A count-up timer with no time limit. You decide when to take a break."],
+            ["Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).", "Good when you're absorbed in your work (coding, design, writing)."],
+            ["Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.", "Work with your natural focus and press pause when you need a rest."],
+            ["Ẩn đồng hồ số", "Hide digital clock"],
+            ["Hiện đồng hồ số", "Show digital clock"],
+            ["Bắt đầu tập trung", "Start focusing"],
+            ["Tạm dừng", "Pause"],
+            ["Tiếp tục", "Continue"],
+            ["Bắt đầu Flow", "Start Flow"],
+            ["Tiếp tục Flow", "Resume Flow"],
+            ["Đang tập trung", "Focusing"],
+            ["Đã tạm dừng", "Paused"],
+            ["Đang ở chế độ Flowtime (đếm lên)", "In Flowtime (counting up)"],
+            ["Đã tạm dừng Flow", "Flow paused"],
+            ["Làm việc cho đến khi bạn thấy cần nghỉ.", "Work until you feel you need a break."],
+            ["\"Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung.\"", "\"Time keeps passing, but you don't have to chase it. Relax and focus.\""],
+            ["🌿 Hết giờ rồi!", "🌿 Time's up!"],
+            ["✨ Hết giờ rồi!", "✨ Time's up!"],
+            ["Bạn đã hoàn thành 25 phút tập trung.", "You've completed 25 focused minutes."],
+            ["Bây giờ hãy dành một chút thời gian để nghỉ ngơi nhé.", "Now take a little time to rest."],
+            ["Bạn đã hoàn thành 45 phút tập trung.", "You've completed 45 focused minutes."],
+            ["Đến lúc tạm dừng và nghỉ ngơi rồi.", "Time to pause and rest."],
+            ["☕ Thời gian nghỉ", "☕ Break time"],
+            ["🎬 Thời gian nghỉ", "🎬 Break time"],
+            ["Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.", "Set your work aside and give your mind a pause."],
+            ["Thư giãn một chút trước khi quay lại nhé.", "Relax a little before getting back to it."],
+            ["✨ Hết giờ nghỉ", "✨ Break is over"],
+            ["🌱 Hết giờ nghỉ", "🌱 Break is over"],
+            ["Quay lại làm việc", "Back to work"],
+            ["Dừng nghỉ sớm", "End break early"],
+            ["Không gian nghỉ ngơi", "A place to rest"],
+            ["Dành một chút thời gian để nghỉ ngơi. Cho phép bản thân thả lỏng.", "Take a little time to rest. Allow yourself to relax."],
+            ["Hít thở nhịp 4-4-4", "Breathing 4-4-4"],
+            ["Hít vào...", "Breathe in..."],
+            ["Giữ...", "Hold..."],
+            ["Thở ra...", "Breathe out..."],
+            ["Đại dương", "Ocean"],
+            ["Âm thanh nền trầm", "Low ambient tone"],
+            ["Mưa", "Rain"],
+            ["Rừng mưa nhiệt đới", "Rainforest"],
+            ["Bật âm thanh", "Turn sound on"],
+            ["Tắt âm thanh", "Turn sound off"],
+            ["Bảng vẽ tự do", "Free drawing board"],
+            ["Vẽ tự do để thư giãn.", "Draw freely to unwind."],
+            ["Xóa toàn bộ", "Clear all"],
+            ["\"Cứ vẽ bất cứ điều gì bạn muốn, không ai chấm điểm cả.\"", "\"Draw whatever you like. Nobody is grading it.\""],
+            ["\"Đã xóa xong. Hãy hít một hơi sâu và thả lỏng đôi vai.\"", "\"Cleared. Take a deep breath and relax your shoulders.\""],
+            ["\"Hãy để những lo lắng trôi đi, bạn đã làm đủ tốt rồi.\"", "\"Let the worries go; you've done enough.\""],
+            ["\"Tờ giấy trống mới đang chờ bạn, không cần vội.\"", "\"A fresh blank page is waiting; no need to hurry.\""],
+            ["\"Căng thẳng đang giảm dần. Hãy nghỉ thêm một chút nhé.\"", "\"Tension is easing. Rest a little longer.\""],
+            ["Dù chưa bắt đầu, tôi đã lo rằng kết quả hôm nay sẽ không được như ý.", "Even before starting, I worry today's results won't turn out as I hope."],
+            ["Tôi thường nghĩ rằng một sai sót nhỏ cũng có thể khiến cả kết quả trở nên tệ đi.", "I often think a small mistake can ruin the whole result."],
+            ["Khi làm một việc quan trọng, tôi thường lo mình sẽ không đạt được kết quả tốt nhất.", "When doing something important, I often worry I won't achieve the best result."],
+            ["Tôi thường đặt mục tiêu cao hơn khả năng thực tế của mình.", "I often set goals higher than my real ability."],
+            ["Tôi cảm thấy một kết quả chỉ thật sự tốt khi nó gần như hoàn hảo.", "I feel a result is only truly good when it is almost perfect."],
+            ["Tôi thường tự đặt ra những yêu cầu rất cao cho những việc tưởng như đơn giản.", "I often set very high demands for seemingly simple things."],
+            ["Tôi từng trì hoãn bắt đầu một việc vì sợ mình không thể làm thật tốt.", "I have put off starting something because I feared I couldn't do it really well."],
+            ["Tôi có xu hướng chờ đến khi cảm thấy “đủ sẵn sàng” mới bắt đầu.", "I tend to wait until I feel “ready enough” before starting."],
+            ["Tôi thà không làm còn hơn làm nhưng mắc nhiều sai sót.", "I would rather not do something than do it with many mistakes."],
+            ["Tôi thường tự trách mình khá lâu vì một lỗi nhỏ.", "I often blame myself for quite a while over a small mistake."],
+            ["Khi mắc lỗi, tôi dễ tập trung vào điều mình làm chưa tốt hơn là những gì mình đã làm được.", "When I make a mistake, I focus more on what went wrong than on what I achieved."],
+            ["Tôi thường cảm thấy mình chưa đủ tốt dù đã hoàn thành nhiều việc.", "I often feel I'm not good enough even after finishing many things."],
+            ["Tôi cảm thấy mình nên luôn làm một việc gì đó có ích thay vì nghỉ ngơi.", "I feel I should always be doing something useful instead of resting."],
+            ["Khi thấy người khác học tập hoặc làm việc rất năng suất, tôi cảm thấy mình cũng phải cố gắng hơn.", "When I see others studying or working very productively, I feel I must try harder too."],
+            ["Tôi cảm thấy một ngày không hiệu quả nếu mình không hoàn thành đủ những việc đã đặt ra.", "I feel a day is unproductive if I don't finish everything I planned."]
+        ];
+
         const PSYCH_PALETTES = {
             mesh: { c1: 'rgba(169, 209, 186, 0.75)', c2: 'rgba(242, 185, 179, 0.60)', c3: 'rgba(195, 177, 225, 0.50)', c4: 'rgba(174, 198, 207, 0.60)' },
             sage: { c1: 'rgba(162, 210, 182, 0.85)', c2: 'rgba(195, 230, 212, 0.70)', c3: 'rgba(141, 190, 163, 0.65)', c4: 'rgba(215, 238, 225, 0.80)' },
@@ -1192,53 +2209,118 @@
             peach: { c1: 'rgba(249, 197, 190, 0.85)', c2: 'rgba(253, 220, 215, 0.70)', c3: 'rgba(242, 178, 170, 0.60)', c4: 'rgba(254, 235, 233, 0.80)' }
         };
 
-        function applyBgPalette(key) {
-            const palette = PSYCH_PALETTES[key] || PSYCH_PALETTES.mesh;
-            const root = document.documentElement;
-            root.style.setProperty('--mesh-c1', palette.c1);
-            root.style.setProperty('--mesh-c2', palette.c2);
-            root.style.setProperty('--mesh-c3', palette.c3);
-            root.style.setProperty('--mesh-c4', palette.c4);
+        (function () {
+            const norm = s => s.replace(/\s+/g, ' ').trim();
+            const D = new Map(PAIRS.map(([a, b]) => [norm(a), b]));
+            const RX = [[/^Điểm hôm nay: (\d+)\/25$/, "Today's score: $1/25"], [/^(\d+) phút$/, '$1 min'], [/^(\d+) nhiệm vụ$/, '$1 tasks']];
+            const store = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+            const save = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+            
+            let lang = store('insight_lang') === 'en' ? 'en' : 'vi';
+            let themePref = store('insight_theme') === 'dark' ? 'dark' : 'light';
+            let bgTheme = store('insight_bg') || 'mesh';
+
+            function tr(s) {
+                const n = norm(s); if (!n) return s;
+                let o = D.get(n);
+                if (o === undefined) for (const [r, v] of RX) if (r.test(n)) { o = n.replace(r, v); break; }
+                if (o === undefined) { const m = n.match(/^(\d+)\. (.+)$/); if (m && D.has(m[2])) o = m[1] + '. ' + D.get(m[2]); }
+                if (o === undefined) return s;
+                return s.match(/^\s*/)[0] + o + s.match(/\s*$/)[0];
+            }
+            window.t = s => lang === 'en' ? tr(s) : s;
+
+            function procText(n) {
+                if (n.__cur !== undefined && n.data === n.__cur) return;
+                const src = n.data, out = lang === 'en' ? tr(src) : src;
+                n.__vi = src; n.__cur = out; if (out !== src) n.data = out;
+            }
+            function procAttr(el, a) {
+                const v = el.getAttribute(a); if (v === null) return;
+                const k = '__a_' + a, st = el[k]; if (st && st.cur === v) return;
+                const out = lang === 'en' ? tr(v) : v;
+                el[k] = { vi: v, cur: out }; if (out !== v) el.setAttribute(a, out);
+            }
+            function walk(root) {
+                if (root.nodeType === 3) { if (!/^(SCRIPT|STYLE)$/.test(root.parentNode.nodeName)) procText(root); return; }
+                if (root.nodeType !== 1) return;
+                const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+                let n; while ((n = w.nextNode())) procText(n);
+                [root, ...root.querySelectorAll('[title],[placeholder]')].forEach(el => { procAttr(el, 'title'); procAttr(el, 'placeholder'); });
+            }
+            const mo = new MutationObserver(ms => ms.forEach(m => {
+                if (m.type === 'childList') m.addedNodes.forEach(walk);
+                else if (m.type === 'characterData') procText(m.target);
+                else procAttr(m.target, m.attributeName);
+            }));
+
+            function setLang(l) {
+                lang = l; save('insight_lang', l); document.documentElement.lang = l;
+                const w = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+                let n; while ((n = w.nextNode())) {
+                    if (/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue;
+                    const src = n.__vi !== undefined && n.data === n.__cur ? n.__vi : n.data;
+                    const out = l === 'en' ? tr(src) : src; n.__vi = src; n.__cur = out; if (n.data !== out) n.data = out;
+                }
+                document.querySelectorAll('[title],[placeholder]').forEach(el => ['title', 'placeholder'].forEach(a => {
+                    const st = el['__a_' + a]; if (!st || el.getAttribute(a) === null) return;
+                    const vi = el.getAttribute(a) === st.cur ? st.vi : el.getAttribute(a);
+                    const out = l === 'en' ? tr(vi) : vi; el['__a_' + a] = { vi, cur: out }; el.setAttribute(a, out);
+                }));
+                document.querySelectorAll('#seg-lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === l));
+            }
+
+            function applyTheme() {
+                const dark = themePref === 'dark';
+                document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+                document.querySelectorAll('#seg-theme button').forEach(b => b.setAttribute('aria-pressed', b.dataset.themeOpt === themePref));
+            }
+
+            function applyBgPalette(key) {
+                const palette = PSYCH_PALETTES[key] || PSYCH_PALETTES.mesh;
+                const root = document.documentElement;
+                root.style.setProperty('--mesh-c1', palette.c1);
+                root.style.setProperty('--mesh-c2', palette.c2);
+                root.style.setProperty('--mesh-c3', palette.c3);
+                root.style.setProperty('--mesh-c4', palette.c4);
+
+                document.querySelectorAll('.color-swatch').forEach(swatch => {
+                    swatch.classList.toggle('active', swatch.dataset.bgTheme === key);
+                });
+            }
+
+            walk(document.documentElement);
+            mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['title', 'placeholder'] });
+            
+            if (lang === 'en') setLang('en'); else setLang('vi');
+            applyTheme();
+            applyBgPalette(bgTheme);
+
+            document.querySelectorAll('#seg-lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
+            document.querySelectorAll('#seg-theme button').forEach(b => b.addEventListener('click', () => { 
+                themePref = b.dataset.themeOpt; 
+                save('insight_theme', themePref); 
+                applyTheme(); 
+            }));
 
             document.querySelectorAll('.color-swatch').forEach(swatch => {
-                swatch.classList.toggle('active', swatch.dataset.bgTheme === key);
+                swatch.addEventListener('click', () => {
+                    const chosen = swatch.dataset.bgTheme;
+                    bgTheme = chosen;
+                    save('insight_bg', chosen);
+                    applyBgPalette(chosen);
+                });
             });
-            SafeStore.set('insight_bg', key);
-        }
 
-        document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.addEventListener('click', () => applyBgPalette(swatch.dataset.bgTheme));
-        });
+            const sBtn = document.getElementById('settings-btn'), sPop = document.getElementById('settings-pop');
+            const toggleS = open => { sPop.hidden = !open; sBtn.setAttribute('aria-expanded', open); };
+            sBtn.addEventListener('click', e => { e.stopPropagation(); toggleS(sPop.hidden); });
+            document.addEventListener('click', e => { if (!sPop.hidden && !sPop.contains(e.target)) toggleS(false); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleS(false); });
 
-        // Theme Toggle (Sáng / Tối)
-        function applyTheme(theme) {
-            document.documentElement.dataset.theme = theme;
-            document.querySelectorAll('#seg-theme button').forEach(b => {
-                b.setAttribute('aria-pressed', b.dataset.themeOpt === theme);
-            });
-            SafeStore.set('insight_theme', theme);
-        }
-
-        document.querySelectorAll('#seg-theme button').forEach(btn => {
-            btn.addEventListener('click', () => applyTheme(btn.dataset.themeOpt));
-        });
-
-        // Popup Cài đặt
-        const sBtn = document.getElementById('settings-btn');
-        const sPop = document.getElementById('settings-pop');
-        sBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            sPop.hidden = !sPop.hidden;
-        });
-        document.addEventListener('click', (e) => {
-            if (!sPop.hidden && !sPop.contains(e.target)) sPop.hidden = true;
-        });
-
-        // Khởi tạo
-        applyTheme(SafeStore.get('insight_theme', 'light'));
-        applyBgPalette(SafeStore.get('insight_bg', 'mesh'));
-        resetTimerVisuals();
-        window.addEventListener('resize', initCanvas);
+            const iBtn = document.getElementById('amps-info-btn'), iBox = document.getElementById('amps-info');
+            iBtn.addEventListener('click', () => { iBox.hidden = !iBox.hidden; iBtn.setAttribute('aria-expanded', !iBox.hidden); });
+        })();
     </script>
 </body>
 </html>
