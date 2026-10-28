@@ -41,7 +41,7 @@
             --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
             --transition: all 0.3s var(--ease-ios);
 
-            /* Dynamic Psychological Background Stops */
+            /* Dynamic Psychological Background Gradient Stops */
             --mesh-c1: rgba(169, 209, 186, 0.75);
             --mesh-c2: rgba(242, 185, 179, 0.60);
             --mesh-c3: rgba(195, 177, 225, 0.50);
@@ -75,7 +75,7 @@
         h3 small { font-weight: 400; color: var(--color-text-light); font-size: 0.8rem; }
         button, input, select { font-family: var(--font-ui); }
 
-        /* Dynamic Animated Background */
+        /* Dynamic Psychological Animated Background */
         body::before {
             content: ''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
             background:
@@ -84,7 +84,7 @@
                 radial-gradient(45% 45% at 76% 86%, var(--mesh-c3) 0%, transparent 70%),
                 radial-gradient(36% 36% at 20% 84%, var(--mesh-c4) 0%, transparent 70%);
             filter: blur(28px);
-            animation: meshDrift 28s ease-in-out infinite alternate;
+            animation: meshDrift 30s ease-in-out infinite alternate;
             transition: background 1s ease-in-out;
         }
         @keyframes meshDrift {
@@ -155,9 +155,10 @@
             gap: 10px;
             box-shadow: 0 6px 18px rgba(44, 62, 80, 0.22);
         }
+        .welcome-btn:hover { transform: translateY(-2px); opacity: 1; filter: brightness(1.08); }
         .welcome-btn:active { transform: scale(0.97); }
 
-        /* --- SIDEBAR / NAVIGATION --- */
+        /* --- SIDEBAR & NAVIGATION --- */
         .sidebar {
             width: 280px;
             background: var(--glass-bg);
@@ -199,10 +200,10 @@
         }
         .nav-item:active { transform: scale(0.97); }
 
-        /* --- SETTINGS POPUP --- */
+        /* --- SETTINGS POPUP (NGUYÊN BẢN GỐC) --- */
         .settings-wrap { margin-top: auto; position: relative; }
         .settings-btn { 
-            width: 100%; display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.25rem; 
+            width: 100%; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; 
             border: none; background: transparent; border-radius: var(--radius-md); 
             color: var(--color-text-light); font: inherit; font-weight: 500; cursor: pointer; 
             transition: var(--transition); 
@@ -210,52 +211,50 @@
         .settings-btn i { font-size: 1.2rem; width: 24px; text-align: center; }
         .settings-btn:hover, .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.45); color: var(--color-text); }
         
-        .settings-backdrop {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.35);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            z-index: 1000;
-        }
-        .settings-backdrop.show { display: block; }
-
+        /* POPUP CÀI ĐẶT: Nền đục 95% + bóng đổ mạnh để không bị lộ chữ phía dưới */
         .settings-pop { 
             position: absolute; 
             left: 0; 
             bottom: calc(100% + 12px); 
-            width: 280px; 
-            padding: 1.35rem; 
-            border-radius: var(--radius-lg); 
-            background: rgba(255, 255, 255, 0.95); 
-            -webkit-backdrop-filter: blur(24px); 
-            backdrop-filter: blur(24px); 
+            width: 270px; 
+            padding: 1.25rem; 
+            border-radius: var(--radius-md); 
+            background: rgba(255, 255, 255, 0.94); 
+            -webkit-backdrop-filter: blur(20px); 
+            backdrop-filter: blur(20px); 
             border: 1px solid rgba(255, 255, 255, 0.9); 
-            box-shadow: 0 16px 36px rgba(44, 62, 80, 0.16); 
-            z-index: 1001; 
+            box-shadow: 0 14px 35px rgba(44, 62, 80, 0.16), 0 2px 6px rgba(0,0,0,0.04); 
+            z-index: 1000; 
             animation: fadeIn .25s ease-out; 
         }
         .settings-pop[hidden] { display: none; }
-        .settings-pop-header { display: none; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 0.6rem; }
-        .settings-pop-header span { font-weight: 600; font-size: 1.05rem; }
-        .settings-close-btn { background: none; border: none; font-size: 1.2rem; color: var(--color-text-light); cursor: pointer; padding: 4px; }
-        
         .settings-pop h4 { font: 600 .85rem var(--font-ui); color: var(--color-text-light); margin: 0 0 .5rem; }
         .settings-pop h4:not(:first-child) { margin-top: 1.15rem; }
         
-        .seg { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: rgba(44,62,80,.07); }
-        .seg button { flex: 1; border: none; background: transparent; padding: .55rem .4rem; border-radius: 9px; font: inherit; font-size: .88rem; color: var(--color-text-light); cursor: pointer; transition: var(--transition); }
+        .seg { display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: rgba(44,62,80,.08); }
+        .seg button { flex: 1; border: none; background: transparent; padding: .5rem .4rem; border-radius: 9px; font: inherit; font-size: .88rem; color: var(--color-text-light); cursor: pointer; transition: var(--transition); }
         .seg button[aria-pressed="true"] { background: var(--bg-card); color: var(--color-text); font-weight: 600; box-shadow: var(--shadow-sm); }
 
-        .color-palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 0.4rem; }
-        .color-swatch {
-            width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.9);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.12); cursor: pointer; transition: transform 0.2s;
+        .color-palette-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 0.4rem;
         }
-        .color-swatch:active, .color-swatch.active { border-color: var(--color-text); transform: scale(1.12); }
+        .color-swatch {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.85);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .color-swatch:hover { transform: scale(1.15); box-shadow: 0 4px 8px rgba(0,0,0,0.18); }
+        .color-swatch.active { border-color: var(--color-text); transform: scale(1.12); outline: 2px solid var(--color-accent); outline-offset: 1px; }
 
-        /* --- MAIN CONTENT --- */
+        /* --- MAIN CONTENT AREA --- */
         .main-content {
             flex: 1;
             padding: 2.5rem 3.5rem;
@@ -299,6 +298,7 @@
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 6px 16px rgba(44, 62, 80, 0.2);
             min-height: 44px;
         }
+        button.primary-btn:hover { transform: translateY(-2px); opacity: 1; filter: brightness(1.08); }
         button.primary-btn:active { transform: scale(0.97) !important; }
         button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
@@ -313,6 +313,7 @@
             transition: var(--transition);
             min-height: 44px;
         }
+        button.secondary-btn:hover { background: rgba(255, 255, 255, 0.85); color: var(--color-text); }
         button.secondary-btn:active { transform: scale(0.97) !important; }
 
         /* --- 1. DAILY VIEW --- */
@@ -525,113 +526,64 @@
         .tool-lavender { background: #C3B1E1; }
         
         .shatter-btn { background: var(--color-text); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
-        .shatter-btn:active { background: #E74C3C; }
+        .shatter-btn:hover { background: #E74C3C; }
 
         #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background: rgba(255,255,255,0.35); width: 100%; height: 100%; }
         .affirmation-overlay { position: absolute; bottom: 15px; left: 10px; right: 10px; text-align: center; color: var(--color-text-light); font-style: italic; pointer-events: none; font-size: 0.85rem; }
 
         /* =====================================================================
-           MOBILE SPECIFIC ADJUSTMENTS (Fit màn hình, không đè lấn)
+           RESPONSIVE MOBILE LOGIC (Fit màn hình & Chống tràn)
            ===================================================================== */
         @media (max-width: 900px) {
             body { 
-                flex-direction: column-reverse; /* Đặt thanh điều hướng xuống đáy để dùng 1 tay thuận tiện */
-                height: 100dvh;
+                flex-direction: column; 
             }
-
             .sidebar {
                 width: 100%;
-                height: auto;
-                padding: 0.5rem 0.8rem;
-                padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+                padding: 0.75rem 1rem;
                 flex-direction: row;
                 align-items: center;
-                justify-content: space-around;
+                justify-content: space-between;
                 border-right: none;
-                border-top: 1px solid var(--glass-border);
-                box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
-                z-index: 999;
-                background: rgba(255, 255, 255, 0.88);
+                border-bottom: 1px solid var(--glass-border);
             }
-
-            .logo-area { display: none; } /* Ẩn logo ở navbar để nhường chỗ cho các tab trên mobile */
+            .logo-area { margin-bottom: 0; }
+            .logo-title { font-size: 1.8rem; }
+            .logo-slogan { display: none; }
 
             .nav-menu { 
                 flex-direction: row; 
-                flex: 1; 
-                justify-content: space-around; 
-                gap: 0.3rem; 
+                flex: unset; 
+                gap: 0.4rem; 
             }
-            .nav-item {
-                flex-direction: column;
-                gap: 3px;
-                padding: 0.4rem 0.6rem;
-                font-size: 0.75rem;
-                border-radius: var(--radius-sm);
-                min-width: 48px;
-                justify-content: center;
-            }
-            .nav-item i { font-size: 1.15rem; width: auto; }
-            .nav-item span { display: block; font-size: 0.72rem; }
-            .nav-item.active { box-shadow: none; border-color: rgba(44, 62, 80, 0.15); }
+            .nav-item { padding: 0.6rem 0.8rem; gap: 0.4rem; }
+            .nav-item span { display: none; }
 
-            .settings-wrap { 
-                margin-top: 0; 
-                display: flex; 
-                align-items: center; 
-            }
-            .settings-btn { 
-                flex-direction: column; 
-                gap: 3px; 
-                padding: 0.4rem 0.6rem; 
-                font-size: 0.75rem; 
-                min-width: 48px; 
-                justify-content: center; 
-            }
-            .settings-btn i { font-size: 1.15rem; width: auto; }
-            .settings-btn span { font-size: 0.72rem; display: block; }
-
-            /* Settings chuyển thành Bottom Sheet Popup trên Mobile */
-            .settings-pop {
-                position: fixed;
-                left: 1rem;
-                right: 1rem;
-                bottom: calc(75px + env(safe-area-inset-bottom));
-                width: auto;
-                max-width: 450px;
-                margin: 0 auto;
-                border-radius: var(--radius-lg);
-                box-shadow: 0 10px 40px rgba(0,0,0,0.25);
-                z-index: 1002;
-            }
-            .settings-pop-header { display: flex; }
-
-            .main-content {
-                padding: 1.25rem 1.25rem calc(80px + env(safe-area-inset-bottom)) 1.25rem;
-            }
-
-            .card { padding: 1.4rem; }
-            .plan-container { grid-template-columns: 1fr; gap: 1.5rem; }
-            .learn-cards-container { flex-direction: column; gap: 0.8rem; }
-            .pause-container { grid-template-columns: 1fr; min-height: auto; gap: 1.5rem; }
+            .settings-wrap { margin-top: 0; }
+            .settings-btn { padding: 0.6rem 0.8rem; gap: 0.4rem; }
+            .settings-btn span { display: none; }
             
-            .doodling-area { min-height: 340px; height: 340px; }
+            /* Đảm bảo popup trên mobile nằm gọn góc phải và không bị khuất */
+            .settings-pop {
+                left: auto;
+                right: 0;
+                bottom: auto;
+                top: calc(100% + 10px);
+                max-width: 90vw;
+            }
+
+            .main-content { padding: 1.5rem 1.25rem; }
+            .plan-container { grid-template-columns: 1fr; }
+            .learn-cards-container { flex-direction: column; }
+            .pause-container { grid-template-columns: 1fr; min-height: auto; }
+            .doodling-area { min-height: 350px; height: 350px; }
         }
 
         @media (max-width: 600px) {
-            .main-content { padding: 1rem 1rem calc(75px + env(safe-area-inset-bottom)) 1rem; }
-            .card { padding: 1.2rem; border-radius: var(--radius-md); }
-            .section-header h2 { font-size: 1.55rem; }
-            
-            .task-input-group { flex-direction: column; gap: 0.6rem; }
-            .task-input-group input[type="text"], .task-input-group select { width: 100%; }
-            
+            .task-input-group { flex-direction: column; }
             .task-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
             .task-info { width: 100%; justify-content: space-between; }
             .task-actions { width: 100%; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.5rem; }
-            
-            #break-countdown { font-size: 3.5rem !important; }
-            .clock-container { margin-bottom: 1.4rem; }
         }
 
         /* --- DARK THEME OVERRIDES --- */
@@ -643,16 +595,15 @@
             --tick-major: rgba(230,235,240,.7); --tick-minor: rgba(157,170,183,.4); 
         }
         html[data-theme="dark"] body::before { opacity: .35; }
-        html[data-theme="dark"] .sidebar { background: rgba(23, 31, 40, 0.92); }
         html[data-theme="dark"] .settings-pop { 
             background: rgba(27, 36, 45, 0.96); 
             border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.45);
         }
         html[data-theme="dark"] .welcome-content { background: var(--glass-bg); }
         html[data-theme="dark"] .welcome-btn, html[data-theme="dark"] button.primary-btn { background: linear-gradient(180deg,#6a87a2,#506a82); }
         html[data-theme="dark"] input, html[data-theme="dark"] select { color: var(--color-text); }
-        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); }
+        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.14) !important; }
         html[data-theme="dark"] .task-item, html[data-theme="dark"] .analog-clock, html[data-theme="dark"] .doodle-header, html[data-theme="dark"] #doodle-canvas { background: rgba(255,255,255,.05); }
         html[data-theme="dark"] .schedule-visualizer { background: rgba(255,255,255,.04); }
         html[data-theme="dark"] .quote-banner { background: linear-gradient(135deg,rgba(80,120,100,.45),rgba(130,80,80,.35)); color: var(--color-text); }
@@ -685,10 +636,7 @@
         </div>
     </div>
 
-    <!-- Settings Backdrop (Mobile) -->
-    <div class="settings-backdrop" id="settings-backdrop"></div>
-
-    <!-- Sidebar / Bottom Navigation Bar -->
+    <!-- Sidebar Navigation -->
     <nav class="sidebar">
         <div class="logo-area">
             <h1 class="logo-title">INSIGHT</h1>
@@ -704,10 +652,6 @@
         <div class="settings-wrap">
             <button type="button" class="settings-btn" id="settings-btn" aria-expanded="false" aria-controls="settings-pop"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></button>
             <div class="settings-pop" id="settings-pop" hidden>
-                <div class="settings-pop-header">
-                    <span>Cài đặt</span>
-                    <button type="button" class="settings-close-btn" id="settings-close-btn"><i class="fa-solid fa-xmark"></i></button>
-                </div>
                 <h4>Ngôn ngữ</h4>
                 <div class="seg" id="seg-lang"><button type="button" data-lang="vi">Tiếng Việt</button><button type="button" data-lang="en">English</button></div>
                 
@@ -757,7 +701,7 @@
                 <h3 class="amps-title">Thang đo AMPS <button type="button" class="info-toggle" id="amps-info-btn" aria-expanded="false" aria-controls="amps-info" title="Xem thông tin thang đo"><span aria-hidden="true">i</span></button></h3>
                 <div class="amps-info" id="amps-info" hidden>
                     <p class="amps-full">Assessment of Maladaptive Perfectionism Scale</p>
-                    <p>Chủ nghĩa cầu toàn không thích nghi là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.</p>
+                    <p>Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.</p>
                     <p class="amps-note">Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.</p>
                 </div>
                 
@@ -783,8 +727,8 @@
 
             <div class="plan-container">
                 <div class="card">
-                    <h3>Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 0.95rem; font-weight:normal;">(0/5)</span></h3>
-                    <p style="font-size: 0.88rem; color: var(--color-text-light); margin-bottom: 1.2rem;" id="task-warning">
+                    <h3>Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 1rem; font-weight:normal;">(0/5)</span></h3>
+                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem;" id="task-warning">
                         Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.
                     </p>
                     
@@ -796,23 +740,23 @@
                             <option value="90">90 phút (làm việc sâu)</option>
                         </select>
                     </div>
-                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.75rem;">Thêm nhiệm vụ</button>
+                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.6rem;">Thêm nhiệm vụ</button>
                     
                     <ul class="task-list" id="task-list-ui"></ul>
 
-                    <div id="schedule-controls" style="display: none; margin-top: 1.8rem; background: rgba(255,255,255,0.45); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.5rem;">
-                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.92rem;">Giờ bắt đầu:</label>
-                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid rgba(44,62,80,0.12); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem; outline: none; background: white;">
+                    <div id="schedule-controls" style="display: none; margin-top: 2rem; background: var(--bg-main); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid #eaeaea;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.95rem;">Giờ bắt đầu:</label>
+                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; outline: none; background: white;">
                         </div>
                         <button class="primary-btn" id="btn-generate-schedule" style="width: 100%;">Tạo lịch trình tự động</button>
                     </div>
                 </div>
 
                 <div class="schedule-visualizer" id="schedule-ui">
-                    <h3 style="margin-bottom: 1.2rem; text-align: center; color: var(--color-text-light); font-size: 1.1rem;">Lịch trình dự kiến</h3>
+                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-light);">Lịch trình dự kiến</h3>
                     <div class="timeline" id="timeline-container">
-                        <p style="text-align:center; color: #aaa; margin-top: 40px; font-size: 0.9rem;">Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.</p>
+                        <p style="text-align:center; color: #aaa; margin-top: 50px;">Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.</p>
                     </div>
                 </div>
             </div>
@@ -841,9 +785,9 @@
                             <i class="fa-solid fa-circle-question info-btn" title="Xem chi tiết"></i>
                         </div>
                         <div class="learn-card-info">
-                            <b>Tính năng:</b> Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút.<br>
-                            <b>Dùng khi nào:</b> Phù hợp khi cần hoàn thành việc lớn và muốn có phần thưởng giải trí.<br>
-                            <b>Cách thực hiện:</b> Tập trung 45 phút, sau đó thư giãn 15 phút.
+                            <b>Tính năng:</b> Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).<br>
+                            <b>Dùng khi nào:</b> Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.<br>
+                            <b>Cách thực hiện:</b> Tập trung trong 45 phút, sau đó thư giãn 15 phút.
                         </div>
                     </div>
 
@@ -854,8 +798,8 @@
                         </div>
                         <div class="learn-card-info">
                             <b>Tính năng:</b> Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.<br>
-                            <b>Dùng khi nào:</b> Phù hợp khi bạn đang cuốn vào mạch suy nghĩ sâu.<br>
-                            <b>Cách thực hiện:</b> Làm việc theo nhịp tự nhiên và bấm tạm dừng khi thấy mệt.
+                            <b>Dùng khi nào:</b> Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).<br>
+                            <b>Cách thực hiện:</b> Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.
                         </div>
                     </div>
                 </div>
@@ -881,24 +825,24 @@
                         </div>
                     </div>
 
-                    <div id="timer-controls" style="margin: 0.2rem 0 0.8rem; min-height: 48px; text-align: center;">
-                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.75rem 2.2rem; font-size: 0.95rem;">
+                    <div id="timer-controls" style="margin: 0.5rem 0 1rem; min-height: 50px;">
+                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.6rem 2rem; font-size: 0.95rem;">
                             <i class="fa-solid fa-play"></i> Bắt đầu tập trung
                         </button>
                         <div id="timer-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--color-text-light); font-weight: 500;"></div>
                     </div>
                     
-                    <p style="color: var(--color-text-light); font-size: 0.88rem; font-style: italic; max-width: 320px; line-height: 1.45;">
+                    <p style="color: var(--color-text-light); font-size: 0.9rem; font-style: italic;">
                         "Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung."
                     </p>
                 </div>
 
                 <!-- BREAK SCREEN -->
-                <div id="break-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem 0; min-height: 320px;">
-                    <h3 id="break-title" style="color: var(--color-text-light); font-size: 1.15rem; margin-bottom: 0.8rem;">☕ Thời gian nghỉ</h3>
-                    <div id="break-countdown" style="font-family: 'Playfair Display', serif; font-size: 4.2rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.8rem; letter-spacing: 2px;">05:00</div>
-                    <p id="break-desc" style="color: var(--color-text-light); font-size: 0.92rem; margin-bottom: 1.8rem; max-width: 300px; text-align: center;">Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.</p>
-                    <div id="break-end-msg" style="display: none; font-size: 1.15rem; font-weight: 600; color: var(--color-mint-dark); margin-bottom: 1.2rem; animation: fadeIn 0.5s ease-out;">✨ Hết giờ nghỉ</div>
+                <div id="break-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem 0; min-height: 350px;">
+                    <h3 id="break-title" style="color: var(--color-text-light); font-size: 1.2rem; margin-bottom: 1rem;">☕ Thời gian nghỉ</h3>
+                    <div id="break-countdown" style="font-family: 'Playfair Display', serif; font-size: 4.5rem; font-weight: 700; color: var(--color-text); margin-bottom: 1rem; letter-spacing: 2px;">05:00</div>
+                    <p id="break-desc" style="color: var(--color-text-light); font-size: 0.95rem; margin-bottom: 2rem; max-width: 300px; text-align: center;">Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.</p>
+                    <div id="break-end-msg" style="display: none; font-size: 1.2rem; font-weight: 600; color: var(--color-mint-dark); margin-bottom: 1.5rem; animation: fadeIn 0.5s ease-out;">✨ Hết giờ nghỉ</div>
                     <button class="primary-btn" id="btn-end-break">Quay lại làm việc</button>
                 </div>
 
@@ -914,7 +858,7 @@
 
             <div class="pause-container">
                 <div class="breathing-widget" id="breathing-widget-bg">
-                    <h3 style="margin-bottom: 0.4rem; position: relative; z-index: 2; font-size: 1.15rem;">Hít thở nhịp 4-4-4</h3>
+                    <h3 style="margin-bottom: 0.5rem; position: relative; z-index: 2; font-size: 1.2rem;">Hít thở nhịp 4-4-4</h3>
                     
                     <div class="breathe-graph-container">
                         <svg class="breathe-wave-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
@@ -939,9 +883,9 @@
 
                 <div class="doodling-area">
                     <div class="doodle-header">
-                        <div style="display: flex; flex-direction: column; gap: 2px;">
-                            <span style="font-weight:600; font-size: 0.95rem;"><i class="fa-solid fa-palette"></i> Bảng vẽ tự do</span>
-                            <span style="font-size:0.75rem; opacity:0.8;">Vẽ tự do để thư giãn.</span>
+                        <div style="display: flex; flex-direction: column; gap: 4px;">
+                            <span style="font-weight:600;"><i class="fa-solid fa-palette"></i> Bảng vẽ tự do</span>
+                            <span style="font-size:0.8rem; opacity:0.8;">Vẽ tự do để thư giãn.</span>
                         </div>
                         <div class="tools">
                             <div class="tool-btn tool-soft-blue active" data-color="#AEC6CF"></div>
@@ -966,7 +910,7 @@
 
         btnStartApp.addEventListener('click', () => {
             welcomeScreen.classList.add('hidden');
-            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 500);
+            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 600);
         });
 
         const navItems = document.querySelectorAll('.nav-item');
@@ -982,11 +926,8 @@
                 const targetId = item.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
                 
-                // Cuộn mượt lên đầu màn hình mỗi khi đổi tab
-                document.querySelector('.main-content').scrollTop = 0;
-
                 if(targetId === 'pause') {
-                    setTimeout(() => { initCanvas(true); }, 100);
+                    initCanvas(); 
                     const dotWrapper = document.querySelector('.breathe-dot-wrapper');
                     const dot = document.querySelector('.breathe-dot');
                     dotWrapper.style.animation = 'none';
@@ -1000,8 +941,8 @@
         });
 
         function goToTab(targetId) { 
-            const tabBtn = document.querySelector(`.nav-item[data-target="${targetId}"]`);
-            if (tabBtn) tabBtn.click(); 
+            const tab = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+            if (tab) tab.click();
         }
 
         const AppState = { maxTasks: 5, tasks: [] };
@@ -1044,7 +985,8 @@
             container.innerHTML = '';
             selectedQuestions.forEach((q, index) => {
                 const group = document.createElement('div');
-                group.className = 'question-group';
+                group.className = 'question-group question-anim';
+                group.style.animationDelay = `${index * 0.15}s`;
                 group.innerHTML = `
                     <p class="question-text">${index + 1}. ${q.text}</p>
                     <input type="range" min="1" max="5" value="3" class="amps-range">
@@ -1080,7 +1022,7 @@
                 planSubtitle.innerHTML = "Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu."; taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
             }
             updateTaskCounterUI(); btnSubmitAmps.innerText = "Đang chuyển sang Kế hoạch...";
-            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 2000);
+            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 2500);
         });
 
         // --- 2. PLAN LOGIC ---
@@ -1166,7 +1108,9 @@
                     const info = card.querySelector('.learn-card-info');
                     const isCurrentlyShown = info.classList.contains('show');
                     document.querySelectorAll('.learn-card-info').forEach(el => el.classList.remove('show'));
-                    if (!isCurrentlyShown) info.classList.add('show');
+                    if (!isCurrentlyShown) {
+                        info.classList.add('show');
+                    }
                     return; 
                 }
                 learnCards.forEach(c => c.classList.remove('active'));
@@ -1189,10 +1133,10 @@
             tick.style.position = 'absolute'; tick.style.left = '50%'; tick.style.top = '0';
             
             if (i % 5 === 0) {
-                tick.style.width = '2px'; tick.style.height = '10px';
+                tick.style.width = '2px'; tick.style.height = '12px';
                 tick.style.background = 'var(--tick-major)'; tick.style.marginLeft = '-1px';
             } else {
-                tick.style.width = '1px'; tick.style.height = '4px';
+                tick.style.width = '1px'; tick.style.height = '5px';
                 tick.style.background = 'var(--tick-minor)'; tick.style.marginLeft = '-0.5px';
             }
             mark.appendChild(tick); clockFace.appendChild(mark);
@@ -1238,11 +1182,13 @@
         btnToggleDigital.addEventListener('click', () => {
             isDigitalClockVisible = !isDigitalClockVisible;
             if (isDigitalClockVisible) {
-                digitalClock.style.visibility = 'visible'; digitalClock.style.opacity = '1';
+                digitalClock.style.visibility = 'visible';
+                digitalClock.style.opacity = '1';
                 btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
                 btnToggleDigital.title = "Ẩn đồng hồ số";
             } else {
-                digitalClock.style.visibility = 'hidden'; digitalClock.style.opacity = '0';
+                digitalClock.style.visibility = 'hidden';
+                digitalClock.style.opacity = '0';
                 btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>';
                 btnToggleDigital.title = "Hiện đồng hồ số";
             }
@@ -1305,8 +1251,15 @@
             setTimeout(() => { popup.style.display = 'none'; }, 300);
         }
 
-        document.getElementById('btn-continue-work').addEventListener('click', () => { hideSessionPopup(); resetTimerVisuals(); });
-        document.getElementById('btn-take-break').addEventListener('click', () => { hideSessionPopup(); startBreakMode(); });
+        document.getElementById('btn-continue-work').addEventListener('click', () => {
+            hideSessionPopup();
+            resetTimerVisuals(); 
+        });
+
+        document.getElementById('btn-take-break').addEventListener('click', () => {
+            hideSessionPopup();
+            startBreakMode();
+        });
 
         function startBreakMode(resumeTimeRemaining = null) {
             isWorkingPhase = false;
@@ -1340,11 +1293,16 @@
             breakInterval = setInterval(() => {
                 breakTimeRemaining = Math.ceil((breakEndTimeMs - Date.now()) / 1000);
                 if (breakTimeRemaining <= 0) {
-                    breakTimeRemaining = 0; clearInterval(breakInterval); breakInterval = null;
-                    display.textContent = '00:00'; gentlyBell.play().catch(()=>{});
+                    breakTimeRemaining = 0;
+                    clearInterval(breakInterval);
+                    breakInterval = null;
+                    display.textContent = '00:00';
+                    
+                    gentlyBell.play().catch(()=>{});
                     document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
                     document.getElementById('break-end-msg').style.display = 'block';
-                    btn.innerHTML = 'Quay lại làm việc'; saveTimerState();
+                    btn.innerHTML = 'Quay lại làm việc';
+                    saveTimerState();
                 } else {
                     display.textContent = formatTimeText(breakTimeRemaining);
                 }
@@ -1360,8 +1318,13 @@
         });
 
         function handlePhaseComplete() {
-            timeRemaining = 0; updateTimerRing(); digitalClock.textContent = formatTimeText(0);
-            clearInterval(timerInterval); timerInterval = null; saveTimerState();
+            timeRemaining = 0;
+            updateTimerRing();
+            digitalClock.textContent = formatTimeText(0);
+            clearInterval(timerInterval);
+            timerInterval = null;
+            saveTimerState();
+
             if (currentLearnMode === 'flowtime') return;
             showSessionPopup();
         }
@@ -1372,20 +1335,29 @@
             if (currentLearnMode === 'flowtime') {
                 flowStartTime = resumeStartTime ? resumeStartTime : (Date.now() - timeElapsed * 1000);
                 saveTimerState();
+
                 timerInterval = setInterval(() => {
-                    let now = Date.now(); timeElapsed = Math.floor((now - flowStartTime) / 1000);
+                    let now = Date.now();
+                    timeElapsed = Math.floor((now - flowStartTime) / 1000);
                     digitalClock.textContent = formatTimeText(timeElapsed);
                 }, 500);
 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
-                timerStatus.innerHTML = '<i class="fa-solid fa-water"></i> Đang ở chế độ Flowtime';
+                timerStatus.innerHTML = '<i class="fa-solid fa-water"></i> Đang ở chế độ Flowtime (đếm lên)';
             } else {
                 endTime = resumeEndTime ? resumeEndTime : (Date.now() + timeRemaining * 1000);
                 saveTimerState();
+
                 timerInterval = setInterval(() => {
-                    let now = Date.now(); timeRemaining = Math.ceil((endTime - now) / 1000);
-                    if (timeRemaining <= 0) handlePhaseComplete();
-                    else { updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining); }
+                    let now = Date.now();
+                    timeRemaining = Math.ceil((endTime - now) / 1000);
+                    
+                    if (timeRemaining <= 0) {
+                        handlePhaseComplete();
+                    } else {
+                        updateTimerRing();
+                        digitalClock.textContent = formatTimeText(timeRemaining);
+                    }
                 }, 500);
 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
@@ -1394,7 +1366,10 @@
         }
 
         function pauseTimer() {
-            clearInterval(timerInterval); timerInterval = null; saveTimerState();
+            clearInterval(timerInterval);
+            timerInterval = null;
+            saveTimerState();
+            
             if (currentLearnMode === 'flowtime') {
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
                 timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng Flow';
@@ -1405,24 +1380,32 @@
         }
 
         function resetTimerVisuals() {
-            clearInterval(timerInterval); timerInterval = null;
-            if (breakInterval) clearInterval(breakInterval); breakInterval = null;
+            clearInterval(timerInterval);
+            timerInterval = null;
+            if (breakInterval) clearInterval(breakInterval);
+            breakInterval = null;
             
             isWorkingPhase = true;
             document.getElementById('break-screen').style.display = 'none';
             document.getElementById('focus-visuals').style.display = 'flex';
             
             if (currentLearnMode === 'flowtime') {
-                progressSvg.style.opacity = '0'; timerControls.style.display = 'block'; 
-                timeElapsed = 0; digitalClock.textContent = formatTimeText(timeElapsed);
+                progressSvg.style.opacity = '0';
+                timerControls.style.display = 'block'; 
+                timeElapsed = 0;
+                digitalClock.textContent = formatTimeText(timeElapsed);
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu Flow';
                 timerStatus.innerHTML = 'Làm việc cho đến khi bạn thấy cần nghỉ.';
             } else {
-                progressSvg.style.opacity = '1'; timerControls.style.display = 'block';
+                progressSvg.style.opacity = '1';
+                timerControls.style.display = 'block';
                 const settings = getDurationSettings(currentLearnMode);
-                totalDuration = settings.work; timeRemaining = totalDuration;
+                totalDuration = settings.work;
+                timeRemaining = totalDuration;
+                
                 digitalClock.textContent = formatTimeText(timeRemaining);
                 timerRing.style.strokeDashoffset = 0;
+                timerRing.style.stroke = 'var(--color-text)'; 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
                 timerStatus.innerHTML = '';
             }
@@ -1438,10 +1421,10 @@
                 
                 if (isDigitalClockVisible) {
                     digitalClock.style.visibility = 'visible'; digitalClock.style.opacity = '1';
-                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>'; btnToggleDigital.title = "Ẩn đồng hồ số";
                 } else {
                     digitalClock.style.visibility = 'hidden'; digitalClock.style.opacity = '0';
-                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>';
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>'; btnToggleDigital.title = "Hiện đồng hồ số";
                 }
                 
                 learnCards.forEach(c => { c.classList.toggle('active', c.getAttribute('data-mode') === currentLearnMode); });
@@ -1468,6 +1451,7 @@
                         document.getElementById('focus-visuals').style.display = 'none';
                         document.getElementById('break-screen').style.display = 'flex';
                         document.getElementById('break-countdown').textContent = '00:00';
+                        document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
                         document.getElementById('break-end-msg').style.display = 'block';
                     }
                     return;
@@ -1478,12 +1462,19 @@
                 totalDuration = state.totalDuration || getDurationSettings(currentLearnMode).work;
                 
                 if (state.isRunning) {
-                    let now = Date.now(); let remaining = Math.ceil((state.endTime - now) / 1000);
+                    let now = Date.now();
+                    let remaining = Math.ceil((state.endTime - now) / 1000);
                     if (remaining <= 0) handlePhaseComplete(); 
-                    else { timeRemaining = remaining; updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining); startTimer(state.endTime); }
+                    else {
+                        timeRemaining = remaining;
+                        updateTimerRing();
+                        digitalClock.textContent = formatTimeText(timeRemaining);
+                        startTimer(state.endTime);
+                    }
                 } else {
                     timeRemaining = state.timeRemaining !== undefined ? state.timeRemaining : totalDuration;
-                    updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining);
+                    updateTimerRing();
+                    digitalClock.textContent = formatTimeText(timeRemaining);
                     btnTimerToggle.innerHTML = (timeRemaining === totalDuration) ? '<i class="fa-solid fa-play"></i> Bắt đầu tập trung' : '<i class="fa-solid fa-play"></i> Tiếp tục';
                 }
             } else {
@@ -1548,7 +1539,11 @@
 
         class MultiAudio {
             constructor(src, count) {
-                this.audios = Array.from({length: count}, () => { const a = new Audio(src); a.loop = true; return a; });
+                this.audios = Array.from({length: count}, () => {
+                    const a = new Audio(src);
+                    a.loop = true;
+                    return a;
+                });
                 this._volume = 0;
             }
             play() { this.audios.forEach(a => a.play().catch(()=>{})); return Promise.resolve(); }
@@ -1591,7 +1586,7 @@
 
         btnToggleSound.addEventListener('click', () => {
             isSoundOn = !isSoundOn;
-            if (isSoundOn) { btnToggleSound.classList.add('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> Tắt âm'; fadeInAudio(ambientAudioAssets[currentAudioKey]); } 
+            if (isSoundOn) { btnToggleSound.classList.add('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> Tắt âm thanh'; fadeInAudio(ambientAudioAssets[currentAudioKey]); } 
             else { btnToggleSound.classList.remove('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Bật âm thanh'; fadeOutAudio(ambientAudioAssets[currentAudioKey]); }
         });
 
@@ -1599,19 +1594,22 @@
         const canvas = document.getElementById('doodle-canvas'); const ctx = canvas.getContext('2d');
         let isDrawing = false; let strokeColor = '#AEC6CF'; let isCanvasInit = false;
 
-        function initCanvas(force = false) {
-            if(isCanvasInit && !force) return;
+        function initCanvas() {
+            if(isCanvasInit) return;
             const container = canvas.parentElement; 
-            const headerHeight = container.querySelector('.doodle-header').offsetHeight || 50;
+            const headerH = container.querySelector('.doodle-header').offsetHeight || 50;
             canvas.width = container.clientWidth; 
-            canvas.height = container.clientHeight - headerHeight; 
+            canvas.height = container.clientHeight - headerH; 
             ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; isCanvasInit = true;
         }
 
         window.addEventListener('resize', () => { 
-            if(document.getElementById('pause').classList.contains('active')) { initCanvas(true); }
+            if(document.getElementById('pause').classList.contains('active')) { 
+                isCanvasInit = false; 
+                initCanvas(); 
+            }
         });
-
+        
         function startDrawing(e) { isDrawing = true; draw(e); } 
         function stopDrawing() { isDrawing = false; ctx.beginPath(); }
         function draw(e) {
@@ -1622,10 +1620,10 @@
             const x = clientX - rect.left; 
             const y = clientY - rect.top;
             ctx.strokeStyle = strokeColor; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y);
-            if (e.touches) e.preventDefault(); // Ngăn cuộn trang khi vẽ trên màn hình cảm ứng
+            if(e.touches) e.preventDefault();
         }
 
-        canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseout', stopDrawing);
         canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing);
 
         const toolBtns = document.querySelectorAll('.tool-btn');
@@ -1638,11 +1636,11 @@
         const textOverlay = document.getElementById('affirmation-text');
 
         btnShatter.addEventListener('click', () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); 
-            textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
+            canvas.classList.add('crumple-anim'); textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)]; textOverlay.style.color = 'var(--color-text)'; 
+            setTimeout(() => { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.classList.remove('crumple-anim'); textOverlay.style.color = 'var(--color-text-light)'; }, 800); 
         });
 
-        // --- I18N & BẢNG MÀU ---
+        // --- I18N & BẢNG MÀU (NGUYÊN BẢN ĐẦY ĐỦ 100%) ---
         const PAIRS = [
             ["INSIGHT – Soi Thấu Tâm Trí, Bật Mood Siêu Focus", "INSIGHT – Clear Your Mind, Boost Deep Focus"],
             ["Soi Thấu Tâm Trí, Bật Mood Siêu Focus", "Clear Your Mind, Boost Deep Focus"],
@@ -1675,7 +1673,7 @@
             ["Bạn đang tràn đầy năng lượng! Hãy tận dụng để xử lý những việc quan trọng.", "You're full of energy! Use it for your most important tasks."],
             ["Thang đo AMPS", "AMPS scale"],
             ["Xem thông tin thang đo", "About this scale"],
-            ["Chủ nghĩa cầu toàn không thích nghi là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.", "Maladaptive perfectionism means setting standards that are unrealistically high, leading to anxiety, self-blame and procrastination."],
+            ["Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.", "Maladaptive perfectionism means setting standards that are unrealistically high, leading to anxiety, self-blame and procrastination."],
             ["Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.", "This is a quick self-assessment tool and does not replace a professional diagnosis."],
             ["Hôm nay, bạn có đang quá khắt khe với bản thân không?", "Are you being too hard on yourself today?"],
             ["Trả lời vài câu ngắn để xem mức độ cầu toàn của bạn hôm nay.", "Answer a few short questions to see how perfectionistic you feel today."],
@@ -1683,6 +1681,17 @@
             ["Hoàn toàn đúng", "Completely true"],
             ["Xem kết quả & lập kế hoạch", "See results & plan"],
             ["Đang chuyển sang Kế hoạch...", "Moving to Plan..."],
+            ["Hôm nay mức độ cầu toàn của bạn khá cao. Hãy thử chuyển sang tab Nghỉ ngơi và dành cho bản thân một khoảng nghỉ.", "Your perfectionism level looks fairly high today. Try the Rest tab and give yourself a break."],
+            ["Hệ thống đã giới hạn danh sách việc xuống còn", "The to-do list has been limited to"],
+            ["Bạn có vẻ đang hơi khắt khe với bản thân.", "You seem to be a little hard on yourself."],
+            ["Bạn vẫn có thể chọn", "You can still choose"],
+            [", hãy làm việc nhẹ nhàng, không cần hoàn hảo.", ", so work gently; perfection isn't required."],
+            ["Hôm nay, bạn đang khá nhẹ nhàng với chính mình 🌱", "Today you're being kind to yourself 🌱"],
+            ["Bạn đang khá thoải mái. Bạn có thể chọn tối đa", "You're fairly relaxed. You can choose up to"],
+            ["Quy tắc 3 việc (điều chỉnh theo kết quả AMPS). Hôm nay hãy giảm bớt kỳ vọng và chọn ít việc hơn.", "The Rule of 3 (adjusted by your AMPS result). Lower your expectations today and pick fewer tasks."],
+            ["Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu.", "The Rule of 5: limit your tasks to avoid overload and make starting easier."],
+            ["Mức AMPS cao: hôm nay nên chọn tối đa 3 nhiệm vụ.", "High AMPS level: choose at most 3 tasks today."],
+            ["Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.", "Choose only your 5 most important tasks today."],
             ["Kế hoạch hôm nay", "Today's plan"],
             ["Danh sách việc cần làm", "To-do list"],
             ["Ví dụ: Học IELTS...", "e.g. Study for IELTS..."],
@@ -1692,6 +1701,8 @@
             ["Thêm nhiệm vụ", "Add task"],
             ["Đã đạt giới hạn", "Limit reached"],
             ["Cập nhật nhiệm vụ", "Update task"],
+            ["Sửa", "Edit"],
+            ["Xóa", "Delete"],
             ["Giờ bắt đầu:", "Start time:"],
             ["Tạo lịch trình tự động", "Generate schedule"],
             ["Đã cập nhật lịch trình!", "Schedule updated!"],
@@ -1701,6 +1712,18 @@
             ["Vui lòng chọn thời gian bắt đầu!", "Please choose a start time!"],
             ["Flowtime (Tự do)", "Flowtime (Free)"],
             ["Xem chi tiết", "View details"],
+            ["Tính năng:", "Feature:"],
+            ["Dùng khi nào:", "Best for:"],
+            ["Cách thực hiện:", "How to:"],
+            ["Làm việc tập trung 25 phút, sau đó nghỉ ngắn 5 phút.", "Work with full focus for 25 minutes, then take a 5-minute break."],
+            ["Phù hợp khi bạn có nhiều việc nhỏ hoặc đang khó bắt đầu.", "Good when you have many small tasks or find it hard to get started."],
+            ["Tập trung trọn vẹn rồi bắt đầu. Khi nghỉ, hãy đứng dậy đi lại.", "Focus fully and start. During the break, stand up and move around."],
+            ["Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).", "Work with focus for 45 minutes, then take a 15-minute entertainment break (e.g. a short episode)."],
+            ["Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.", "Good for a large task when you want a reward to stay motivated."],
+            ["Tập trung trong 45 phút, sau đó thư giãn 15 phút.", "Focus for 45 minutes, then relax for 15."],
+            ["Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.", "A count-up timer with no time limit. You decide when to take a break."],
+            ["Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).", "Good when you're absorbed in your work (coding, design, writing)."],
+            ["Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.", "Work with your natural focus and press pause when you need a rest."],
             ["Ẩn đồng hồ số", "Hide digital clock"],
             ["Hiện đồng hồ số", "Show digital clock"],
             ["Bắt đầu tập trung", "Start focusing"],
@@ -1710,10 +1733,16 @@
             ["Tiếp tục Flow", "Resume Flow"],
             ["Đang tập trung", "Focusing"],
             ["Đã tạm dừng", "Paused"],
-            ["Đang ở chế độ Flowtime", "In Flowtime mode"],
+            ["Đang ở chế độ Flowtime (đếm lên)", "In Flowtime (counting up)"],
             ["Đã tạm dừng Flow", "Flow paused"],
             ["Làm việc cho đến khi bạn thấy cần nghỉ.", "Work until you feel you need a break."],
             ["\"Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung.\"", "\"Time keeps passing, but you don't have to chase it. Relax and focus.\""],
+            ["🌿 Hết giờ rồi!", "🌿 Time's up!"],
+            ["✨ Hết giờ rồi!", "✨ Time's up!"],
+            ["Bạn đã hoàn thành 25 phút tập trung.", "You've completed 25 focused minutes."],
+            ["Bây giờ hãy dành một chút thời gian để nghỉ ngơi nhé.", "Now take a little time to rest."],
+            ["Bạn đã hoàn thành 45 phút tập trung.", "You've completed 45 focused minutes."],
+            ["Đến lúc tạm dừng và nghỉ ngơi rồi.", "Time to pause and rest."],
             ["☕ Thời gian nghỉ", "☕ Break time"],
             ["🎬 Thời gian nghỉ", "🎬 Break time"],
             ["Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.", "Set your work aside and give your mind a pause."],
@@ -1733,7 +1762,7 @@
             ["Mưa", "Rain"],
             ["Rừng mưa nhiệt đới", "Rainforest"],
             ["Bật âm thanh", "Turn sound on"],
-            ["Tắt âm", "Turn sound off"],
+            ["Tắt âm thanh", "Turn sound off"],
             ["Bảng vẽ tự do", "Free drawing board"],
             ["Vẽ tự do để thư giãn.", "Draw freely to unwind."],
             ["Xóa toàn bộ", "Clear all"],
@@ -1771,6 +1800,7 @@
         (function () {
             const norm = s => s.replace(/\s+/g, ' ').trim();
             const D = new Map(PAIRS.map(([a, b]) => [norm(a), b]));
+            const RX = [[/^Điểm hôm nay: (\d+)\/25$/, "Today's score: $1/25"], [/^(\d+) phút$/, '$1 min'], [/^(\d+) nhiệm vụ$/, '$1 tasks']];
             const store = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
             const save = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
             
@@ -1781,10 +1811,52 @@
             function tr(s) {
                 const n = norm(s); if (!n) return s;
                 let o = D.get(n);
+                if (o === undefined) for (const [r, v] of RX) if (r.test(n)) { o = n.replace(r, v); break; }
                 if (o === undefined) { const m = n.match(/^(\d+)\. (.+)$/); if (m && D.has(m[2])) o = m[1] + '. ' + D.get(m[2]); }
-                return o !== undefined ? o : s;
+                if (o === undefined) return s;
+                return s.match(/^\s*/)[0] + o + s.match(/\s*$/)[0];
             }
             window.t = s => lang === 'en' ? tr(s) : s;
+
+            function procText(n) {
+                if (n.__cur !== undefined && n.data === n.__cur) return;
+                const src = n.data, out = lang === 'en' ? tr(src) : src;
+                n.__vi = src; n.__cur = out; if (out !== src) n.data = out;
+            }
+            function procAttr(el, a) {
+                const v = el.getAttribute(a); if (v === null) return;
+                const k = '__a_' + a, st = el[k]; if (st && st.cur === v) return;
+                const out = lang === 'en' ? tr(v) : v;
+                el[k] = { vi: v, cur: out }; if (out !== v) el.setAttribute(a, out);
+            }
+            function walk(root) {
+                if (root.nodeType === 3) { if (!/^(SCRIPT|STYLE)$/.test(root.parentNode.nodeName)) procText(root); return; }
+                if (root.nodeType !== 1) return;
+                const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
+                let n; while ((n = w.nextNode())) procText(n);
+                [root, ...root.querySelectorAll('[title],[placeholder]')].forEach(el => { procAttr(el, 'title'); procAttr(el, 'placeholder'); });
+            }
+            const mo = new MutationObserver(ms => ms.forEach(m => {
+                if (m.type === 'childList') m.addedNodes.forEach(walk);
+                else if (m.type === 'characterData') procText(m.target);
+                else procAttr(m.target, m.attributeName);
+            }));
+
+            function setLang(l) {
+                lang = l; save('insight_lang', l); document.documentElement.lang = l;
+                const w = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+                let n; while ((n = w.nextNode())) {
+                    if (/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue;
+                    const src = n.__vi !== undefined && n.data === n.__cur ? n.__vi : n.data;
+                    const out = l === 'en' ? tr(src) : src; n.__vi = src; n.__cur = out; if (n.data !== out) n.data = out;
+                }
+                document.querySelectorAll('[title],[placeholder]').forEach(el => ['title', 'placeholder'].forEach(a => {
+                    const st = el['__a_' + a]; if (!st || el.getAttribute(a) === null) return;
+                    const vi = el.getAttribute(a) === st.cur ? st.vi : el.getAttribute(a);
+                    const out = l === 'en' ? tr(vi) : vi; el['__a_' + a] = { vi, cur: out }; el.setAttribute(a, out);
+                }));
+                document.querySelectorAll('#seg-lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === l));
+            }
 
             function applyTheme() {
                 const dark = themePref === 'dark';
@@ -1805,9 +1877,14 @@
                 });
             }
 
+            walk(document.documentElement);
+            mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['title', 'placeholder'] });
+            
+            if (lang === 'en') setLang('en'); else setLang('vi');
             applyTheme();
             applyBgPalette(bgTheme);
 
+            document.querySelectorAll('#seg-lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
             document.querySelectorAll('#seg-theme button').forEach(b => b.addEventListener('click', () => { 
                 themePref = b.dataset.themeOpt; 
                 save('insight_theme', themePref); 
@@ -1823,22 +1900,10 @@
                 });
             });
 
-            // Settings popup controls (with Mobile backdrop support)
-            const sBtn = document.getElementById('settings-btn');
-            const sPop = document.getElementById('settings-pop');
-            const sBackdrop = document.getElementById('settings-backdrop');
-            const sClose = document.getElementById('settings-close-btn');
-
-            const toggleS = open => { 
-                sPop.hidden = !open; 
-                sBtn.setAttribute('aria-expanded', open); 
-                if (open) sBackdrop.classList.add('show');
-                else sBackdrop.classList.remove('show');
-            };
-
+            const sBtn = document.getElementById('settings-btn'), sPop = document.getElementById('settings-pop');
+            const toggleS = open => { sPop.hidden = !open; sBtn.setAttribute('aria-expanded', open); };
             sBtn.addEventListener('click', e => { e.stopPropagation(); toggleS(sPop.hidden); });
-            if (sClose) sClose.addEventListener('click', () => toggleS(false));
-            sBackdrop.addEventListener('click', () => toggleS(false));
+            document.addEventListener('click', e => { if (!sPop.hidden && !sPop.contains(e.target)) toggleS(false); });
             document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleS(false); });
 
             const iBtn = document.getElementById('amps-info-btn'), iBox = document.getElementById('amps-info');
