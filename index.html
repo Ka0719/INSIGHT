@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>INSIGHT – Soi Thấu Tâm Trí, Bật Mood Siêu Focus</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,47 +25,89 @@
             --color-beige: #F5EFEB;
             --color-accent: #8E9BAE; 
             
+            --font-ui: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-bg-strong: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --glass-blur: blur(24px) saturate(170%);
+            --glass-shadow: 0 8px 32px rgba(44, 62, 80, 0.08), 0 1px 2px rgba(44, 62, 80, 0.04);
+            --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
+            
             --shadow-sm: 0 4px 6px -1px rgba(0,0,0,0.05);
             --shadow-md: 0 10px 15px -3px rgba(0,0,0,0.05);
             --radius-lg: 24px;
             --radius-md: 16px;
-            --radius-sm: 8px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 12px;
+            --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
+            --transition: all 0.3s var(--ease-ios);
 
-            /* Dynamic Psychological Background Gradient Stops */
+            /* Dynamic Psychological Background Stops */
             --mesh-c1: rgba(169, 209, 186, 0.75);
             --mesh-c2: rgba(242, 185, 179, 0.60);
             --mesh-c3: rgba(195, 177, 225, 0.50);
             --mesh-c4: rgba(174, 198, 207, 0.60);
+
+            --tick-major: rgba(44,62,80,.6);
+            --tick-minor: rgba(127,140,141,.3);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        body {
-            font-family: 'Be Vietnam Pro', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--color-text);
-            display: flex;
-            height: 100vh;
+        html, body {
+            height: 100%;
             height: 100dvh;
             overflow: hidden;
-            line-height: 1.6;
+            background-color: var(--bg-main);
+            color: var(--color-text);
+            font-family: var(--font-ui);
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; }
+        body {
+            display: flex;
+            position: relative;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 600; line-height: 1.25; }
+        h3 { font-family: var(--font-ui); font-size: 1.15rem; letter-spacing: -0.015em; }
+        h3 small { font-weight: 400; color: var(--color-text-light); font-size: 0.8rem; }
+        button, input, select { font-family: var(--font-ui); }
+
+        /* Dynamic Animated Background */
+        body::before {
+            content: ''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
+            background:
+                radial-gradient(42% 42% at 14% 18%, var(--mesh-c1) 0%, transparent 70%),
+                radial-gradient(38% 38% at 86% 14%, var(--mesh-c2) 0%, transparent 70%),
+                radial-gradient(45% 45% at 76% 86%, var(--mesh-c3) 0%, transparent 70%),
+                radial-gradient(36% 36% at 20% 84%, var(--mesh-c4) 0%, transparent 70%);
+            filter: blur(28px);
+            animation: meshDrift 28s ease-in-out infinite alternate;
+            transition: background 1s ease-in-out;
+        }
+        @keyframes meshDrift {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to   { transform: translate3d(2%, -2%, 0) scale(1.05); }
+        }
 
         /* --- WELCOME SCREEN --- */
         #welcome-screen {
             position: fixed;
             inset: 0;
-            background-color: var(--bg-main);
+            background:
+                radial-gradient(45% 45% at 15% 20%, var(--mesh-c1), transparent 70%),
+                radial-gradient(40% 40% at 85% 15%, var(--mesh-c2), transparent 70%),
+                radial-gradient(45% 45% at 75% 85%, var(--mesh-c3), transparent 70%),
+                radial-gradient(40% 40% at 20% 85%, var(--mesh-c4), transparent 70%),
+                var(--bg-main);
             z-index: 9999;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            padding: 1.5rem;
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         #welcome-screen.hidden {
             opacity: 0;
@@ -74,68 +116,69 @@
         }
         .welcome-content {
             text-align: center;
-            animation: fadeIn 1s ease-out forwards;
-            padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 4rem);
-            max-width: 90%;
-            width: 580px;
+            background: rgba(255, 255, 255, 0.45);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
+            border-radius: var(--radius-lg);
+            padding: clamp(2rem, 5vw, 3.5rem) clamp(1.5rem, 5vw, 3rem);
+            max-width: 520px;
+            width: 100%;
+            animation: fadeIn 0.8s ease-out forwards;
         }
         .welcome-logo {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
             font-size: clamp(2.8rem, 10vw, 4.5rem);
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             color: var(--color-text);
-            margin-bottom: 0.5rem;
-            line-height: 1.1;
+            margin-bottom: 0.4rem;
         }
         .welcome-slogan {
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            font-size: clamp(0.95rem, 3.5vw, 1.15rem);
             color: var(--color-text-light);
-            margin-bottom: clamp(1.8rem, 5vh, 3rem);
+            margin-bottom: 2.2rem;
             font-weight: 500;
         }
         .welcome-btn {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             padding: 0.9rem 2.5rem;
             border-radius: 50px;
-            background-color: var(--color-text);
+            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
             color: white;
             border: none;
             cursor: pointer;
-            font-family: inherit;
             font-weight: 500;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            min-height: 48px;
+            box-shadow: 0 6px 18px rgba(44, 62, 80, 0.22);
         }
-        .welcome-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            background-color: #3b5066;
-        }
+        .welcome-btn:active { transform: scale(0.97); }
 
-        /* --- LAYOUT --- */
+        /* --- SIDEBAR / NAVIGATION --- */
         .sidebar {
             width: 280px;
-            background-color: var(--color-beige);
-            padding: 2.5rem 2rem;
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border-right: 1px solid var(--glass-border);
+            box-shadow: var(--glass-highlight), 4px 0 30px rgba(44, 62, 80, 0.04);
+            padding: 2.5rem 1.8rem;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid rgba(0,0,0,0.03);
             z-index: 100;
             flex-shrink: 0;
         }
 
-        .logo-area { margin-bottom: 3rem; }
-        .logo-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; letter-spacing: 2px; color: var(--color-text); font-weight: 700; }
-        .logo-slogan { font-size: 0.88rem; color: var(--color-text-light); margin-top: 0.5rem; font-weight: 500; }
+        .logo-area { margin-bottom: 2.5rem; }
+        .logo-title { font-family: 'Playfair Display', serif; font-size: 2.3rem; letter-spacing: 2px; color: var(--color-text); font-weight: 700; }
+        .logo-slogan { font-size: 0.85rem; color: var(--color-text-light); margin-top: 0.3rem; font-weight: 500; }
 
-        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
+        .nav-menu { flex: 1; display: flex; flex-direction: column; gap: 0.6rem; }
         
         .nav-item {
-            padding: 1rem 1.5rem;
+            padding: 0.9rem 1.25rem;
             border-radius: var(--radius-md);
             cursor: pointer;
             display: flex;
@@ -144,127 +187,186 @@
             font-weight: 500;
             color: var(--color-text-light);
             transition: var(--transition);
-            min-height: 44px;
         }
-        
-        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; flex-shrink: 0; }
-        .nav-item:hover { background-color: rgba(255,255,255,0.5); color: var(--color-text); }
-        .nav-item.active { background-color: var(--bg-card); color: var(--color-text); box-shadow: var(--shadow-sm); font-weight: 600; }
+        .nav-item i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .nav-item:hover { background: rgba(255, 255, 255, 0.45); color: var(--color-text); }
+        .nav-item.active {
+            background: var(--glass-bg-strong);
+            color: var(--color-text);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-highlight), 0 4px 14px rgba(44, 62, 80, 0.08);
+            font-weight: 600;
+        }
+        .nav-item:active { transform: scale(0.97); }
 
+        /* --- SETTINGS POPUP --- */
+        .settings-wrap { margin-top: auto; position: relative; }
+        .settings-btn { 
+            width: 100%; display: flex; align-items: center; gap: 1rem; padding: 0.9rem 1.25rem; 
+            border: none; background: transparent; border-radius: var(--radius-md); 
+            color: var(--color-text-light); font: inherit; font-weight: 500; cursor: pointer; 
+            transition: var(--transition); 
+        }
+        .settings-btn i { font-size: 1.2rem; width: 24px; text-align: center; }
+        .settings-btn:hover, .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.45); color: var(--color-text); }
+        
+        .settings-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+        .settings-backdrop.show { display: block; }
+
+        .settings-pop { 
+            position: absolute; 
+            left: 0; 
+            bottom: calc(100% + 12px); 
+            width: 280px; 
+            padding: 1.35rem; 
+            border-radius: var(--radius-lg); 
+            background: rgba(255, 255, 255, 0.95); 
+            -webkit-backdrop-filter: blur(24px); 
+            backdrop-filter: blur(24px); 
+            border: 1px solid rgba(255, 255, 255, 0.9); 
+            box-shadow: 0 16px 36px rgba(44, 62, 80, 0.16); 
+            z-index: 1001; 
+            animation: fadeIn .25s ease-out; 
+        }
+        .settings-pop[hidden] { display: none; }
+        .settings-pop-header { display: none; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 0.6rem; }
+        .settings-pop-header span { font-weight: 600; font-size: 1.05rem; }
+        .settings-close-btn { background: none; border: none; font-size: 1.2rem; color: var(--color-text-light); cursor: pointer; padding: 4px; }
+        
+        .settings-pop h4 { font: 600 .85rem var(--font-ui); color: var(--color-text-light); margin: 0 0 .5rem; }
+        .settings-pop h4:not(:first-child) { margin-top: 1.15rem; }
+        
+        .seg { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: rgba(44,62,80,.07); }
+        .seg button { flex: 1; border: none; background: transparent; padding: .55rem .4rem; border-radius: 9px; font: inherit; font-size: .88rem; color: var(--color-text-light); cursor: pointer; transition: var(--transition); }
+        .seg button[aria-pressed="true"] { background: var(--bg-card); color: var(--color-text); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+        .color-palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 0.4rem; }
+        .color-swatch {
+            width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.9);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.12); cursor: pointer; transition: transform 0.2s;
+        }
+        .color-swatch:active, .color-swatch.active { border-color: var(--color-text); transform: scale(1.12); }
+
+        /* --- MAIN CONTENT --- */
         .main-content {
             flex: 1;
-            padding: 2.5rem 4rem;
+            padding: 2.5rem 3.5rem;
             overflow-y: auto;
+            overflow-x: hidden;
             position: relative;
+            z-index: 1;
+            scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
         }
+        .main-content::-webkit-scrollbar { width: 6px; }
+        .main-content::-webkit-scrollbar-thumb { background: rgba(44, 62, 80, 0.15); border-radius: 8px; }
 
-        .view-section {
-            display: none;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
+        .view-section { display: none; animation: fadeIn 0.35s ease-out forwards; max-width: 1000px; margin: 0 auto; }
         .view-section.active { display: block; }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- GLOBAL COMPONENTS --- */
-        .card {
-            background: var(--bg-card);
+        /* --- GLOBAL UI COMPONENTS --- */
+        .card, .doodling-area, .learn-card, .schedule-visualizer, .breathing-widget {
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow), var(--glass-highlight);
+            background: var(--glass-bg);
             border-radius: var(--radius-lg);
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
         }
-        .section-header { margin-bottom: 1.75rem; }
-        .section-header h2 { font-size: 2rem; margin-bottom: 0.4rem; }
-        .section-header p { color: var(--color-text-light); font-size: 1rem; }
+        .card { padding: 1.8rem 2rem; }
+        .section-header { margin-bottom: 1.5rem; }
+        .section-header h2 { font-size: clamp(1.6rem, 2.5vw, 2.2rem); margin-bottom: 0.3rem; letter-spacing: -0.02em; }
+        .section-header p { color: var(--color-text-light); font-size: 0.95rem; }
         
         button.primary-btn {
-            background-color: var(--color-text);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-family: 'Be Vietnam Pro', sans-serif;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
+            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
+            color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 50px;
+            font-weight: 500; cursor: pointer; transition: var(--transition);
             display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 6px 16px rgba(44, 62, 80, 0.2);
             min-height: 44px;
         }
-        button.primary-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); opacity: 0.9; }
+        button.primary-btn:active { transform: scale(0.97) !important; }
         button:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
         button.secondary-btn {
-            background-color: transparent;
+            background: rgba(255, 255, 255, 0.65);
             color: var(--color-text-light);
-            border: 1px solid #ddd;
-            padding: 0.8rem 2rem;
+            border: 1px solid var(--glass-border);
+            padding: 0.8rem 1.8rem;
             border-radius: 50px;
-            font-family: inherit;
-            font-size: 1rem;
             font-weight: 500;
             cursor: pointer;
             transition: var(--transition);
             min-height: 44px;
         }
-        button.secondary-btn:hover {
-            background-color: #f5f5f5;
-            color: var(--color-text);
-            border-color: #ccc;
-        }
+        button.secondary-btn:active { transform: scale(0.97) !important; }
 
         /* --- 1. DAILY VIEW --- */
         .quote-banner {
-            background: linear-gradient(135deg, var(--color-mint), var(--color-peach));
-            padding: 1.5rem;
+            background: linear-gradient(135deg, rgba(212, 234, 221, 0.8), rgba(250, 220, 217, 0.8));
+            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            padding: 1.25rem 1.5rem;
             border-radius: var(--radius-md);
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.8rem;
             font-style: italic;
-            color: #333;
             font-weight: 500;
+            box-shadow: var(--glass-shadow);
         }
 
-        .mood-tracker { display: flex; justify-content: center; gap: clamp(0.75rem, 3vw, 1.5rem); margin: 2rem 0; flex-wrap: wrap; }
+        .mood-tracker { display: flex; justify-content: center; gap: clamp(0.8rem, 3vw, 1.6rem); margin: 1.5rem 0; flex-wrap: wrap; }
         .mood-btn {
-            font-size: clamp(2rem, 6vw, 2.5rem);
+            font-size: clamp(2rem, 6vw, 2.6rem);
             background: none; border: none; cursor: pointer;
             transition: var(--transition); filter: grayscale(80%); opacity: 0.6;
-            min-width: 44px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center;
+            min-width: 44px; min-height: 44px;
         }
-        .mood-btn:hover, .mood-btn.selected { filter: grayscale(0%); opacity: 1; transform: scale(1.2); }
-        .mood-msg { text-align: center; min-height: 30px; color: var(--color-text-light); font-weight: 500; padding: 0 0.5rem; }
+        .mood-btn:hover, .mood-btn.selected { filter: grayscale(0%); opacity: 1; transform: scale(1.18); }
+        .mood-msg { text-align: center; min-height: 28px; color: var(--color-text-light); font-weight: 500; font-size: 0.95rem; }
 
-        /* Glass AMPS Intro */
+        .amps-title { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
+        .info-toggle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--color-accent); background: transparent; color: var(--color-accent); font: italic 700 .9rem/1 'Playfair Display', serif; cursor: pointer; transition: var(--transition); display: flex; align-items: center; justify-content: center; }
+        .info-toggle:hover, .info-toggle[aria-expanded="true"] { background: var(--color-accent); color: #fff; }
+        
+        .amps-info { margin: 0 0 1.2rem; padding: 1rem 1.2rem; border-radius: var(--radius-md); background: var(--glass-bg-strong); border: 1px solid var(--glass-border); }
+        .amps-info[hidden] { display: none; }
+        .amps-info p { font-size: .92rem; line-height: 1.6; color: var(--color-text-light); margin: 0; }
+        .amps-info p + p { margin-top: .4rem; }
+        .amps-info .amps-full { font-size: 0.98rem; font-weight: 600; color: var(--color-text); }
+        .amps-info .amps-note { font-size: .85rem; font-style: italic; padding-top: .4rem; border-top: 1px solid rgba(44,62,80,.08); }
+
         .amps-intro { 
-            background: rgba(212, 234, 221, 0.38); 
-            -webkit-backdrop-filter: blur(16px) saturate(160%);
-            backdrop-filter: blur(16px) saturate(160%);
-            padding: 1.35rem 1.6rem; 
+            background: rgba(212, 234, 221, 0.45); 
+            -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+            padding: 1.1rem 1.3rem; 
             border-radius: var(--radius-md); 
-            margin: 1.25rem 0 1.8rem 0; 
+            margin: 1rem 0 1.5rem 0; 
             border: 1px solid rgba(255, 255, 255, 0.7);
             border-left: 4px solid var(--color-mint-dark); 
-            box-shadow: 0 4px 18px rgba(44, 62, 80, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
-        .amps-intro p { margin: 0; line-height: 1.6; }
-        .amps-intro p strong { font-weight: 600; font-size: 1.02rem; }
-        .amps-intro p + p { margin-top: 0.45rem; font-size: 0.94rem; color: var(--color-text-light); }
+        .amps-intro p { margin: 0; line-height: 1.5; font-size: 0.95rem; }
+        .amps-intro p strong { font-weight: 600; }
+        .amps-intro p + p { margin-top: 0.35rem; font-size: 0.9rem; color: var(--color-text-light); }
 
-        .question-group { margin-bottom: 1.6rem; }
-        .question-text { font-weight: 500; margin-bottom: 0.6rem; font-size: 0.98rem; }
+        .question-group { margin-bottom: 1.4rem; }
+        .question-text { font-weight: 500; margin-bottom: 0.6rem; font-size: 0.96rem; }
         
-        .question-anim { opacity: 0; animation: fadeInQuestion 0.5s ease-out forwards; }
-        @keyframes fadeInQuestion {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; padding: 8px 0; touch-action: pan-x; }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; height: 32px; }
         input[type=range]:focus { outline: none; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--color-beige); border-radius: 4px; }
         input[type=range]::-webkit-slider-thumb {
@@ -272,39 +374,39 @@
             background: var(--color-accent); cursor: pointer;
             -webkit-appearance: none; margin-top: -9px; box-shadow: var(--shadow-sm);
         }
-        .slider-labels { display: flex; justify-content: space-between; font-size: 0.82rem; color: var(--color-text-light); margin-top: 6px; }
+        .slider-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--color-text-light); margin-top: 4px; }
         
-        #amps-result { display: none; margin-top: 1.5rem; padding: 1.5rem; border-radius: var(--radius-md); font-weight: 500; text-align: center; }
+        #amps-result { display: none; margin-top: 1.5rem; padding: 1.3rem; border-radius: var(--radius-md); font-weight: 500; text-align: center; font-size: 0.95rem; }
         .result-high { background-color: var(--color-peach); color: #c0392b; }
         .result-medium { background-color: #FFF3CD; color: #856404; }
         .result-low { background-color: var(--color-mint); color: #27ae60; }
 
         /* --- 2. PLAN VIEW --- */
-        .plan-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-        .task-input-group { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .plan-container { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; }
+        .task-input-group { display: flex; gap: 0.8rem; margin-bottom: 0.9rem; }
         .task-input-group input, .task-input-group select {
-            padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: var(--radius-sm);
-            font-family: inherit; font-size: 1rem; outline: none;
+            padding: 0.75rem 1rem; border: 1px solid rgba(44, 62, 80, 0.12); border-radius: var(--radius-sm);
+            font-family: inherit; font-size: 0.95rem; outline: none; background: rgba(255, 255, 255, 0.65);
         }
-        .task-input-group input[type="text"] { flex: 1; min-width: 200px; }
-        .task-list { list-style: none; margin-top: 1.5rem; }
+        .task-input-group input[type="text"] { flex: 1; }
+        .task-list { list-style: none; margin-top: 1.2rem; }
         
         .task-item {
-            background-color: var(--bg-main); padding: 0.8rem 1rem; border-radius: var(--radius-sm); margin-bottom: 0.8rem;
-            display: flex; justify-content: space-between; align-items: center; border-left: 3px solid var(--color-text);
+            background: rgba(255, 255, 255, 0.65); padding: 0.8rem 1rem; border-radius: var(--radius-sm); margin-bottom: 0.7rem;
+            display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--glass-border);
+            border-left: 3px solid var(--color-text);
         }
-        .task-info { display: flex; align-items: center; gap: 0.8rem; flex: 1; }
-        .task-time-badge { background: #e0e6ed; padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; color: #444; font-weight: 500; white-space: nowrap; }
-        .task-actions { display: flex; gap: 0.5rem; }
+        .task-info { display: flex; align-items: center; gap: 0.7rem; flex: 1; }
+        .task-time-badge { background: rgba(44, 62, 80, 0.08); padding: 3px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; }
+        .task-actions { display: flex; gap: 0.4rem; }
         .action-btn {
             background: transparent; border: none; cursor: pointer; color: var(--color-text-light);
             width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center;
-            transition: var(--transition);
         }
-        .action-btn:hover { background: rgba(0,0,0,0.05); color: var(--color-text); }
+        .action-btn:hover { background: rgba(0,0,0,0.06); color: var(--color-text); }
         .action-btn.delete-btn:hover { background: #FADCD9; color: #c0392b; }
         
-        .schedule-visualizer { background-color: var(--color-beige); padding: 1.5rem; border-radius: var(--radius-lg); height: 100%; }
+        .schedule-visualizer { background: rgba(245, 239, 235, 0.55); padding: 1.5rem; border-radius: var(--radius-lg); }
         .timeline { position: relative; padding-left: 1.5rem; border-left: 2px solid rgba(0,0,0,0.1); }
         .timeline-item { position: relative; padding-bottom: 1rem; }
         .timeline-item::before {
@@ -312,656 +414,251 @@
             border-radius: 50%; background: var(--color-text); border: 2px solid var(--color-beige);
         }
         .timeline-break::before { background: var(--color-peach-dark); }
-        .timeline-break { color: var(--color-text-light); font-style: italic; font-size: 0.9rem; }
+        .timeline-break { color: var(--color-text-light); font-style: italic; font-size: 0.88rem; }
 
         /* --- 3. LEARN VIEW --- */
-        .learn-view { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100%; padding-bottom: 2rem;}
+        .learn-view { text-align: center; display: flex; flex-direction: column; align-items: center; padding-bottom: 1.5rem; }
         
         .learn-cards-container {
             display: flex;
             align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 2.5rem;
+            gap: 1.2rem;
+            margin-bottom: 1.8rem;
             width: 100%;
             max-width: 750px;
         }
         .learn-card {
-            background: var(--bg-card);
-            border-radius: var(--radius-md);
-            padding: 1.2rem;
-            box-shadow: var(--shadow-sm);
+            padding: 1.1rem;
             cursor: pointer;
             flex: 1;
             border: 2px solid transparent;
             transition: var(--transition);
-            position: relative;
             display: flex;
             flex-direction: column;
             text-align: left;
+            margin-bottom: 0;
         }
-        .learn-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); }
-        .learn-card.active { border-color: var(--color-text); box-shadow: var(--shadow-md); }
-        
-        .learn-card-header {
-            display: flex; justify-content: space-between; align-items: center;
-            font-weight: 600; color: var(--color-text-light); font-size: 1rem;
-        }
+        .learn-card.active { border-color: rgba(44, 62, 80, 0.6); background: var(--glass-bg-strong); }
+        .learn-card-header { display: flex; justify-content: space-between; align-items: center; font-weight: 600; color: var(--color-text-light); font-size: 0.95rem; }
         .learn-card.active .learn-card-header { color: var(--color-text); }
-        
-        .info-btn { color: var(--color-accent); cursor: pointer; padding: 6px; font-size: 1.25rem; transition: var(--transition); min-width: 32px; min-height: 32px; display: inline-flex; align-items: center; justify-content: center; }
-        .info-btn:hover { color: var(--color-text); transform: scale(1.1); }
+        .info-btn { color: var(--color-accent); cursor: pointer; padding: 4px; font-size: 1.15rem; }
         
         .learn-card-info {
-            display: none; margin-top: 1rem; font-size: 0.85rem; color: var(--color-text-light);
-            border-top: 1px solid rgba(44, 62, 80, 0.08); padding-top: 0.8rem; line-height: 1.5;
+            display: none; margin-top: 0.8rem; font-size: 0.85rem; color: var(--color-text-light);
+            border-top: 1px solid rgba(44, 62, 80, 0.08); padding-top: 0.6rem; line-height: 1.5;
         }
-        .learn-card-info.show { display: block; animation: fadeIn 0.3s ease-out forwards; }
-        .learn-card-info b { color: var(--color-text); }
+        .learn-card-info.show { display: block; animation: fadeIn 0.25s ease-out forwards; }
 
-        /* Digital Clock */
         .digital-clock-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 1.2rem;
-            min-height: 60px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            margin-bottom: 1rem; height: 50px;
         }
-
         #digital-clock {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 9vw, 3.8rem);
-            font-weight: 700;
-            color: var(--color-text);
-            letter-spacing: 2px;
-            transition: visibility 0.2s, opacity 0.2s;
+            font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 8vw, 3.8rem);
+            font-weight: 700; color: var(--color-text); letter-spacing: 2px; font-variant-numeric: tabular-nums;
         }
-
         #btn-toggle-digital {
-            font-size: 1.3rem;
-            width: 44px;
-            height: 44px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: var(--color-text-light);
-            border-radius: 50%;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 1.2rem; width: 44px; height: 44px; background: transparent; border: none;
+            cursor: pointer; color: var(--color-text-light); border-radius: 50%; display: flex; align-items: center; justify-content: center;
         }
 
-        #btn-toggle-digital:hover {
-            background: rgba(0,0,0,0.06);
-            color: var(--color-text);
-        }
-
-        /* Analog Clock */
-        .clock-container { position: relative; margin-bottom: 2.2rem; }
-        
+        .clock-container { position: relative; margin-bottom: 1.8rem; }
         .analog-clock {
-            width: 260px; height: 260px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px);
-            box-shadow: inset 0 0 20px rgba(255,255,255,0.5), 0 10px 30px rgba(0,0,0,0.03);
-            border: 1px solid rgba(255,255,255,0.8);
-            position: relative; display: flex; align-items: center; justify-content: center;
+            width: clamp(190px, 48vw, 250px); height: clamp(190px, 48vw, 250px); border-radius: 50%;
+            background: rgba(255, 255, 255, 0.45); -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+            box-shadow: var(--glass-highlight), 0 14px 35px rgba(44, 62, 80, 0.08);
+            border: 1px solid var(--glass-border); position: relative; display: flex; align-items: center; justify-content: center;
         }
-
-        .clock-progress-ring {
-            position: absolute; inset: -12px; width: calc(100% + 24px); height: calc(100% + 24px);
-            z-index: 1; pointer-events: none; transition: opacity 0.4s ease;
-        }
-
+        .clock-progress-ring { position: absolute; inset: -10px; width: calc(100% + 20px); height: calc(100% + 20px); z-index: 1; pointer-events: none; }
         .clock-face { width: 100%; height: 100%; position: absolute; border-radius: 50%; z-index: 2; }
-        .hand {
-            position: absolute; bottom: 50%; left: 50%;
-            transform-origin: bottom center; border-radius: 10px; z-index: 10;
-        }
+        .hand { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 10px; z-index: 10; }
         .hour-hand { width: 4px; height: 26%; margin-left: -2px; background: var(--color-text); }
         .min-hand { width: 2.5px; height: 38%; margin-left: -1.25px; background: var(--color-text-light); }
-        .sec-hand { width: 1.5px; height: 45%; margin-left: -0.75px; background: var(--color-mint-dark); z-index: 11; transition: transform 0.05s linear;}
-        
+        .sec-hand { width: 1.5px; height: 45%; margin-left: -0.75px; background: var(--color-mint-dark); z-index: 11; }
         .clock-face::after {
-            content: ''; position: absolute; top: 50%; left: 50%;
-            width: 12px; height: 12px; background: var(--color-text);
-            border-radius: 50%; transform: translate(-50%, -50%); z-index: 12;
-            border: 2px solid var(--bg-main);
+            content: ''; position: absolute; top: 50%; left: 50%; width: 10px; height: 10px;
+            background: var(--color-text); border-radius: 50%; transform: translate(-50%, -50%); z-index: 12;
         }
 
         /* --- 4. PAUSE VIEW --- */
-        .pause-container { display: grid; grid-template-columns: 320px 1fr; gap: 2rem; min-height: calc(100vh - 150px); }
+        .pause-container { display: grid; grid-template-columns: 320px 1fr; gap: 1.8rem; min-height: 520px; }
         
         .breathing-widget {
-            background: #E3F2FD; border-radius: var(--radius-lg); padding: 2rem;
+            background: #E3F2FD; border-radius: var(--radius-lg); padding: 1.6rem 1.4rem;
             display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-            box-shadow: var(--shadow-md); position: relative; overflow: hidden;
-            transition: background-color 1s ease;
+            position: relative; overflow: hidden; transition: background-color 1s ease;
         }
-        
-        .breathe-graph-container {
-            position: relative; width: 100%; max-width: 280px; height: 110px;
-            margin: 1.5rem 0 1rem 0; z-index: 2;
-        }
-        .breathe-wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-        
-        .breathe-dot-wrapper {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
+        .breathe-graph-container { position: relative; width: 100%; max-width: 260px; height: 95px; margin: 1.2rem 0 0.8rem 0; z-index: 2; }
+        .breathe-wave-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+        .breathe-dot-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .breathe-dot {
-            position: absolute; width: 16px; height: 16px; border-radius: 50%;
-            background-color: var(--color-text);
-            box-shadow: 0 0 0 6px rgba(255,255,255,0.5);
-            margin-left: -8px; margin-top: -8px;
+            position: absolute; width: 15px; height: 15px; border-radius: 50%;
+            background-color: var(--color-text); box-shadow: 0 0 0 5px rgba(255,255,255,0.5);
+            margin-left: -7.5px; margin-top: -7.5px;
         }
+        @keyframes breathMoveX { 0% { left: 7.1%; } 33.33% { left: 35.7%; } 66.66% { left: 64.3%; } 100% { left: 92.8%; } }
+        @keyframes breathMoveY { 0% { top: 90%; animation-timing-function: ease-in-out; } 33.33% { top: 10%; animation-timing-function: linear; } 66.66% { top: 10%; animation-timing-function: ease-in-out; } 100% { top: 90%; } }
+        .breathe-text { font-weight: 500; color: var(--color-text-light); text-align: center; font-size: 1rem; margin-bottom: 1.5rem; }
 
-        @keyframes breathMoveX {
-            0% { left: 7.1%; }       
-            33.33% { left: 35.7%; }  
-            66.66% { left: 64.3%; }  
-            100% { left: 92.8%; }    
-        }
-        @keyframes breathMoveY {
-            0% { top: 90%; animation-timing-function: ease-in-out; }     
-            33.33% { top: 10%; animation-timing-function: linear; }      
-            66.66% { top: 10%; animation-timing-function: ease-in-out; } 
-            100% { top: 90%; }                                           
-        }
-
-        .breathe-text { font-weight: 500; color: var(--color-text-light); text-align: center; font-size: 1rem; margin-bottom: 2rem; height: 24px; }
-
-        .ambient-selector { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1.2rem; z-index: 2; }
+        .ambient-selector { margin-top: auto; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 1rem; z-index: 2; }
         .ambient-cards { display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center; }
         .ambient-card {
-            background: rgba(255,255,255,0.7); width: 48px; height: 48px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: var(--transition);
-            font-size: 1.4rem; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);
+            background: rgba(255,255,255,0.7); width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+            border: 2px solid transparent; transition: var(--transition); font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
         }
-        .ambient-card:hover { transform: translateY(-3px) scale(1.05); background: #fff; }
-        .ambient-card.active { border-color: var(--color-mint-dark); background: white; transform: scale(1.1); box-shadow: 0 8px 15px -3px rgba(0,0,0,0.1); }
+        .ambient-card.active { border-color: var(--color-mint-dark); background: white; transform: scale(1.1); }
         
-        .sound-btn { background: rgba(255,255,255,0.9); border: none; padding: 0.6rem 1.2rem; border-radius: 50px; cursor: pointer; color: var(--color-text-light); font-family: inherit; font-size: 0.9rem; font-weight: 500; transition: var(--transition); box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 8px; min-height: 44px; }
-        .sound-btn:hover { background: #fff; transform: translateY(-2px); }
+        .sound-btn {
+            background: rgba(255,255,255,0.85); border: 1px solid var(--glass-border); padding: 0.6rem 1.4rem; border-radius: 50px;
+            cursor: pointer; color: var(--color-text-light); font-size: 0.9rem; font-weight: 500; transition: var(--transition);
+            display: flex; align-items: center; gap: 8px; min-height: 40px;
+        }
         .sound-btn.active { background: var(--color-text); color: white; }
 
-        .doodling-area { background: #FFFFFF; border-radius: var(--radius-lg); position: relative; overflow: hidden; box-shadow: var(--shadow-md); display: flex; flex-direction: column; border: 1px solid #eaeaea; min-height: 380px; }
-        .doodle-header { padding: 1rem 1.5rem; background: var(--bg-main); display: flex; justify-content: space-between; align-items: center; color: var(--color-text); border-bottom: 1px solid #eaeaea; flex-wrap: wrap; gap: 0.8rem; }
+        .doodling-area { background: #FFFFFF; border-radius: var(--radius-lg); position: relative; overflow: hidden; display: flex; flex-direction: column; min-height: 380px; }
+        .doodle-header { padding: 0.9rem 1.2rem; background: rgba(255, 255, 255, 0.65); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.06); }
         .tools { display: flex; gap: 0.8rem; align-items: center; }
-        .tool-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
-        .tool-btn.active { border-color: var(--color-text); transform: scale(1.15); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+        .tool-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ddd; cursor: pointer; transition: 0.2s; }
+        .tool-btn.active { border-color: var(--color-text); transform: scale(1.15); }
         .tool-soft-blue { background: #AEC6CF; }
         .tool-soft-green { background: #B2D8B2; }
         .tool-lavender { background: #C3B1E1; }
         
-        .shatter-btn { background: var(--color-text); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; transition: var(--transition); font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
-        .shatter-btn:hover { background: #E74C3C; transform: scale(1.15); box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
+        .shatter-btn { background: var(--color-text); color: white; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; font-size: 0.95rem; display: flex; align-items: center; justify-content: center; }
+        .shatter-btn:active { background: #E74C3C; }
 
-        #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background-color: transparent; width: 100%; }
-        
-        .crumple-anim { animation: paperCrumple 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards; transform-origin: center; }
-        @keyframes paperCrumple {
-            0% { transform: scale(1) rotate(0deg); opacity: 1; border-radius: 0; }
-            30% { transform: scale(0.9) rotate(2deg) skew(2deg, 2deg); opacity: 0.9; }
-            60% { transform: scale(0.6) rotate(-5deg) skew(-5deg, -5deg); opacity: 0.6; border-radius: 40px; }
-            100% { transform: scale(0) translateY(400px) rotate(20deg); opacity: 0; border-radius: 50%; }
-        }
-        
-        .affirmation-overlay { position: absolute; bottom: 20px; left: 0; width: 100%; text-align: center; color: var(--color-text-light); font-style: italic; pointer-events: none; transition: opacity 0.3s; padding: 0 1rem; font-size: 0.9rem; }
+        #doodle-canvas { flex: 1; cursor: crosshair; touch-action: none; background: rgba(255,255,255,0.35); width: 100%; height: 100%; }
+        .affirmation-overlay { position: absolute; bottom: 15px; left: 10px; right: 10px; text-align: center; color: var(--color-text-light); font-style: italic; pointer-events: none; font-size: 0.85rem; }
 
         /* =====================================================================
-           iOS GLASS LAYER & SETTINGS
-           ===================================================================== */
-        :root {
-            --font-ui: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
-            --glass-bg: rgba(255, 255, 255, 0.55);
-            --glass-bg-strong: rgba(255, 255, 255, 0.72);
-            --glass-border: rgba(255, 255, 255, 0.65);
-            --glass-blur: blur(24px) saturate(170%);
-            --glass-shadow: 0 8px 32px rgba(44, 62, 80, 0.08), 0 1px 2px rgba(44, 62, 80, 0.04);
-            --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.85), inset 0 -1px 0 rgba(255, 255, 255, 0.25);
-            --ease-ios: cubic-bezier(0.22, 1, 0.36, 1);
-            --radius-lg: 28px;
-            --radius-md: 18px;
-            --radius-sm: 12px;
-            --transition: all 0.3s var(--ease-ios);
-        }
-
-        body {
-            font-family: var(--font-ui);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            text-rendering: optimizeLegibility;
-            line-height: 1.55;
-        }
-        h1, h2, h3 { letter-spacing: -0.01em; line-height: 1.2; }
-        h3 { font-family: var(--font-ui); font-weight: 600; font-size: 1.15rem; letter-spacing: -0.015em; }
-        h3 small { font-weight: 400; color: var(--color-text-light); font-size: 0.8rem; }
-        .section-header h2 { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.2rem); letter-spacing: -0.02em; }
-        .logo-slogan, .welcome-slogan { line-height: 1.45; }
-        button, input, select { font-family: var(--font-ui); }
-
-        body::before {
-            content: ''; position: fixed; inset: -10%; z-index: -1; pointer-events: none;
-            background:
-                radial-gradient(42% 42% at 14% 18%, var(--mesh-c1) 0%, transparent 70%),
-                radial-gradient(38% 38% at 86% 14%, var(--mesh-c2) 0%, transparent 70%),
-                radial-gradient(45% 45% at 76% 86%, var(--mesh-c3) 0%, transparent 70%),
-                radial-gradient(36% 36% at 20% 84%, var(--mesh-c4) 0%, transparent 70%);
-            filter: blur(24px);
-            animation: meshDrift 30s ease-in-out infinite alternate;
-            transition: background 1s ease-in-out;
-        }
-        @keyframes meshDrift {
-            from { transform: translate3d(0, 0, 0) scale(1); }
-            to   { transform: translate3d(2%, -2%, 0) scale(1.05); }
-        }
-
-        .sidebar {
-            background: var(--glass-bg);
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border-right: 1px solid var(--glass-border);
-            box-shadow: var(--glass-highlight), 4px 0 30px rgba(44, 62, 80, 0.04);
-        }
-        .nav-item { border-radius: var(--radius-md); }
-        .nav-item:hover { background: rgba(255, 255, 255, 0.45); }
-        .nav-item.active {
-            background: var(--glass-bg-strong);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-highlight), 0 4px 14px rgba(44, 62, 80, 0.08);
-        }
-        .nav-item:active { transform: scale(0.97); }
-
-        .main-content { z-index: 1; scroll-behavior: smooth; }
-        .main-content::-webkit-scrollbar { width: 8px; }
-        .main-content::-webkit-scrollbar-thumb { background: rgba(44, 62, 80, 0.15); border-radius: 8px; }
-
-        .card, .doodling-area, .learn-card, .schedule-visualizer, .breathing-widget {
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow), var(--glass-highlight);
-        }
-        .card, .learn-card, .doodling-area { background: var(--glass-bg); }
-        .card { padding: 2rem 2.2rem; }
-        .schedule-visualizer { background: rgba(245, 239, 235, 0.5); }
-        .breathing-widget { box-shadow: var(--glass-shadow), var(--glass-highlight); }
-        .doodle-header { background: rgba(255, 255, 255, 0.45); border-bottom: 1px solid rgba(255, 255, 255, 0.7); }
-        #doodle-canvas { background-color: rgba(255, 255, 255, 0.35); }
-
-        .learn-card.active { border-color: rgba(44, 62, 80, 0.55); background: var(--glass-bg-strong); }
-        .learn-card:hover { transform: translateY(-3px); }
-
-        .quote-banner {
-            background: linear-gradient(135deg, rgba(212, 234, 221, 0.75), rgba(250, 220, 217, 0.75));
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow), var(--glass-highlight);
-            font-size: 1.02rem; line-height: 1.6;
-        }
-
-        button.primary-btn, .welcome-btn {
-            background: linear-gradient(180deg, #3a4f63 0%, var(--color-text) 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 6px 16px rgba(44, 62, 80, 0.22);
-            letter-spacing: 0.005em;
-        }
-        button.primary-btn:hover, .welcome-btn:hover { transform: translateY(-2px); opacity: 1; filter: brightness(1.08); }
-        button.primary-btn:active, .welcome-btn:active, button.secondary-btn:active { transform: scale(0.97) !important; }
-        button.secondary-btn {
-            background: rgba(255, 255, 255, 0.5); border: 1px solid var(--glass-border);
-            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-            box-shadow: var(--glass-highlight);
-        }
-        button.secondary-btn:hover { background: rgba(255, 255, 255, 0.8); border-color: rgba(255, 255, 255, 0.9); }
-        .sound-btn, .ambient-card {
-            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-        }
-        .ambient-card.active { border-color: var(--color-mint-dark); }
-        .sound-btn.active { border-color: transparent; }
-        #btn-take-break { background: linear-gradient(180deg, #b9dcc8, var(--color-mint-dark)) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 6px 16px rgba(169, 209, 186, 0.45); }
-
-        .task-input-group input, .task-input-group select, #schedule-start-time {
-            background: rgba(255, 255, 255, 0.6) !important;
-            border: 1px solid rgba(44, 62, 80, 0.10) !important;
-            border-radius: 14px !important;
-            padding: 0.8rem 1rem;
-            transition: var(--transition);
-        }
-        .task-input-group input:focus, .task-input-group select:focus, #schedule-start-time:focus {
-            background: #fff !important;
-            border-color: var(--color-mint-dark) !important;
-            box-shadow: 0 0 0 4px rgba(169, 209, 186, 0.35);
-        }
-        #schedule-controls {
-            background: rgba(255, 255, 255, 0.45) !important;
-            border: 1px solid var(--glass-border) !important;
-            border-radius: var(--radius-md) !important;
-        }
-
-        .task-item {
-            background: rgba(255, 255, 255, 0.55);
-            border: 1px solid var(--glass-border);
-            border-left: 3px solid var(--color-text);
-            border-radius: 14px;
-            box-shadow: var(--glass-highlight);
-        }
-        .task-time-badge { background: rgba(44, 62, 80, 0.08); }
-        .timeline-item::before { border-color: rgba(245, 239, 235, 0.9); }
-
-        .analog-clock {
-            background: rgba(255, 255, 255, 0.45);
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            box-shadow: var(--glass-highlight), inset 0 0 30px rgba(255, 255, 255, 0.35), 0 16px 40px rgba(44, 62, 80, 0.10);
-            border: 1px solid var(--glass-border);
-        }
-        #digital-clock { letter-spacing: 0.02em; font-variant-numeric: tabular-nums; }
-        #break-countdown { font-variant-numeric: tabular-nums; }
-
-        #welcome-screen {
-            background:
-                radial-gradient(45% 45% at 15% 20%, var(--mesh-c1), transparent 70%),
-                radial-gradient(40% 40% at 85% 15%, var(--mesh-c2), transparent 70%),
-                radial-gradient(45% 45% at 75% 85%, var(--mesh-c3), transparent 70%),
-                radial-gradient(40% 40% at 20% 85%, var(--mesh-c4), transparent 70%),
-                var(--bg-main);
-        }
-        .welcome-content {
-            background: rgba(255, 255, 255, 0.4);
-            -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow), var(--glass-highlight);
-            border-radius: 36px;
-        }
-
-        /* --- CÀI ĐẶT --- */
-        :root { --tick-major: rgba(44,62,80,.6); --tick-minor: rgba(127,140,141,.3); }
-        .amps-title { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; }
-        .info-toggle { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--color-accent); background: transparent; color: var(--color-accent); font: italic 700 .95rem/1 'Playfair Display', serif; cursor: pointer; transition: var(--transition); flex: none; display: inline-flex; align-items: center; justify-content: center; }
-        .info-toggle:hover, .info-toggle[aria-expanded="true"] { background: var(--color-accent); color: #fff; }
-        
-        .amps-info { margin: 0 0 1.25rem; padding: 1rem 1.25rem; border-radius: var(--radius-md); background: var(--glass-bg-strong); border: 1px solid var(--glass-border); animation: fadeIn .3s ease-out; }
-        .amps-info[hidden] { display: none; }
-        .amps-info p { font-size: .95rem; line-height: 1.6; color: var(--color-text-light); margin: 0; }
-        .amps-info p + p { margin-top: .5rem; }
-        .amps-info .amps-full { font-size: 1rem; font-weight: 600; color: var(--color-text); }
-        .amps-info .amps-note { font-size: .88rem; font-style: italic; padding-top: .5rem; border-top: 1px solid rgba(44,62,80,.08); }
-
-        .settings-wrap { margin-top: auto; position: relative; }
-        .settings-btn { width: 100%; display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border: none; background: transparent; border-radius: var(--radius-md); color: var(--color-text-light); font: inherit; font-weight: 500; cursor: pointer; transition: var(--transition); min-height: 44px; }
-        .settings-btn i { font-size: 1.2rem; width: 24px; text-align: center; }
-        .settings-btn:hover, .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.45); color: var(--color-text); }
-        
-        /* POPUP CÀI ĐẶT */
-        .settings-pop { 
-            position: absolute; 
-            left: 0; 
-            bottom: calc(100% + 12px); 
-            width: 270px; 
-            padding: 1.25rem; 
-            border-radius: var(--radius-md); 
-            background: rgba(255, 255, 255, 0.96); 
-            -webkit-backdrop-filter: blur(20px); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.9); 
-            box-shadow: 0 14px 35px rgba(44, 62, 80, 0.16), 0 2px 6px rgba(0,0,0,0.04); 
-            z-index: 1000; 
-            animation: fadeIn .25s ease-out; 
-        }
-        .settings-pop[hidden] { display: none; }
-        .settings-pop h4 { font: 600 .85rem var(--font-ui); color: var(--color-text-light); margin: 0 0 .5rem; }
-        .settings-pop h4:not(:first-child) { margin-top: 1.15rem; }
-        
-        .seg { display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: rgba(44,62,80,.08); }
-        .seg button { flex: 1; border: none; background: transparent; padding: .5rem .4rem; border-radius: 9px; font: inherit; font-size: .88rem; color: var(--color-text-light); cursor: pointer; transition: var(--transition); min-height: 38px; }
-        .seg button[aria-pressed="true"] { background: var(--bg-card); color: var(--color-text); font-weight: 600; box-shadow: var(--shadow-sm); }
-
-        .color-palette-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 8px;
-            margin-top: 0.4rem;
-        }
-        .color-swatch {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.85);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-            position: relative;
-        }
-        .color-swatch:hover { transform: scale(1.15); box-shadow: 0 4px 8px rgba(0,0,0,0.18); }
-        .color-swatch.active { border-color: var(--color-text); transform: scale(1.12); outline: 2px solid var(--color-accent); outline-offset: 1px; }
-
-        /* Dark Mode */
-        html[data-theme="dark"] { 
-            color-scheme: dark;
-            --bg-main: #10161c; --bg-card: #1b242d; --color-text: #E6EBF0; --color-text-light: #9DAAB7; --color-beige: #1a222a; --color-accent: #7f93ab;
-            --glass-bg: rgba(30,40,52,.62); --glass-bg-strong: rgba(38,50,64,.82); --glass-border: rgba(255,255,255,.09);
-            --glass-shadow: 0 8px 32px rgba(0,0,0,.35); --glass-highlight: inset 0 1px 0 rgba(255,255,255,.06);
-            --tick-major: rgba(230,235,240,.7); --tick-minor: rgba(157,170,183,.4); 
-        }
-        html[data-theme="dark"] body::before { opacity: .35; }
-        html[data-theme="dark"] .settings-pop { 
-            background: rgba(27, 36, 45, 0.96); 
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            box-shadow: 0 14px 40px rgba(0,0,0,0.45);
-        }
-        html[data-theme="dark"] .welcome-content { background: var(--glass-bg); }
-        html[data-theme="dark"] .welcome-btn, html[data-theme="dark"] button.primary-btn { background: linear-gradient(180deg,#6a87a2,#506a82); }
-        html[data-theme="dark"] input, html[data-theme="dark"] select { color: var(--color-text); }
-        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.14) !important; }
-        html[data-theme="dark"] .task-input-group input:focus, html[data-theme="dark"] .task-input-group select:focus, html[data-theme="dark"] #schedule-start-time:focus { background: rgba(255,255,255,.12) !important; }
-        html[data-theme="dark"] #schedule-controls { background: rgba(255,255,255,.05) !important; }
-        html[data-theme="dark"] .nav-item:hover, html[data-theme="dark"] .settings-btn:hover, html[data-theme="dark"] .settings-btn[aria-expanded="true"] { background: rgba(255,255,255,.08); }
-        html[data-theme="dark"] .task-item, html[data-theme="dark"] .analog-clock, html[data-theme="dark"] .doodle-header, html[data-theme="dark"] #doodle-canvas { background: rgba(255,255,255,.05); }
-        html[data-theme="dark"] .schedule-visualizer { background: rgba(255,255,255,.04); }
-        html[data-theme="dark"] .task-time-badge { background: rgba(255,255,255,.1); color: #c9d3dc; }
-        html[data-theme="dark"] .timeline-item::before { border-color: #1a222a; }
-        html[data-theme="dark"] .quote-banner { background: linear-gradient(135deg,rgba(80,120,100,.45),rgba(130,80,80,.35)); color: var(--color-text); }
-        html[data-theme="dark"] .amps-intro { 
-            background: rgba(169, 209, 186, 0.12); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-left: 4px solid var(--color-mint-dark); 
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
-        }
-        html[data-theme="dark"] .amps-info .amps-note, html[data-theme="dark"] .learn-card-info { border-top-color: rgba(255,255,255,.1); }
-        html[data-theme="dark"] .learn-card.active { border-color: rgba(230,235,240,.55); }
-        html[data-theme="dark"] .result-high { background: rgba(242,185,179,.18); color: #ffb4a8; }
-        html[data-theme="dark"] .result-medium { background: rgba(255,224,138,.14); color: #ffe08a; }
-        html[data-theme="dark"] .result-low { background: rgba(169,209,186,.16); color: #9fdcb7; }
-        html[data-theme="dark"] button.secondary-btn { background: rgba(255,255,255,.06); color: var(--color-text-light); }
-        html[data-theme="dark"] button.secondary-btn:hover { background: rgba(255,255,255,.12); color: var(--color-text); }
-        html[data-theme="dark"] .breathing-widget { background-image: linear-gradient(rgba(16,22,28,.68),rgba(16,22,28,.68)); }
-        html[data-theme="dark"] .ambient-card, html[data-theme="dark"] .sound-btn { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.12); }
-        html[data-theme="dark"] .ambient-card:hover, html[data-theme="dark"] .ambient-card.active { background: rgba(255,255,255,.2); }
-        html[data-theme="dark"] .sound-btn.active, html[data-theme="dark"] .shatter-btn { background: #5f7a93; }
-        html[data-theme="dark"] .shatter-btn:hover { background: #E74C3C; }
-        html[data-theme="dark"] .seg { background: rgba(255,255,255,.08); }
-        html[data-theme="dark"] .color-swatch { border-color: rgba(255,255,255,0.2); }
-        html[data-theme="dark"] .color-swatch.active { border-color: #fff; }
-        html[data-theme="dark"] .main-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,.18); }
-
-        /* =====================================================================
-           RESPONSIVE MOBILE & TABLET MEDIA QUERIES
+           MOBILE SPECIFIC ADJUSTMENTS (Fit màn hình, không đè lấn)
            ===================================================================== */
         @media (max-width: 900px) {
             body { 
-                flex-direction: column; 
-                height: 100vh;
+                flex-direction: column-reverse; /* Đặt thanh điều hướng xuống đáy để dùng 1 tay thuận tiện */
                 height: 100dvh;
             }
-            .sidebar { 
-                width: 100%; 
-                padding: 0.75rem 1.25rem; 
-                flex-direction: row; 
-                align-items: center; 
-                justify-content: space-between; 
-                border-right: none; 
-                border-bottom: 1px solid var(--glass-border);
-                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 0.5rem 0.8rem;
+                padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-around;
+                border-right: none;
+                border-top: 1px solid var(--glass-border);
+                box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
+                z-index: 999;
+                background: rgba(255, 255, 255, 0.88);
             }
-            .logo-area { margin-bottom: 0; }
-            .logo-title { font-size: 1.8rem; }
-            .logo-slogan { display: none; }
+
+            .logo-area { display: none; } /* Ẩn logo ở navbar để nhường chỗ cho các tab trên mobile */
+
             .nav-menu { 
                 flex-direction: row; 
-                flex: unset; 
-                gap: 0.4rem;
-                align-items: center;
-            }
-            .nav-item { 
-                padding: 0.6rem 0.9rem; 
-                gap: 0.5rem; 
-                border-radius: var(--radius-sm);
-            }
-            .main-content { 
-                padding: 1.75rem 1.5rem; 
-                height: calc(100% - 65px);
-            }
-            .plan-container { grid-template-columns: 1fr; }
-            .learn-cards-container { flex-direction: column; gap: 1rem; }
-            .pause-container { 
-                grid-template-columns: 1fr; 
-                grid-template-rows: auto 420px; 
-                min-height: auto; 
-                gap: 1.5rem;
-            }
-            .analog-clock { width: 230px; height: 230px; }
-            .settings-wrap { margin-top: 0; }
-            .settings-btn { 
-                padding: 0.6rem 0.9rem; 
-                gap: 0.5rem; 
-                border-radius: var(--radius-sm);
-            }
-            .settings-pop { 
-                left: auto; 
-                right: 0; 
-                bottom: auto; 
-                top: calc(100% + 10px); 
-                max-width: min(290px, calc(100vw - 24px));
-            }
-        }
-
-        /* --- PHÙ HỢP CÁC DÒNG SMARTPHONE (< 600px) --- */
-        @media (max-width: 600px) {
-            body {
-                position: relative;
-            }
-            .sidebar {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                top: auto;
-                z-index: 1000;
-                padding: 0.5rem 0.75rem env(safe-area-inset-bottom) 0.75rem;
-                border-bottom: none;
-                border-top: 1px solid var(--glass-border);
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
-                background: var(--glass-bg-strong);
-                justify-content: space-around;
-            }
-            .logo-area { display: none; }
-            .nav-menu {
-                width: 100%;
-                justify-content: space-around;
-                gap: 0.2rem;
+                flex: 1; 
+                justify-content: space-around; 
+                gap: 0.3rem; 
             }
             .nav-item {
                 flex-direction: column;
                 gap: 3px;
-                padding: 0.4rem 0.5rem;
-                font-size: 0.72rem;
-                border-radius: 10px;
-                flex: 1;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.75rem;
+                border-radius: var(--radius-sm);
+                min-width: 48px;
                 justify-content: center;
-                min-height: 48px;
             }
             .nav-item i { font-size: 1.15rem; width: auto; }
-            .nav-item span { display: block !important; }
-            .settings-wrap { display: flex; align-items: center; }
-            .settings-btn {
-                flex-direction: column;
-                gap: 3px;
-                padding: 0.4rem 0.5rem;
-                font-size: 0.72rem;
-                min-width: 48px;
-                min-height: 48px;
-                justify-content: center;
+            .nav-item span { display: block; font-size: 0.72rem; }
+            .nav-item.active { box-shadow: none; border-color: rgba(44, 62, 80, 0.15); }
+
+            .settings-wrap { 
+                margin-top: 0; 
+                display: flex; 
+                align-items: center; 
             }
-            .settings-btn span { display: block; font-size: 0.72rem; }
+            .settings-btn { 
+                flex-direction: column; 
+                gap: 3px; 
+                padding: 0.4rem 0.6rem; 
+                font-size: 0.75rem; 
+                min-width: 48px; 
+                justify-content: center; 
+            }
             .settings-btn i { font-size: 1.15rem; width: auto; }
+            .settings-btn span { font-size: 0.72rem; display: block; }
+
+            /* Settings chuyển thành Bottom Sheet Popup trên Mobile */
             .settings-pop {
                 position: fixed;
-                top: auto;
-                bottom: calc(64px + env(safe-area-inset-bottom));
-                right: 12px;
-                left: 12px;
+                left: 1rem;
+                right: 1rem;
+                bottom: calc(75px + env(safe-area-inset-bottom));
                 width: auto;
-                max-width: none;
-                box-sizing: border-box;
+                max-width: 450px;
+                margin: 0 auto;
+                border-radius: var(--radius-lg);
+                box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+                z-index: 1002;
             }
+            .settings-pop-header { display: flex; }
 
             .main-content {
-                padding: 1.25rem 1rem calc(80px + env(safe-area-inset-bottom)) 1rem;
-                overflow-x: hidden;
+                padding: 1.25rem 1.25rem calc(80px + env(safe-area-inset-bottom)) 1.25rem;
             }
 
-            .card {
-                padding: 1.4rem 1.25rem;
-                border-radius: 20px;
-                margin-bottom: 1.25rem;
-            }
-            .section-header { margin-bottom: 1.25rem; }
-            .section-header h2 { font-size: 1.55rem; }
-            .section-header p { font-size: 0.92rem; }
-
-            .quote-banner {
-                padding: 1.1rem 1.2rem;
-                font-size: 0.95rem;
-                margin-bottom: 1.25rem;
-            }
-
-            /* Ngăn Safari iOS tự động zoom vào input */
-            .task-input-group input, 
-            .task-input-group select, 
-            #schedule-start-time {
-                font-size: 16px !important;
-            }
-
-            .task-input-group { flex-direction: column; gap: 0.7rem; }
-            .task-input-group input[type="text"], .task-input-group select { width: 100%; min-width: unset; }
-            .task-item { flex-direction: column; align-items: flex-start; gap: 0.8rem; padding: 0.9rem; }
-            .task-info { width: 100%; flex-wrap: wrap; word-break: break-word; gap: 0.4rem; font-size: 0.92rem; }
-            .task-actions { width: 100%; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.6rem; }
-            #schedule-controls > div { flex-direction: column; align-items: flex-start !important; gap: 0.6rem; }
-            #schedule-controls input[type="time"] { width: 100%; }
-            .timeline-item { word-break: break-word; padding-right: 0.5rem; font-size: 0.92rem; }
-
-            /* Learn View Mobile */
-            .analog-clock { width: 210px; height: 210px; }
-            .clock-container { margin-bottom: 1.6rem; }
-            .learn-cards-container { margin-bottom: 1.8rem; }
-            .learn-card { padding: 1rem; }
+            .card { padding: 1.4rem; }
+            .plan-container { grid-template-columns: 1fr; gap: 1.5rem; }
+            .learn-cards-container { flex-direction: column; gap: 0.8rem; }
+            .pause-container { grid-template-columns: 1fr; min-height: auto; gap: 1.5rem; }
             
-            /* Pause View Mobile */
-            .pause-container { 
-                grid-template-columns: 1fr; 
-                grid-template-rows: auto 380px; 
-                gap: 1.2rem; 
-            }
-            .breathing-widget { padding: 1.4rem 1.2rem; border-radius: 20px; }
-            .breathe-graph-container { max-width: 250px; height: 95px; }
-            .doodling-area { border-radius: 20px; }
-            .doodle-header { padding: 0.8rem 1rem; }
-
-            /* Session Popup Mobile */
-            #session-popup .card {
-                padding: 1.8rem 1.25rem !important;
-                margin: 0 1rem !important;
-                width: calc(100% - 2rem) !important;
-            }
+            .doodling-area { min-height: 340px; height: 340px; }
         }
+
+        @media (max-width: 600px) {
+            .main-content { padding: 1rem 1rem calc(75px + env(safe-area-inset-bottom)) 1rem; }
+            .card { padding: 1.2rem; border-radius: var(--radius-md); }
+            .section-header h2 { font-size: 1.55rem; }
+            
+            .task-input-group { flex-direction: column; gap: 0.6rem; }
+            .task-input-group input[type="text"], .task-input-group select { width: 100%; }
+            
+            .task-item { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+            .task-info { width: 100%; justify-content: space-between; }
+            .task-actions { width: 100%; justify-content: flex-end; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 0.5rem; }
+            
+            #break-countdown { font-size: 3.5rem !important; }
+            .clock-container { margin-bottom: 1.4rem; }
+        }
+
+        /* --- DARK THEME OVERRIDES --- */
+        html[data-theme="dark"] { 
+            color-scheme: dark;
+            --bg-main: #10161c; --bg-card: #1b242d; --color-text: #E6EBF0; --color-text-light: #9DAAB7; --color-beige: #1a222a; --color-accent: #7f93ab;
+            --glass-bg: rgba(30,40,52,.65); --glass-bg-strong: rgba(38,50,64,.85); --glass-border: rgba(255,255,255,.09);
+            --glass-shadow: 0 8px 32px rgba(0,0,0,.35); --glass-highlight: inset 0 1px 0 rgba(255,255,255,.06);
+            --tick-major: rgba(230,235,240,.7); --tick-minor: rgba(157,170,183,.4); 
+        }
+        html[data-theme="dark"] body::before { opacity: .35; }
+        html[data-theme="dark"] .sidebar { background: rgba(23, 31, 40, 0.92); }
+        html[data-theme="dark"] .settings-pop { 
+            background: rgba(27, 36, 45, 0.96); 
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 14px 40px rgba(0,0,0,0.5);
+        }
+        html[data-theme="dark"] .welcome-content { background: var(--glass-bg); }
+        html[data-theme="dark"] .welcome-btn, html[data-theme="dark"] button.primary-btn { background: linear-gradient(180deg,#6a87a2,#506a82); }
+        html[data-theme="dark"] input, html[data-theme="dark"] select { color: var(--color-text); }
+        html[data-theme="dark"] .task-input-group input, html[data-theme="dark"] .task-input-group select, html[data-theme="dark"] #schedule-start-time { background: rgba(255,255,255,.07); border-color: rgba(255,255,255,.14); }
+        html[data-theme="dark"] .task-item, html[data-theme="dark"] .analog-clock, html[data-theme="dark"] .doodle-header, html[data-theme="dark"] #doodle-canvas { background: rgba(255,255,255,.05); }
+        html[data-theme="dark"] .schedule-visualizer { background: rgba(255,255,255,.04); }
+        html[data-theme="dark"] .quote-banner { background: linear-gradient(135deg,rgba(80,120,100,.45),rgba(130,80,80,.35)); color: var(--color-text); }
+        html[data-theme="dark"] .amps-intro { background: rgba(169, 209, 186, 0.12); border-left: 4px solid var(--color-mint-dark); }
+        html[data-theme="dark"] .breathing-widget { background-image: linear-gradient(rgba(16,22,28,.7),rgba(16,22,28,.7)); }
+        html[data-theme="dark"] .seg { background: rgba(255,255,255,.08); }
     </style>
     <script>try{var p=localStorage.getItem('insight_theme')||'light';document.documentElement.dataset.theme=(p==='dark')?'dark':'light'}catch(e){}</script>
 </head>
@@ -977,18 +674,21 @@
     </div>
 
     <!-- SESSION COMPLETION POPUP -->
-    <div id="session-popup" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; padding: 1rem;">
-        <div class="card" style="text-align: center; max-width: 400px; width: 100%; padding: 2.5rem 2rem; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
-            <h2 id="popup-title" style="margin-bottom: 1rem; font-family: 'Playfair Display', serif;">✨ Hết giờ rồi!</h2>
-            <p id="popup-desc" style="color: var(--color-text-light); margin-bottom: 2rem; line-height: 1.6;"></p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                <button class="primary-btn" id="btn-take-break" style="background-color: var(--color-mint-dark); color: #2c3e50; flex: 1; min-width: 120px;">Nghỉ ngơi</button>
-                <button class="secondary-btn" id="btn-continue-work" style="flex: 1; min-width: 120px;">Tiếp tục</button>
+    <div id="session-popup" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s; pointer-events: none; padding: 1.5rem;">
+        <div class="card" style="text-align: center; max-width: 400px; width: 100%; padding: 2.2rem 1.8rem; margin: 0; box-shadow: 0 20px 40px rgba(0,0,0,0.25);">
+            <h2 id="popup-title" style="margin-bottom: 0.8rem; font-family: 'Playfair Display', serif;">✨ Hết giờ rồi!</h2>
+            <p id="popup-desc" style="color: var(--color-text-light); margin-bottom: 1.8rem; line-height: 1.6; font-size: 0.95rem;"></p>
+            <div style="display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap;">
+                <button class="primary-btn" id="btn-take-break" style="background-color: var(--color-mint-dark); color: #2c3e50;">Nghỉ ngơi</button>
+                <button class="secondary-btn" id="btn-continue-work">Tiếp tục</button>
             </div>
         </div>
     </div>
 
-    <!-- Sidebar Navigation -->
+    <!-- Settings Backdrop (Mobile) -->
+    <div class="settings-backdrop" id="settings-backdrop"></div>
+
+    <!-- Sidebar / Bottom Navigation Bar -->
     <nav class="sidebar">
         <div class="logo-area">
             <h1 class="logo-title">INSIGHT</h1>
@@ -1004,6 +704,10 @@
         <div class="settings-wrap">
             <button type="button" class="settings-btn" id="settings-btn" aria-expanded="false" aria-controls="settings-pop"><i class="fa-solid fa-gear"></i> <span>Cài đặt</span></button>
             <div class="settings-pop" id="settings-pop" hidden>
+                <div class="settings-pop-header">
+                    <span>Cài đặt</span>
+                    <button type="button" class="settings-close-btn" id="settings-close-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
                 <h4>Ngôn ngữ</h4>
                 <div class="seg" id="seg-lang"><button type="button" data-lang="vi">Tiếng Việt</button><button type="button" data-lang="en">English</button></div>
                 
@@ -1053,7 +757,7 @@
                 <h3 class="amps-title">Thang đo AMPS <button type="button" class="info-toggle" id="amps-info-btn" aria-expanded="false" aria-controls="amps-info" title="Xem thông tin thang đo"><span aria-hidden="true">i</span></button></h3>
                 <div class="amps-info" id="amps-info" hidden>
                     <p class="amps-full">Assessment of Maladaptive Perfectionism Scale</p>
-                    <p>Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.</p>
+                    <p>Chủ nghĩa cầu toàn không thích nghi là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.</p>
                     <p class="amps-note">Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.</p>
                 </div>
                 
@@ -1079,8 +783,8 @@
 
             <div class="plan-container">
                 <div class="card">
-                    <h3>Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 1rem; font-weight:normal;">(0/5)</span></h3>
-                    <p style="font-size: 0.9rem; color: var(--color-text-light); margin-bottom: 1.5rem;" id="task-warning">
+                    <h3>Danh sách việc cần làm <span id="task-counter" style="color:var(--color-text-light); font-size: 0.95rem; font-weight:normal;">(0/5)</span></h3>
+                    <p style="font-size: 0.88rem; color: var(--color-text-light); margin-bottom: 1.2rem;" id="task-warning">
                         Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.
                     </p>
                     
@@ -1092,23 +796,23 @@
                             <option value="90">90 phút (làm việc sâu)</option>
                         </select>
                     </div>
-                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.6rem;">Thêm nhiệm vụ</button>
+                    <button class="primary-btn" id="btn-add-task" style="width: 100%; padding: 0.75rem;">Thêm nhiệm vụ</button>
                     
                     <ul class="task-list" id="task-list-ui"></ul>
 
-                    <div id="schedule-controls" style="display: none; margin-top: 2rem; background: var(--bg-main); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid #eaeaea;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.95rem;">Giờ bắt đầu:</label>
-                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: var(--radius-sm); font-family: inherit; font-size: 1rem; outline: none; background: white;">
+                    <div id="schedule-controls" style="display: none; margin-top: 1.8rem; background: rgba(255,255,255,0.45); padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--glass-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 0.5rem;">
+                            <label for="schedule-start-time" style="font-weight: 500; font-size: 0.92rem;">Giờ bắt đầu:</label>
+                            <input type="time" id="schedule-start-time" value="08:30" style="padding: 0.5rem; border: 1px solid rgba(44,62,80,0.12); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.95rem; outline: none; background: white;">
                         </div>
                         <button class="primary-btn" id="btn-generate-schedule" style="width: 100%;">Tạo lịch trình tự động</button>
                     </div>
                 </div>
 
                 <div class="schedule-visualizer" id="schedule-ui">
-                    <h3 style="margin-bottom: 1.5rem; text-align: center; color: var(--color-text-light);">Lịch trình dự kiến</h3>
+                    <h3 style="margin-bottom: 1.2rem; text-align: center; color: var(--color-text-light); font-size: 1.1rem;">Lịch trình dự kiến</h3>
                     <div class="timeline" id="timeline-container">
-                        <p style="text-align:center; color: #aaa; margin-top: 50px;">Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.</p>
+                        <p style="text-align:center; color: #aaa; margin-top: 40px; font-size: 0.9rem;">Chưa có lịch trình. Hãy thêm nhiệm vụ rồi chọn giờ bắt đầu để tạo lịch.</p>
                     </div>
                 </div>
             </div>
@@ -1137,9 +841,9 @@
                             <i class="fa-solid fa-circle-question info-btn" title="Xem chi tiết"></i>
                         </div>
                         <div class="learn-card-info">
-                            <b>Tính năng:</b> Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).<br>
-                            <b>Dùng khi nào:</b> Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.<br>
-                            <b>Cách thực hiện:</b> Tập trung trong 45 phút, sau đó thư giãn 15 phút.
+                            <b>Tính năng:</b> Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút.<br>
+                            <b>Dùng khi nào:</b> Phù hợp khi cần hoàn thành việc lớn và muốn có phần thưởng giải trí.<br>
+                            <b>Cách thực hiện:</b> Tập trung 45 phút, sau đó thư giãn 15 phút.
                         </div>
                     </div>
 
@@ -1150,8 +854,8 @@
                         </div>
                         <div class="learn-card-info">
                             <b>Tính năng:</b> Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.<br>
-                            <b>Dùng khi nào:</b> Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).<br>
-                            <b>Cách thực hiện:</b> Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.
+                            <b>Dùng khi nào:</b> Phù hợp khi bạn đang cuốn vào mạch suy nghĩ sâu.<br>
+                            <b>Cách thực hiện:</b> Làm việc theo nhịp tự nhiên và bấm tạm dừng khi thấy mệt.
                         </div>
                     </div>
                 </div>
@@ -1177,24 +881,24 @@
                         </div>
                     </div>
 
-                    <div id="timer-controls" style="margin: 0.5rem 0 1rem; min-height: 50px;">
-                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.6rem 2rem; font-size: 0.95rem;">
+                    <div id="timer-controls" style="margin: 0.2rem 0 0.8rem; min-height: 48px; text-align: center;">
+                        <button class="primary-btn" id="btn-timer-toggle" style="padding: 0.75rem 2.2rem; font-size: 0.95rem;">
                             <i class="fa-solid fa-play"></i> Bắt đầu tập trung
                         </button>
                         <div id="timer-status" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--color-text-light); font-weight: 500;"></div>
                     </div>
                     
-                    <p style="color: var(--color-text-light); font-size: 0.9rem; font-style: italic; max-width: 90%;">
+                    <p style="color: var(--color-text-light); font-size: 0.88rem; font-style: italic; max-width: 320px; line-height: 1.45;">
                         "Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung."
                     </p>
                 </div>
 
                 <!-- BREAK SCREEN -->
-                <div id="break-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem 0; min-height: 350px;">
-                    <h3 id="break-title" style="color: var(--color-text-light); font-size: 1.2rem; margin-bottom: 1rem;">☕ Thời gian nghỉ</h3>
-                    <div id="break-countdown" style="font-family: 'Playfair Display', serif; font-size: clamp(3.2rem, 10vw, 4.5rem); font-weight: 700; color: var(--color-text); margin-bottom: 1rem; letter-spacing: 2px;">05:00</div>
-                    <p id="break-desc" style="color: var(--color-text-light); font-size: 0.95rem; margin-bottom: 2rem; max-width: 320px; text-align: center;">Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.</p>
-                    <div id="break-end-msg" style="display: none; font-size: 1.2rem; font-weight: 600; color: var(--color-mint-dark); margin-bottom: 1.5rem; animation: fadeIn 0.5s ease-out;">✨ Hết giờ nghỉ</div>
+                <div id="break-screen" style="display: none; flex-direction: column; align-items: center; justify-content: center; width: 100%; padding: 1rem 0; min-height: 320px;">
+                    <h3 id="break-title" style="color: var(--color-text-light); font-size: 1.15rem; margin-bottom: 0.8rem;">☕ Thời gian nghỉ</h3>
+                    <div id="break-countdown" style="font-family: 'Playfair Display', serif; font-size: 4.2rem; font-weight: 700; color: var(--color-text); margin-bottom: 0.8rem; letter-spacing: 2px;">05:00</div>
+                    <p id="break-desc" style="color: var(--color-text-light); font-size: 0.92rem; margin-bottom: 1.8rem; max-width: 300px; text-align: center;">Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.</p>
+                    <div id="break-end-msg" style="display: none; font-size: 1.15rem; font-weight: 600; color: var(--color-mint-dark); margin-bottom: 1.2rem; animation: fadeIn 0.5s ease-out;">✨ Hết giờ nghỉ</div>
                     <button class="primary-btn" id="btn-end-break">Quay lại làm việc</button>
                 </div>
 
@@ -1210,7 +914,7 @@
 
             <div class="pause-container">
                 <div class="breathing-widget" id="breathing-widget-bg">
-                    <h3 style="margin-bottom: 0.5rem; position: relative; z-index: 2; font-size: 1.2rem;">Hít thở nhịp 4-4-4</h3>
+                    <h3 style="margin-bottom: 0.4rem; position: relative; z-index: 2; font-size: 1.15rem;">Hít thở nhịp 4-4-4</h3>
                     
                     <div class="breathe-graph-container">
                         <svg class="breathe-wave-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
@@ -1235,9 +939,9 @@
 
                 <div class="doodling-area">
                     <div class="doodle-header">
-                        <div style="display: flex; flex-direction: column; gap: 4px;">
-                            <span style="font-weight:600;"><i class="fa-solid fa-palette"></i> Bảng vẽ tự do</span>
-                            <span style="font-size:0.8rem; opacity:0.8;">Vẽ tự do để thư giãn.</span>
+                        <div style="display: flex; flex-direction: column; gap: 2px;">
+                            <span style="font-weight:600; font-size: 0.95rem;"><i class="fa-solid fa-palette"></i> Bảng vẽ tự do</span>
+                            <span style="font-size:0.75rem; opacity:0.8;">Vẽ tự do để thư giãn.</span>
                         </div>
                         <div class="tools">
                             <div class="tool-btn tool-soft-blue active" data-color="#AEC6CF"></div>
@@ -1262,7 +966,7 @@
 
         btnStartApp.addEventListener('click', () => {
             welcomeScreen.classList.add('hidden');
-            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 600);
+            setTimeout(() => { welcomeScreen.style.display = 'none'; }, 500);
         });
 
         const navItems = document.querySelectorAll('.nav-item');
@@ -1278,9 +982,11 @@
                 const targetId = item.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
                 
+                // Cuộn mượt lên đầu màn hình mỗi khi đổi tab
+                document.querySelector('.main-content').scrollTop = 0;
+
                 if(targetId === 'pause') {
-                    isCanvasInit = false;
-                    setTimeout(initCanvas, 50);
+                    setTimeout(() => { initCanvas(true); }, 100);
                     const dotWrapper = document.querySelector('.breathe-dot-wrapper');
                     const dot = document.querySelector('.breathe-dot');
                     dotWrapper.style.animation = 'none';
@@ -1294,8 +1000,8 @@
         });
 
         function goToTab(targetId) { 
-            const tab = document.querySelector(`.nav-item[data-target="${targetId}"]`);
-            if (tab) tab.click();
+            const tabBtn = document.querySelector(`.nav-item[data-target="${targetId}"]`);
+            if (tabBtn) tabBtn.click(); 
         }
 
         const AppState = { maxTasks: 5, tasks: [] };
@@ -1338,8 +1044,7 @@
             container.innerHTML = '';
             selectedQuestions.forEach((q, index) => {
                 const group = document.createElement('div');
-                group.className = 'question-group question-anim';
-                group.style.animationDelay = `${index * 0.15}s`;
+                group.className = 'question-group';
                 group.innerHTML = `
                     <p class="question-text">${index + 1}. ${q.text}</p>
                     <input type="range" min="1" max="5" value="3" class="amps-range">
@@ -1375,7 +1080,7 @@
                 planSubtitle.innerHTML = "Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu."; taskWarning.innerHTML = "Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.";
             }
             updateTaskCounterUI(); btnSubmitAmps.innerText = "Đang chuyển sang Kế hoạch...";
-            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 2500);
+            setTimeout(() => { goToTab('plan'); btnSubmitAmps.innerText = "Xem kết quả & lập kế hoạch"; }, 2000);
         });
 
         // --- 2. PLAN LOGIC ---
@@ -1460,12 +1165,8 @@
                     e.stopPropagation();
                     const info = card.querySelector('.learn-card-info');
                     const isCurrentlyShown = info.classList.contains('show');
-                    
                     document.querySelectorAll('.learn-card-info').forEach(el => el.classList.remove('show'));
-                    
-                    if (!isCurrentlyShown) {
-                        info.classList.add('show');
-                    }
+                    if (!isCurrentlyShown) info.classList.add('show');
                     return; 
                 }
                 learnCards.forEach(c => c.classList.remove('active'));
@@ -1488,10 +1189,10 @@
             tick.style.position = 'absolute'; tick.style.left = '50%'; tick.style.top = '0';
             
             if (i % 5 === 0) {
-                tick.style.width = '2px'; tick.style.height = '12px';
+                tick.style.width = '2px'; tick.style.height = '10px';
                 tick.style.background = 'var(--tick-major)'; tick.style.marginLeft = '-1px';
             } else {
-                tick.style.width = '1px'; tick.style.height = '5px';
+                tick.style.width = '1px'; tick.style.height = '4px';
                 tick.style.background = 'var(--tick-minor)'; tick.style.marginLeft = '-0.5px';
             }
             mark.appendChild(tick); clockFace.appendChild(mark);
@@ -1517,18 +1218,10 @@
         let currentLearnMode = 'pomodoro';
         let timerInterval = null;
         let isWorkingPhase = true;
-        
-        let timeRemaining = 0;   
-        let totalDuration = 0;   
-        let endTime = 0;         
-
-        let breakInterval = null;
-        let breakTimeRemaining = 0;
-        let breakEndTimeMs = 0;
-
-        let timeElapsed = 0;     
-        let flowStartTime = 0;   
-        let isDigitalClockVisible = true; 
+        let timeRemaining = 0, totalDuration = 0, endTime = 0;
+        let breakInterval = null, breakTimeRemaining = 0, breakEndTimeMs = 0;
+        let timeElapsed = 0, flowStartTime = 0;
+        let isDigitalClockVisible = true;
 
         const gentlyBell = new Audio('https://actions.google.com/sounds/v1/water/droplet_reverb.ogg');
         const digitalClock = document.getElementById('digital-clock');
@@ -1545,13 +1238,11 @@
         btnToggleDigital.addEventListener('click', () => {
             isDigitalClockVisible = !isDigitalClockVisible;
             if (isDigitalClockVisible) {
-                digitalClock.style.visibility = 'visible';
-                digitalClock.style.opacity = '1';
+                digitalClock.style.visibility = 'visible'; digitalClock.style.opacity = '1';
                 btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
                 btnToggleDigital.title = "Ẩn đồng hồ số";
             } else {
-                digitalClock.style.visibility = 'hidden';
-                digitalClock.style.opacity = '0';
+                digitalClock.style.visibility = 'hidden'; digitalClock.style.opacity = '0';
                 btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>';
                 btnToggleDigital.title = "Hiện đồng hồ số";
             }
@@ -1573,15 +1264,9 @@
 
         function saveTimerState() {
             localStorage.setItem('insight_timer', JSON.stringify({
-                isWorkingPhase, 
-                timeRemaining, 
-                totalDuration, 
-                endTime,
-                timeElapsed, 
-                flowStartTime, 
-                isRunning: timerInterval !== null,
-                mode: currentLearnMode, 
-                isDigitalClockVisible,
+                isWorkingPhase, timeRemaining, totalDuration, endTime,
+                timeElapsed, flowStartTime, isRunning: timerInterval !== null,
+                mode: currentLearnMode, isDigitalClockVisible,
                 isBreakRunning: breakInterval !== null,
                 breakEndTime: breakInterval ? breakEndTimeMs : 0
             }));
@@ -1620,15 +1305,8 @@
             setTimeout(() => { popup.style.display = 'none'; }, 300);
         }
 
-        document.getElementById('btn-continue-work').addEventListener('click', () => {
-            hideSessionPopup();
-            resetTimerVisuals(); 
-        });
-
-        document.getElementById('btn-take-break').addEventListener('click', () => {
-            hideSessionPopup();
-            startBreakMode();
-        });
+        document.getElementById('btn-continue-work').addEventListener('click', () => { hideSessionPopup(); resetTimerVisuals(); });
+        document.getElementById('btn-take-break').addEventListener('click', () => { hideSessionPopup(); startBreakMode(); });
 
         function startBreakMode(resumeTimeRemaining = null) {
             isWorkingPhase = false;
@@ -1654,7 +1332,6 @@
             }
 
             display.textContent = formatTimeText(breakTimeRemaining);
-            
             if (breakInterval) clearInterval(breakInterval);
             
             breakEndTimeMs = Date.now() + breakTimeRemaining * 1000;
@@ -1662,18 +1339,12 @@
 
             breakInterval = setInterval(() => {
                 breakTimeRemaining = Math.ceil((breakEndTimeMs - Date.now()) / 1000);
-                
                 if (breakTimeRemaining <= 0) {
-                    breakTimeRemaining = 0;
-                    clearInterval(breakInterval);
-                    breakInterval = null;
-                    display.textContent = '00:00';
-                    
-                    gentlyBell.play().catch(()=>{});
+                    breakTimeRemaining = 0; clearInterval(breakInterval); breakInterval = null;
+                    display.textContent = '00:00'; gentlyBell.play().catch(()=>{});
                     document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
                     document.getElementById('break-end-msg').style.display = 'block';
-                    btn.innerHTML = 'Quay lại làm việc';
-                    saveTimerState();
+                    btn.innerHTML = 'Quay lại làm việc'; saveTimerState();
                 } else {
                     display.textContent = formatTimeText(breakTimeRemaining);
                 }
@@ -1689,13 +1360,8 @@
         });
 
         function handlePhaseComplete() {
-            timeRemaining = 0;
-            updateTimerRing();
-            digitalClock.textContent = formatTimeText(0);
-            clearInterval(timerInterval);
-            timerInterval = null;
-            saveTimerState();
-
+            timeRemaining = 0; updateTimerRing(); digitalClock.textContent = formatTimeText(0);
+            clearInterval(timerInterval); timerInterval = null; saveTimerState();
             if (currentLearnMode === 'flowtime') return;
             showSessionPopup();
         }
@@ -1706,29 +1372,20 @@
             if (currentLearnMode === 'flowtime') {
                 flowStartTime = resumeStartTime ? resumeStartTime : (Date.now() - timeElapsed * 1000);
                 saveTimerState();
-
                 timerInterval = setInterval(() => {
-                    let now = Date.now();
-                    timeElapsed = Math.floor((now - flowStartTime) / 1000);
+                    let now = Date.now(); timeElapsed = Math.floor((now - flowStartTime) / 1000);
                     digitalClock.textContent = formatTimeText(timeElapsed);
                 }, 500);
 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
-                timerStatus.innerHTML = '<i class="fa-solid fa-water"></i> Đang ở chế độ Flowtime (đếm lên)';
+                timerStatus.innerHTML = '<i class="fa-solid fa-water"></i> Đang ở chế độ Flowtime';
             } else {
                 endTime = resumeEndTime ? resumeEndTime : (Date.now() + timeRemaining * 1000);
                 saveTimerState();
-
                 timerInterval = setInterval(() => {
-                    let now = Date.now();
-                    timeRemaining = Math.ceil((endTime - now) / 1000);
-                    
-                    if (timeRemaining <= 0) {
-                        handlePhaseComplete();
-                    } else {
-                        updateTimerRing();
-                        digitalClock.textContent = formatTimeText(timeRemaining);
-                    }
+                    let now = Date.now(); timeRemaining = Math.ceil((endTime - now) / 1000);
+                    if (timeRemaining <= 0) handlePhaseComplete();
+                    else { updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining); }
                 }, 500);
 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-pause"></i> Tạm dừng';
@@ -1737,10 +1394,7 @@
         }
 
         function pauseTimer() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            saveTimerState();
-            
+            clearInterval(timerInterval); timerInterval = null; saveTimerState();
             if (currentLearnMode === 'flowtime') {
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
                 timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng Flow';
@@ -1751,33 +1405,24 @@
         }
 
         function resetTimerVisuals() {
-            clearInterval(timerInterval);
-            timerInterval = null;
-            if (breakInterval) clearInterval(breakInterval);
-            breakInterval = null;
+            clearInterval(timerInterval); timerInterval = null;
+            if (breakInterval) clearInterval(breakInterval); breakInterval = null;
             
             isWorkingPhase = true;
             document.getElementById('break-screen').style.display = 'none';
             document.getElementById('focus-visuals').style.display = 'flex';
             
             if (currentLearnMode === 'flowtime') {
-                progressSvg.style.opacity = '0';
-                timerControls.style.display = 'block'; 
-                timeElapsed = 0;
-                digitalClock.textContent = formatTimeText(timeElapsed);
-                
+                progressSvg.style.opacity = '0'; timerControls.style.display = 'block'; 
+                timeElapsed = 0; digitalClock.textContent = formatTimeText(timeElapsed);
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu Flow';
                 timerStatus.innerHTML = 'Làm việc cho đến khi bạn thấy cần nghỉ.';
             } else {
-                progressSvg.style.opacity = '1';
-                timerControls.style.display = 'block';
+                progressSvg.style.opacity = '1'; timerControls.style.display = 'block';
                 const settings = getDurationSettings(currentLearnMode);
-                totalDuration = settings.work;
-                timeRemaining = totalDuration;
-                
+                totalDuration = settings.work; timeRemaining = totalDuration;
                 digitalClock.textContent = formatTimeText(timeRemaining);
                 timerRing.style.strokeDashoffset = 0;
-                timerRing.style.stroke = 'var(--color-text)'; 
                 btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
                 timerStatus.innerHTML = '';
             }
@@ -1793,10 +1438,10 @@
                 
                 if (isDigitalClockVisible) {
                     digitalClock.style.visibility = 'visible'; digitalClock.style.opacity = '1';
-                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>'; btnToggleDigital.title = "Ẩn đồng hồ số";
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
                 } else {
                     digitalClock.style.visibility = 'hidden'; digitalClock.style.opacity = '0';
-                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>'; btnToggleDigital.title = "Hiện đồng hồ số";
+                    btnToggleDigital.innerHTML = '<i class="fa-solid fa-eye"></i>';
                 }
                 
                 learnCards.forEach(c => { c.classList.toggle('active', c.getAttribute('data-mode') === currentLearnMode); });
@@ -1809,69 +1454,38 @@
                     } else {
                         timeElapsed = state.timeElapsed || 0;
                         digitalClock.textContent = formatTimeText(timeElapsed);
-                        if(timeElapsed === 0) {
-                             btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu Flow';
-                             timerStatus.innerHTML = 'Làm việc cho đến khi bạn thấy cần nghỉ.';
-                        } else {
-                             btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
-                             timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng Flow';
-                        }
+                        btnTimerToggle.innerHTML = timeElapsed === 0 ? '<i class="fa-solid fa-play"></i> Bắt đầu Flow' : '<i class="fa-solid fa-play"></i> Tiếp tục Flow';
                     }
                     return;
                 }
 
                 isWorkingPhase = state.isWorkingPhase !== undefined ? state.isWorkingPhase : true;
-                
                 if (!isWorkingPhase) {
                     const expectedEnd = state.breakEndTime || 0;
                     const rem = Math.ceil((expectedEnd - Date.now()) / 1000);
-                    
-                    if (state.isBreakRunning && rem > 0) {
-                        startBreakMode(rem);
-                    } else {
+                    if (state.isBreakRunning && rem > 0) startBreakMode(rem);
+                    else {
                         document.getElementById('focus-visuals').style.display = 'none';
                         document.getElementById('break-screen').style.display = 'flex';
                         document.getElementById('break-countdown').textContent = '00:00';
-                        document.getElementById('break-end-msg').innerHTML = currentLearnMode === 'pomodoro' ? '✨ Hết giờ nghỉ' : '🌱 Hết giờ nghỉ';
                         document.getElementById('break-end-msg').style.display = 'block';
-                        document.getElementById('btn-end-break').innerHTML = 'Quay lại làm việc';
                     }
                     return;
                 }
 
                 document.getElementById('break-screen').style.display = 'none';
                 document.getElementById('focus-visuals').style.display = 'flex';
-                
                 totalDuration = state.totalDuration || getDurationSettings(currentLearnMode).work;
-                timerRing.style.stroke = 'var(--color-text)';
                 
                 if (state.isRunning) {
-                    let now = Date.now();
-                    let remaining = Math.ceil((state.endTime - now) / 1000);
-                    if (remaining <= 0) {
-                        handlePhaseComplete(); 
-                    } else {
-                        timeRemaining = remaining;
-                        updateTimerRing();
-                        digitalClock.textContent = formatTimeText(timeRemaining);
-                        startTimer(state.endTime);
-                    }
+                    let now = Date.now(); let remaining = Math.ceil((state.endTime - now) / 1000);
+                    if (remaining <= 0) handlePhaseComplete(); 
+                    else { timeRemaining = remaining; updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining); startTimer(state.endTime); }
                 } else {
                     timeRemaining = state.timeRemaining !== undefined ? state.timeRemaining : totalDuration;
-                    updateTimerRing();
-                    digitalClock.textContent = formatTimeText(timeRemaining);
-                    if (timeRemaining === totalDuration) {
-                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung';
-                        timerStatus.innerHTML = '';
-                    } else if (timeRemaining <= 0) {
-                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Bắt đầu tập trung'; 
-                        handlePhaseComplete();
-                    } else {
-                        btnTimerToggle.innerHTML = '<i class="fa-solid fa-play"></i> Tiếp tục';
-                        timerStatus.innerHTML = '<i class="fa-solid fa-pause"></i> Đã tạm dừng';
-                    }
+                    updateTimerRing(); digitalClock.textContent = formatTimeText(timeRemaining);
+                    btnTimerToggle.innerHTML = (timeRemaining === totalDuration) ? '<i class="fa-solid fa-play"></i> Bắt đầu tập trung' : '<i class="fa-solid fa-play"></i> Tiếp tục';
                 }
-                progressSvg.style.opacity = '1'; timerControls.style.display = 'block';
             } else {
                 resetTimerVisuals();
             }
@@ -1884,7 +1498,6 @@
             if (timerInterval) pauseTimer();
             else startTimer();
         });
-        
         loadTimerState();
 
         // --- 4. PAUSE LOGIC ---
@@ -1935,11 +1548,7 @@
 
         class MultiAudio {
             constructor(src, count) {
-                this.audios = Array.from({length: count}, () => {
-                    const a = new Audio(src);
-                    a.loop = true;
-                    return a;
-                });
+                this.audios = Array.from({length: count}, () => { const a = new Audio(src); a.loop = true; return a; });
                 this._volume = 0;
             }
             play() { this.audios.forEach(a => a.play().catch(()=>{})); return Promise.resolve(); }
@@ -1982,7 +1591,7 @@
 
         btnToggleSound.addEventListener('click', () => {
             isSoundOn = !isSoundOn;
-            if (isSoundOn) { btnToggleSound.classList.add('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> Tắt âm thanh'; fadeInAudio(ambientAudioAssets[currentAudioKey]); } 
+            if (isSoundOn) { btnToggleSound.classList.add('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-high"></i> Tắt âm'; fadeInAudio(ambientAudioAssets[currentAudioKey]); } 
             else { btnToggleSound.classList.remove('active'); btnToggleSound.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Bật âm thanh'; fadeOutAudio(ambientAudioAssets[currentAudioKey]); }
         });
 
@@ -1990,53 +1599,34 @@
         const canvas = document.getElementById('doodle-canvas'); const ctx = canvas.getContext('2d');
         let isDrawing = false; let strokeColor = '#AEC6CF'; let isCanvasInit = false;
 
-        function initCanvas() {
-            if(isCanvasInit) return;
-            const container = canvas.parentElement;
-            if (!container) return;
-            canvas.width = container.clientWidth;
-            canvas.height = Math.max(container.clientHeight - 60, 240); 
+        function initCanvas(force = false) {
+            if(isCanvasInit && !force) return;
+            const container = canvas.parentElement; 
+            const headerHeight = container.querySelector('.doodle-header').offsetHeight || 50;
+            canvas.width = container.clientWidth; 
+            canvas.height = container.clientHeight - headerHeight; 
             ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; isCanvasInit = true;
         }
 
         window.addEventListener('resize', () => { 
-            if(document.getElementById('pause').classList.contains('active')) { 
-                isCanvasInit = false; 
-                initCanvas(); 
-            }
+            if(document.getElementById('pause').classList.contains('active')) { initCanvas(true); }
         });
 
-        function startDrawing(e) { 
-            isDrawing = true; 
-            draw(e); 
-        } 
-        function stopDrawing() { 
-            isDrawing = false; 
-            ctx.beginPath(); 
-        }
+        function startDrawing(e) { isDrawing = true; draw(e); } 
+        function stopDrawing() { isDrawing = false; ctx.beginPath(); }
         function draw(e) {
             if (!isDrawing) return; 
-            if (e.cancelable && e.type.startsWith('touch')) e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
             const x = clientX - rect.left; 
             const y = clientY - rect.top;
-            ctx.strokeStyle = strokeColor; 
-            ctx.lineTo(x, y); 
-            ctx.stroke(); 
-            ctx.beginPath(); 
-            ctx.moveTo(x, y);
+            ctx.strokeStyle = strokeColor; ctx.lineTo(x, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, y);
+            if (e.touches) e.preventDefault(); // Ngăn cuộn trang khi vẽ trên màn hình cảm ứng
         }
 
-        canvas.addEventListener('mousedown', startDrawing); 
-        canvas.addEventListener('mousemove', draw); 
-        canvas.addEventListener('mouseup', stopDrawing); 
-        canvas.addEventListener('mouseout', stopDrawing);
-        
-        canvas.addEventListener('touchstart', startDrawing, { passive: false }); 
-        canvas.addEventListener('touchmove', draw, { passive: false }); 
-        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing, { passive: false }); canvas.addEventListener('touchmove', draw, { passive: false }); canvas.addEventListener('touchend', stopDrawing);
 
         const toolBtns = document.querySelectorAll('.tool-btn');
         toolBtns.forEach(btn => {
@@ -2048,8 +1638,8 @@
         const textOverlay = document.getElementById('affirmation-text');
 
         btnShatter.addEventListener('click', () => {
-            canvas.classList.add('crumple-anim'); textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)]; textOverlay.style.color = 'var(--color-text)'; 
-            setTimeout(() => { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.classList.remove('crumple-anim'); textOverlay.style.color = 'var(--color-text-light)'; }, 800); 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            textOverlay.textContent = affirmations[Math.floor(Math.random() * affirmations.length)];
         });
 
         // --- I18N & BẢNG MÀU ---
@@ -2085,7 +1675,7 @@
             ["Bạn đang tràn đầy năng lượng! Hãy tận dụng để xử lý những việc quan trọng.", "You're full of energy! Use it for your most important tasks."],
             ["Thang đo AMPS", "AMPS scale"],
             ["Xem thông tin thang đo", "About this scale"],
-            ["Chủ nghĩa cầu toàn không thích nghi (maladaptive perfectionism) là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.", "Maladaptive perfectionism means setting standards that are unrealistically high, leading to anxiety, self-blame and procrastination."],
+            ["Chủ nghĩa cầu toàn không thích nghi là việc đặt tiêu chuẩn quá cao so với thực tế, dẫn đến lo lắng, tự trách và trì hoãn.", "Maladaptive perfectionism means setting standards that are unrealistically high, leading to anxiety, self-blame and procrastination."],
             ["Đây là công cụ tự đánh giá nhanh, không thay thế chẩn đoán chuyên môn.", "This is a quick self-assessment tool and does not replace a professional diagnosis."],
             ["Hôm nay, bạn có đang quá khắt khe với bản thân không?", "Are you being too hard on yourself today?"],
             ["Trả lời vài câu ngắn để xem mức độ cầu toàn của bạn hôm nay.", "Answer a few short questions to see how perfectionistic you feel today."],
@@ -2093,17 +1683,6 @@
             ["Hoàn toàn đúng", "Completely true"],
             ["Xem kết quả & lập kế hoạch", "See results & plan"],
             ["Đang chuyển sang Kế hoạch...", "Moving to Plan..."],
-            ["Hôm nay mức độ cầu toàn của bạn khá cao. Hãy thử chuyển sang tab Nghỉ ngơi và dành cho bản thân một khoảng nghỉ.", "Your perfectionism level looks fairly high today. Try the Rest tab and give yourself a break."],
-            ["Hệ thống đã giới hạn danh sách việc xuống còn", "The to-do list has been limited to"],
-            ["Bạn có vẻ đang hơi khắt khe với bản thân.", "You seem to be a little hard on yourself."],
-            ["Bạn vẫn có thể chọn", "You can still choose"],
-            [", hãy làm việc nhẹ nhàng, không cần hoàn hảo.", ", so work gently; perfection isn't required."],
-            ["Hôm nay, bạn đang khá nhẹ nhàng với chính mình 🌱", "Today you're being kind to yourself 🌱"],
-            ["Bạn đang khá thoải mái. Bạn có thể chọn tối đa", "You're fairly relaxed. You can choose up to"],
-            ["Quy tắc 3 việc (điều chỉnh theo kết quả AMPS). Hôm nay hãy giảm bớt kỳ vọng và chọn ít việc hơn.", "The Rule of 3 (adjusted by your AMPS result). Lower your expectations today and pick fewer tasks."],
-            ["Quy tắc 5 việc: giới hạn nhiệm vụ để tránh quá tải và dễ bắt đầu.", "The Rule of 5: limit your tasks to avoid overload and make starting easier."],
-            ["Mức AMPS cao: hôm nay nên chọn tối đa 3 nhiệm vụ.", "High AMPS level: choose at most 3 tasks today."],
-            ["Chỉ chọn 5 việc quan trọng nhất ngày hôm nay.", "Choose only your 5 most important tasks today."],
             ["Kế hoạch hôm nay", "Today's plan"],
             ["Danh sách việc cần làm", "To-do list"],
             ["Ví dụ: Học IELTS...", "e.g. Study for IELTS..."],
@@ -2113,8 +1692,6 @@
             ["Thêm nhiệm vụ", "Add task"],
             ["Đã đạt giới hạn", "Limit reached"],
             ["Cập nhật nhiệm vụ", "Update task"],
-            ["Sửa", "Edit"],
-            ["Xóa", "Delete"],
             ["Giờ bắt đầu:", "Start time:"],
             ["Tạo lịch trình tự động", "Generate schedule"],
             ["Đã cập nhật lịch trình!", "Schedule updated!"],
@@ -2124,18 +1701,6 @@
             ["Vui lòng chọn thời gian bắt đầu!", "Please choose a start time!"],
             ["Flowtime (Tự do)", "Flowtime (Free)"],
             ["Xem chi tiết", "View details"],
-            ["Tính năng:", "Feature:"],
-            ["Dùng khi nào:", "Best for:"],
-            ["Cách thực hiện:", "How to:"],
-            ["Làm việc tập trung 25 phút, sau đó nghỉ ngắn 5 phút.", "Work with full focus for 25 minutes, then take a 5-minute break."],
-            ["Phù hợp khi bạn có nhiều việc nhỏ hoặc đang khó bắt đầu.", "Good when you have many small tasks or find it hard to get started."],
-            ["Tập trung trọn vẹn rồi bắt đầu. Khi nghỉ, hãy đứng dậy đi lại.", "Focus fully and start. During the break, stand up and move around."],
-            ["Làm việc tập trung 45 phút, sau đó nghỉ giải trí 15 phút (ví dụ xem một tập phim ngắn).", "Work with focus for 45 minutes, then take a 15-minute entertainment break (e.g. a short episode)."],
-            ["Phù hợp khi cần hoàn thành một nhiệm vụ lớn và muốn có phần thưởng để duy trì động lực.", "Good for a large task when you want a reward to stay motivated."],
-            ["Tập trung trong 45 phút, sau đó thư giãn 15 phút.", "Focus for 45 minutes, then relax for 15."],
-            ["Đồng hồ đếm lên, không giới hạn thời gian. Bạn tự quyết định khi nào nghỉ.", "A count-up timer with no time limit. You decide when to take a break."],
-            ["Phù hợp khi bạn đang cuốn vào công việc (như lập trình, thiết kế, viết lách).", "Good when you're absorbed in your work (coding, design, writing)."],
-            ["Làm việc theo mạch tập trung của bạn và bấm tạm dừng khi cần nghỉ.", "Work with your natural focus and press pause when you need a rest."],
             ["Ẩn đồng hồ số", "Hide digital clock"],
             ["Hiện đồng hồ số", "Show digital clock"],
             ["Bắt đầu tập trung", "Start focusing"],
@@ -2145,16 +1710,10 @@
             ["Tiếp tục Flow", "Resume Flow"],
             ["Đang tập trung", "Focusing"],
             ["Đã tạm dừng", "Paused"],
-            ["Đang ở chế độ Flowtime (đếm lên)", "In Flowtime (counting up)"],
+            ["Đang ở chế độ Flowtime", "In Flowtime mode"],
             ["Đã tạm dừng Flow", "Flow paused"],
             ["Làm việc cho đến khi bạn thấy cần nghỉ.", "Work until you feel you need a break."],
             ["\"Thời gian đang trôi, nhưng bạn không cần phải chạy theo nó. Hãy thả lỏng và tập trung.\"", "\"Time keeps passing, but you don't have to chase it. Relax and focus.\""],
-            ["🌿 Hết giờ rồi!", "🌿 Time's up!"],
-            ["✨ Hết giờ rồi!", "✨ Time's up!"],
-            ["Bạn đã hoàn thành 25 phút tập trung.", "You've completed 25 focused minutes."],
-            ["Bây giờ hãy dành một chút thời gian để nghỉ ngơi nhé.", "Now take a little time to rest."],
-            ["Bạn đã hoàn thành 45 phút tập trung.", "You've completed 45 focused minutes."],
-            ["Đến lúc tạm dừng và nghỉ ngơi rồi.", "Time to pause and rest."],
             ["☕ Thời gian nghỉ", "☕ Break time"],
             ["🎬 Thời gian nghỉ", "🎬 Break time"],
             ["Hãy tạm gác công việc và cho tâm trí một khoảng nghỉ.", "Set your work aside and give your mind a pause."],
@@ -2174,7 +1733,7 @@
             ["Mưa", "Rain"],
             ["Rừng mưa nhiệt đới", "Rainforest"],
             ["Bật âm thanh", "Turn sound on"],
-            ["Tắt âm thanh", "Turn sound off"],
+            ["Tắt âm", "Turn sound off"],
             ["Bảng vẽ tự do", "Free drawing board"],
             ["Vẽ tự do để thư giãn.", "Draw freely to unwind."],
             ["Xóa toàn bộ", "Clear all"],
@@ -2212,7 +1771,6 @@
         (function () {
             const norm = s => s.replace(/\s+/g, ' ').trim();
             const D = new Map(PAIRS.map(([a, b]) => [norm(a), b]));
-            const RX = [[/^Điểm hôm nay: (\d+)\/25$/, "Today's score: $1/25"], [/^(\d+) phút$/, '$1 min'], [/^(\d+) nhiệm vụ$/, '$1 tasks']];
             const store = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
             const save = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
             
@@ -2223,52 +1781,10 @@
             function tr(s) {
                 const n = norm(s); if (!n) return s;
                 let o = D.get(n);
-                if (o === undefined) for (const [r, v] of RX) if (r.test(n)) { o = n.replace(r, v); break; }
                 if (o === undefined) { const m = n.match(/^(\d+)\. (.+)$/); if (m && D.has(m[2])) o = m[1] + '. ' + D.get(m[2]); }
-                if (o === undefined) return s;
-                return s.match(/^\s*/)[0] + o + s.match(/\s*$/)[0];
+                return o !== undefined ? o : s;
             }
             window.t = s => lang === 'en' ? tr(s) : s;
-
-            function procText(n) {
-                if (n.__cur !== undefined && n.data === n.__cur) return;
-                const src = n.data, out = lang === 'en' ? tr(src) : src;
-                n.__vi = src; n.__cur = out; if (out !== src) n.data = out;
-            }
-            function procAttr(el, a) {
-                const v = el.getAttribute(a); if (v === null) return;
-                const k = '__a_' + a, st = el[k]; if (st && st.cur === v) return;
-                const out = lang === 'en' ? tr(v) : v;
-                el[k] = { vi: v, cur: out }; if (out !== v) el.setAttribute(a, out);
-            }
-            function walk(root) {
-                if (root.nodeType === 3) { if (!/^(SCRIPT|STYLE)$/.test(root.parentNode.nodeName)) procText(root); return; }
-                if (root.nodeType !== 1) return;
-                const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: n => /^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT });
-                let n; while ((n = w.nextNode())) procText(n);
-                [root, ...root.querySelectorAll('[title],[placeholder]')].forEach(el => { procAttr(el, 'title'); procAttr(el, 'placeholder'); });
-            }
-            const mo = new MutationObserver(ms => ms.forEach(m => {
-                if (m.type === 'childList') m.addedNodes.forEach(walk);
-                else if (m.type === 'characterData') procText(m.target);
-                else procAttr(m.target, m.attributeName);
-            }));
-
-            function setLang(l) {
-                lang = l; save('insight_lang', l); document.documentElement.lang = l;
-                const w = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
-                let n; while ((n = w.nextNode())) {
-                    if (/^(SCRIPT|STYLE)$/.test(n.parentNode.nodeName)) continue;
-                    const src = n.__vi !== undefined && n.data === n.__cur ? n.__vi : n.data;
-                    const out = l === 'en' ? tr(src) : src; n.__vi = src; n.__cur = out; if (n.data !== out) n.data = out;
-                }
-                document.querySelectorAll('[title],[placeholder]').forEach(el => ['title', 'placeholder'].forEach(a => {
-                    const st = el['__a_' + a]; if (!st || el.getAttribute(a) === null) return;
-                    const vi = el.getAttribute(a) === st.cur ? st.vi : el.getAttribute(a);
-                    const out = l === 'en' ? tr(vi) : vi; el['__a_' + a] = { vi, cur: out }; el.setAttribute(a, out);
-                }));
-                document.querySelectorAll('#seg-lang button').forEach(b => b.setAttribute('aria-pressed', b.dataset.lang === l));
-            }
 
             function applyTheme() {
                 const dark = themePref === 'dark';
@@ -2289,14 +1805,9 @@
                 });
             }
 
-            walk(document.documentElement);
-            mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['title', 'placeholder'] });
-            
-            if (lang === 'en') setLang('en'); else setLang('vi');
             applyTheme();
             applyBgPalette(bgTheme);
 
-            document.querySelectorAll('#seg-lang button').forEach(b => b.addEventListener('click', () => setLang(b.dataset.lang)));
             document.querySelectorAll('#seg-theme button').forEach(b => b.addEventListener('click', () => { 
                 themePref = b.dataset.themeOpt; 
                 save('insight_theme', themePref); 
@@ -2312,10 +1823,22 @@
                 });
             });
 
-            const sBtn = document.getElementById('settings-btn'), sPop = document.getElementById('settings-pop');
-            const toggleS = open => { sPop.hidden = !open; sBtn.setAttribute('aria-expanded', open); };
+            // Settings popup controls (with Mobile backdrop support)
+            const sBtn = document.getElementById('settings-btn');
+            const sPop = document.getElementById('settings-pop');
+            const sBackdrop = document.getElementById('settings-backdrop');
+            const sClose = document.getElementById('settings-close-btn');
+
+            const toggleS = open => { 
+                sPop.hidden = !open; 
+                sBtn.setAttribute('aria-expanded', open); 
+                if (open) sBackdrop.classList.add('show');
+                else sBackdrop.classList.remove('show');
+            };
+
             sBtn.addEventListener('click', e => { e.stopPropagation(); toggleS(sPop.hidden); });
-            document.addEventListener('click', e => { if (!sPop.hidden && !sPop.contains(e.target)) toggleS(false); });
+            if (sClose) sClose.addEventListener('click', () => toggleS(false));
+            sBackdrop.addEventListener('click', () => toggleS(false));
             document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleS(false); });
 
             const iBtn = document.getElementById('amps-info-btn'), iBox = document.getElementById('amps-info');
